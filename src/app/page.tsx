@@ -1,5 +1,5 @@
-import LandingPageModule from "@/modules/LandingPageModule";
+import LandingModule from "@/modules/LandingModule";
 
 export default function Home() {
-  return <LandingPageModule />;
+  return <LandingModule />;
 }

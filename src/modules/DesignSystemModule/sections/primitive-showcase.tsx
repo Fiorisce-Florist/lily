@@ -11,10 +11,10 @@ export function PrimitiveShowcase() {
   return (
     <section className="space-y-8">
       <div>
-        <h2 className="text-h3 font-fraunces font-bold text-neutral-900 border-b border-cornsilk-300 pb-2 mb-6">
+        <h2 className="text-h3 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100 border-b border-cornsilk-300 dark:border-neutral-800 pb-2 mb-6">
           Primitives
         </h2>
-        <p className="text-b4 text-neutral-600 mb-8 max-w-2xl">
+        <p className="text-b4 text-neutral-600 dark:text-neutral-400 mb-8 max-w-2xl">
           Core UI building blocks like Buttons, Inputs, Badges, and Skeletons.
         </p>
       </div>
@@ -25,7 +25,7 @@ export function PrimitiveShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Buttons
           </h3>
-          <div className="flex flex-col gap-6 bg-white p-6 rounded-xl border border-cornsilk-300">
+          <div className="flex flex-col gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
             <div className="flex flex-wrap gap-4 items-center">
               <Button variant="primary">Primary</Button>
               <Button variant="secondary">Secondary</Button>
@@ -53,7 +53,7 @@ export function PrimitiveShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Inputs & Textarea
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-xl border border-cornsilk-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -76,7 +76,7 @@ export function PrimitiveShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Badges
           </h3>
-          <div className="flex flex-wrap gap-4 items-center bg-white p-6 rounded-xl border border-cornsilk-300">
+          <div className="flex flex-wrap gap-4 items-center bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
             <Badge variant="default">Default</Badge>
             <Badge variant="secondary">Secondary</Badge>
             <Badge variant="outline">Outline</Badge>
@@ -90,7 +90,7 @@ export function PrimitiveShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Skeleton
           </h3>
-          <div className="flex items-center space-x-4 bg-white p-6 rounded-xl border border-cornsilk-300">
+          <div className="flex items-center space-x-4 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
             <Skeleton className="h-12 w-12 rounded-full" />
             <div className="space-y-2">
               <Skeleton className="h-4 w-[250px]" />
@@ -104,13 +104,13 @@ export function PrimitiveShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Separator
           </h3>
-          <div className="bg-white p-6 rounded-xl border border-cornsilk-300">
+          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
             <div className="space-y-1">
-              <h4 className="text-b4 font-inter font-medium text-neutral-900">Radix Primitives</h4>
+              <h4 className="text-b4 font-inter font-medium text-neutral-900 dark:text-cornsilk-100">Radix Primitives</h4>
               <p className="text-b5 text-neutral-500">Accessible unstyled UI components.</p>
             </div>
             <Separator className="my-4" />
-            <div className="flex h-5 items-center space-x-4 text-b5 text-neutral-700">
+            <div className="flex h-5 items-center space-x-4 text-b5 text-neutral-700 dark:text-neutral-300">
               <div>Blog</div>
               <Separator orientation="vertical" />
               <div>Docs</div>

@@ -54,10 +54,10 @@ export function ComplexShowcase() {
   return (
     <section className="space-y-8">
       <div>
-        <h2 className="text-h3 font-fraunces font-bold text-neutral-900 border-b border-cornsilk-300 pb-2 mb-6">
+        <h2 className="text-h3 font-fraunces font-bold text-neutral-700 dark:text-neutral-300 border-b border-cornsilk-300 dark:border-neutral-800 pb-2 mb-6">
           Complex Features
         </h2>
-        <p className="text-b4 text-neutral-600 mb-8 max-w-2xl">
+        <p className="text-b4 text-neutral-600 dark:text-neutral-400 mb-8 max-w-2xl">
           Advanced components with complex interactions and state management.
         </p>
       </div>
@@ -68,12 +68,12 @@ export function ComplexShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Calendar
           </h3>
-          <div className="bg-white p-6 rounded-xl border border-cornsilk-300 flex justify-center">
+          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex justify-center">
             <Calendar
               mode="single"
               selected={date}
               onSelect={setDate}
-              className="rounded-md border border-cornsilk-300 shadow-sm"
+              className="rounded-md border border-cornsilk-300 dark:border-neutral-800 shadow-sm"
             />
           </div>
         </div>
@@ -83,7 +83,7 @@ export function ComplexShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Combobox
           </h3>
-          <div className="bg-white p-6 rounded-xl border border-cornsilk-300 flex items-center justify-center min-h-[250px]">
+          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex items-center justify-center min-h-62.5">
             <Combobox
               options={[
                 { label: "Rose", value: "rose" },
@@ -102,7 +102,7 @@ export function ComplexShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Carousel
           </h3>
-          <div className="bg-white p-12 rounded-xl border border-cornsilk-300 flex items-center justify-center">
+          <div className="bg-white dark:bg-neutral-900 p-12 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex items-center justify-center">
             <Carousel className="w-full max-w-xs sm:max-w-md">
               <CarouselContent>
                 {Array.from({ length: 5 }).map((_, index) => (
@@ -128,7 +128,7 @@ export function ComplexShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Toast Notifications (Sonner)
           </h3>
-          <div className="bg-white p-6 rounded-xl border border-cornsilk-300 flex flex-wrap gap-4 items-center justify-center">
+          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex flex-wrap gap-4 items-center justify-center">
             <Button
               variant="outline"
               onClick={() => toast("Event has been created", {
@@ -158,7 +158,7 @@ export function ComplexShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Data Table
           </h3>
-          <div className="bg-white p-6 rounded-xl border border-cornsilk-300">
+          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
             <DataTable columns={columns} data={data} />
           </div>
         </div>

@@ -1,4 +1,4 @@
-export default function LandingPageModule() {
+export default function LandingModule() {
   return (
     <div className="">ini landing</div>
   )
