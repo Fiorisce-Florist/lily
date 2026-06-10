@@ -40,7 +40,7 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-inter bg-cornsilk-100 text-neutral-900">
+      <body className="min-h-full flex flex-col font-inter bg-cornsilk-100 text-neutral-900 dark:bg-neutral-950 dark:text-cornsilk-100">
         <TooltipProvider>
           <Navbar />
           <main className="flex-1">
