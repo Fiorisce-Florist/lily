@@ -31,8 +31,6 @@ export function PrimitiveShowcase() {
               <Button variant="secondary">Secondary</Button>
               <Button variant="outline">Outline</Button>
               <Button variant="ghost">Ghost</Button>
-              <Button variant="soft">Soft</Button>
-              <Button variant="destructive">Destructive</Button>
               <Button variant="link">Link</Button>
             </div>
             <div className="flex flex-wrap gap-4 items-center">
@@ -77,11 +75,10 @@ export function PrimitiveShowcase() {
             Badges
           </h3>
           <div className="flex flex-wrap gap-4 items-center bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
-            <Badge variant="default">Default</Badge>
-            <Badge variant="secondary">Secondary</Badge>
-            <Badge variant="outline">Outline</Badge>
-            <Badge variant="destructive">Destructive</Badge>
-            <Badge variant="success">Success</Badge>
+            <Badge variant="default">DEFAULT</Badge>
+            <Badge variant="secondary">SECONDARY</Badge>
+            <Badge variant="outline">OUTLINE</Badge>
+            <Badge variant="success">SUCCESS</Badge>
           </div>
         </div>
 
@@ -93,8 +90,8 @@ export function PrimitiveShowcase() {
           <div className="flex items-center space-x-4 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
             <Skeleton className="h-12 w-12 rounded-full" />
             <div className="space-y-2">
-              <Skeleton className="h-4 w-[250px]" />
-              <Skeleton className="h-4 w-[200px]" />
+              <Skeleton className="h-4 w-62.5" />
+              <Skeleton className="h-4 w-50" />
             </div>
           </div>
         </div>

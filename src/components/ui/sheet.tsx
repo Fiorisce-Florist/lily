@@ -24,7 +24,7 @@ const SheetOverlay = React.forwardRef<
   <SheetPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-neutral-1000/60",
+      "fixed inset-0 z-50 bg-neutral-1000/60 dark:bg-neutral-1000/80",
       "motion-safe:data-[state=open]:animate-fade-in",
       "motion-safe:data-[state=closed]:animate-fade-out",
       className,
@@ -37,16 +37,16 @@ SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 /* ------------------------------ Variants -------------------------------- */
 
 const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-cornsilk-100 p-6 shadow-lg transition ease-in-out motion-safe:data-[state=closed]:duration-300 motion-safe:data-[state=open]:duration-300",
+  "fixed z-50 gap-4 bg-cornsilk-100 dark:bg-neutral-900 p-6 shadow-lg transition ease-in-out motion-safe:data-[state=closed]:duration-300 motion-safe:data-[state=open]:duration-300 dark:text-cornsilk-100",
   {
     variants: {
       side: {
-        top: "inset-x-0 top-0 border-b border-cornsilk-300 motion-safe:data-[state=open]:animate-slide-in-from-top motion-safe:data-[state=closed]:animate-slide-out-to-top",
+        top: "inset-x-0 top-0 border-b border-cornsilk-300 dark:border-neutral-700 motion-safe:data-[state=open]:animate-slide-in-from-top motion-safe:data-[state=closed]:animate-slide-out-to-top",
         bottom:
-          "inset-x-0 bottom-0 border-t border-cornsilk-300 motion-safe:data-[state=open]:animate-slide-in-from-bottom motion-safe:data-[state=closed]:animate-slide-out-to-bottom",
-        left: "inset-y-0 left-0 h-full w-3/4 border-r border-cornsilk-300 sm:max-w-sm motion-safe:data-[state=open]:animate-slide-in-from-left motion-safe:data-[state=closed]:animate-slide-out-to-left",
+          "inset-x-0 bottom-0 border-t border-cornsilk-300 dark:border-neutral-700 motion-safe:data-[state=open]:animate-slide-in-from-bottom motion-safe:data-[state=closed]:animate-slide-out-to-bottom",
+        left: "inset-y-0 left-0 h-full w-3/4 border-r border-cornsilk-300 dark:border-neutral-700 sm:max-w-sm motion-safe:data-[state=open]:animate-slide-in-from-left motion-safe:data-[state=closed]:animate-slide-out-to-left",
         right:
-          "inset-y-0 right-0 h-full w-3/4 border-l border-cornsilk-300 sm:max-w-sm motion-safe:data-[state=open]:animate-slide-in-from-right motion-safe:data-[state=closed]:animate-slide-out-to-right",
+          "inset-y-0 right-0 h-full w-3/4 border-l border-cornsilk-300 dark:border-neutral-700 sm:max-w-sm motion-safe:data-[state=open]:animate-slide-in-from-right motion-safe:data-[state=closed]:animate-slide-out-to-right",
       },
     },
     defaultVariants: {
@@ -77,9 +77,9 @@ const SheetContent = React.forwardRef<
         className={cn(
           "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background",
           "transition-opacity hover:opacity-100",
-          "focus:outline-none focus:ring-2 focus:ring-blush-500 focus:ring-offset-2",
+          "focus:outline-none focus:ring-2 focus:ring-blush-500 focus:ring-offset-2 text-neutral-700 dark:text-cornsilk-300",
           "disabled:pointer-events-none",
-          "data-[state=open]:bg-cornsilk-200",
+          "data-[state=open]:bg-cornsilk-200 dark:data-[state=open]:bg-neutral-800",
         )}
       >
         <X className="h-4 w-4" aria-hidden="true" />
@@ -146,7 +146,7 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Description
     ref={ref}
-    className={cn("text-b5 font-inter text-neutral-600", className)}
+    className={cn("text-b5 font-inter text-neutral-600 dark:text-cornsilk-400", className)}
     {...props}
   />
 ))

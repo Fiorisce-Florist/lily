@@ -54,7 +54,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="rounded-md border border-cornsilk-300">
+      <div className="rounded-md border border-cornsilk-300 dark:border-neutral-800">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center text-neutral-500"
+                  className="h-24 text-center text-neutral-500 dark:text-neutral-400"
                 >
                   No results.
                 </TableCell>

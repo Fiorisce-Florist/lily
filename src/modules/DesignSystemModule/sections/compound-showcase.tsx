@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Progress } from "@/components/ui/progress"
 import { Slider } from "@/components/ui/slider"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { AlertCircle, Terminal, Info, CheckCircle2 } from "lucide-react"
@@ -50,7 +50,7 @@ export function CompoundShowcase() {
                 <CardDescription>Get fresh blooms delivered to your door every month.</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-b4 text-neutral-700 dark:text-neutral-300">
+                <p className="text-b4 text-neutral-700 ">
                   Our seasonal bouquets are carefully curated and arranged by expert florists using the freshest blooms available.
                 </p>
               </CardContent>
@@ -155,7 +155,7 @@ export function CompoundShowcase() {
             Scroll Area
           </h3>
           <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
-            <ScrollArea className="h-72 w-48 rounded-md border border-cornsilk-400">
+            <ScrollArea className="h-72 w-48 rounded-md border border-cornsilk-400 dark:border-neutral-800">
               <div className="p-4">
                 <h4 className="mb-4 text-b4 font-inter font-medium leading-none">Tags</h4>
                 {Array.from({ length: 50 }).map((_, i, a) => (

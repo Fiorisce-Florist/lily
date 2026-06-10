@@ -11,13 +11,13 @@ const alertVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-cornsilk-100 border-cornsilk-300 text-neutral-900",
+          "bg-cornsilk-100 border-cornsilk-300 text-neutral-900 dark:bg-neutral-900 dark:border-neutral-800 dark:text-neutral-100",
         destructive:
-          "border-blush-400 bg-blush-100 text-blush-900 [&>svg]:text-blush-700",
+          "border-blush-400 bg-blush-100 text-blush-900 [&>svg]:text-blush-700 dark:bg-blush-1000 dark:border-blush-800 dark:text-blush-200 dark:[&>svg]:text-blush-400",
         success:
-          "border-olive-400 bg-olive-100 text-olive-900 [&>svg]:text-olive-700",
+          "border-olive-400 bg-olive-100 text-olive-900 [&>svg]:text-olive-700 dark:bg-olive-1000 dark:border-olive-800 dark:text-olive-200 dark:[&>svg]:text-olive-400",
         warning:
-          "border-camel-400 bg-camel-100 text-camel-900 [&>svg]:text-camel-700",
+          "border-camel-400 bg-camel-100 text-camel-900 [&>svg]:text-camel-700 dark:bg-camel-1000 dark:border-camel-800 dark:text-camel-200 dark:[&>svg]:text-camel-400",
       },
     },
     defaultVariants: {

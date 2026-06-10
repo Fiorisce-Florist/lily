@@ -1,18 +1,15 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { X } from "lucide-react"
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-const Dialog = DialogPrimitive.Root
-
-const DialogTrigger = DialogPrimitive.Trigger
-
-const DialogPortal = DialogPrimitive.Portal
-
-const DialogClose = DialogPrimitive.Close
+const Dialog = DialogPrimitive.Root;
+const DialogTrigger = DialogPrimitive.Trigger;
+const DialogPortal = DialogPrimitive.Portal;
+const DialogClose = DialogPrimitive.Close;
 
 /* -------------------------------- Overlay -------------------------------- */
 
@@ -23,15 +20,17 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-neutral-1000/60",
+      "fixed inset-0 z-50",
+      "bg-neutral-1000/60 dark:bg-neutral-1000/80",
       "motion-safe:data-[state=open]:animate-fade-in",
       "motion-safe:data-[state=closed]:animate-fade-out",
       className,
     )}
     {...props}
   />
-))
-DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
+));
+
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 /* -------------------------------- Content -------------------------------- */
 
@@ -41,25 +40,44 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
+
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg gap-4",
-        "border border-cornsilk-300 bg-cornsilk-100 p-6 shadow-lg rounded-xl",
+        "fixed left-1/2 top-1/2 z-50",
+        "grid w-[95vw] max-w-lg gap-4",
+        "-translate-x-1/2 -translate-y-1/2",
+        "rounded-xl border p-6 shadow-lg",
+
+        // Light mode
+        "border-cornsilk-300 bg-cornsilk-100 text-neutral-900",
+
+        // Dark mode
+        "dark:border-neutral-700 dark:bg-neutral-900 dark:text-cornsilk-100",
+
         "motion-safe:data-[state=open]:animate-dialog-in",
         "motion-safe:data-[state=closed]:animate-dialog-out",
+
         className,
       )}
       {...props}
     >
       {children}
+
       <DialogPrimitive.Close
         className={cn(
-          "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background",
-          "transition-opacity hover:opacity-100",
-          "focus:outline-none focus:ring-2 focus:ring-blush-500 focus:ring-offset-2",
+          "absolute right-4 top-4 rounded-md p-1",
+          "opacity-70 transition-opacity",
+          "hover:opacity-100",
+          "focus:outline-none",
+          "focus:ring-2 focus:ring-blush-500",
+          "focus:ring-offset-2",
           "disabled:pointer-events-none",
+
+          "text-neutral-700 dark:text-cornsilk-300",
+
           "data-[state=open]:bg-cornsilk-200",
+          "dark:data-[state=open]:bg-neutral-800",
         )}
       >
         <X className="h-4 w-4" aria-hidden="true" />
@@ -67,8 +85,9 @@ const DialogContent = React.forwardRef<
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
-))
-DialogContent.displayName = DialogPrimitive.Content.displayName
+));
+
+DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 /* -------------------------------- Header -------------------------------- */
 
@@ -84,8 +103,9 @@ const DialogHeader = React.forwardRef<
     )}
     {...props}
   />
-))
-DialogHeader.displayName = "DialogHeader"
+));
+
+DialogHeader.displayName = "DialogHeader";
 
 /* -------------------------------- Footer -------------------------------- */
 
@@ -96,13 +116,14 @@ const DialogFooter = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
       className,
     )}
     {...props}
   />
-))
-DialogFooter.displayName = "DialogFooter"
+));
+
+DialogFooter.displayName = "DialogFooter";
 
 /* -------------------------------- Title --------------------------------- */
 
@@ -118,8 +139,9 @@ const DialogTitle = React.forwardRef<
     )}
     {...props}
   />
-))
-DialogTitle.displayName = DialogPrimitive.Title.displayName
+));
+
+DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
 /* ------------------------------ Description ----------------------------- */
 
@@ -129,26 +151,42 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-b5 font-inter text-neutral-600", className)}
+    className={cn(
+      "text-b5 font-inter text-neutral-600 dark:text-cornsilk-400",
+      className,
+    )}
     {...props}
   />
-))
-DialogDescription.displayName = DialogPrimitive.Description.displayName
+));
+
+DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 /* -------------------------------- Types --------------------------------- */
 
-type DialogProps = React.ComponentPropsWithoutRef<typeof Dialog>
-type DialogTriggerProps = React.ComponentPropsWithoutRef<typeof DialogTrigger>
-type DialogPortalProps = React.ComponentPropsWithoutRef<typeof DialogPortal>
-type DialogCloseProps = React.ComponentPropsWithoutRef<typeof DialogClose>
-type DialogOverlayProps = React.ComponentPropsWithoutRef<typeof DialogOverlay>
-type DialogContentProps = React.ComponentPropsWithoutRef<typeof DialogContent>
-type DialogHeaderProps = React.ComponentPropsWithoutRef<typeof DialogHeader>
-type DialogFooterProps = React.ComponentPropsWithoutRef<typeof DialogFooter>
-type DialogTitleProps = React.ComponentPropsWithoutRef<typeof DialogTitle>
+type DialogProps = React.ComponentPropsWithoutRef<typeof Dialog>;
+type DialogTriggerProps = React.ComponentPropsWithoutRef<
+  typeof DialogTrigger
+>;
+type DialogPortalProps = React.ComponentPropsWithoutRef<
+  typeof DialogPortal
+>;
+type DialogCloseProps = React.ComponentPropsWithoutRef<
+  typeof DialogClose
+>;
+type DialogOverlayProps = React.ComponentPropsWithoutRef<
+  typeof DialogOverlay
+>;
+type DialogContentProps = React.ComponentPropsWithoutRef<
+  typeof DialogContent
+>;
+type DialogHeaderProps = React.HTMLAttributes<HTMLDivElement>;
+type DialogFooterProps = React.HTMLAttributes<HTMLDivElement>;
+type DialogTitleProps = React.ComponentPropsWithoutRef<
+  typeof DialogTitle
+>;
 type DialogDescriptionProps = React.ComponentPropsWithoutRef<
   typeof DialogDescription
->
+>;
 
 export {
   Dialog,
@@ -161,7 +199,7 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-}
+};
 
 export type {
   DialogProps,
@@ -174,4 +212,4 @@ export type {
   DialogFooterProps,
   DialogTitleProps,
   DialogDescriptionProps,
-}
+};

@@ -21,7 +21,7 @@ const AlertDialogOverlay = React.forwardRef<
   <AlertDialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-neutral-1000/60",
+      "fixed inset-0 z-50 bg-neutral-1000/60 dark:bg-neutral-1000/80",
       "motion-safe:data-[state=open]:animate-fade-in",
       "motion-safe:data-[state=closed]:animate-fade-out",
       className,
@@ -43,7 +43,9 @@ const AlertDialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg gap-4",
+        "-translate-x-1/2 -translate-y-1/2",
         "border border-cornsilk-300 bg-cornsilk-100 p-6 shadow-lg rounded-xl",
+        "text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-cornsilk-100",
         "motion-safe:data-[state=open]:animate-dialog-in",
         "motion-safe:data-[state=closed]:animate-dialog-out",
         className,
@@ -96,7 +98,7 @@ const AlertDialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Title
     ref={ref}
-    className={cn("text-h4 font-fraunces font-semibold", className)}
+    className={cn("text-h4 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100", className)}
     {...props}
   />
 ))
@@ -110,7 +112,7 @@ const AlertDialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Description
     ref={ref}
-    className={cn("text-b5 font-inter text-neutral-600", className)}
+    className={cn("text-b5 font-inter text-neutral-600 dark:text-cornsilk-400", className)}
     {...props}
   />
 ))

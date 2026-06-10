@@ -101,7 +101,7 @@ export function OverlayShowcase() {
           <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex items-center justify-center min-h-[150px]">
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive">Delete Account</Button>
+                <Button variant="primary">Delete Account</Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>

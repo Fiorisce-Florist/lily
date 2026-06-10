@@ -27,7 +27,7 @@ const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
   ({ className, ...props }, ref) => (
     <thead
       ref={ref}
-      className={cn("[&_tr]:border-b [&_tr]:border-cornsilk-300", className)}
+      className={cn("[&_tr]:border-b [&_tr]:border-cornsilk-300 dark:[&_tr]:border-neutral-800", className)}
       {...props}
     />
   ),
@@ -58,7 +58,7 @@ const TableFooter = React.forwardRef<HTMLTableSectionElement, TableFooterProps>(
     <tfoot
       ref={ref}
       className={cn(
-        "border-t border-cornsilk-300 bg-cornsilk-200/50 font-medium [&>tr]:last:border-b-0",
+        "border-t border-cornsilk-300 bg-cornsilk-200/50 font-medium [&>tr]:last:border-b-0 dark:border-neutral-800 dark:bg-neutral-800/50",
         className,
       )}
       {...props}
@@ -76,7 +76,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
     <tr
       ref={ref}
       className={cn(
-        "border-b border-cornsilk-300 transition-colors hover:bg-cornsilk-200/50 data-[state=selected]:bg-cornsilk-200",
+        "border-b border-cornsilk-300 transition-colors hover:bg-cornsilk-200/50 data-[state=selected]:bg-cornsilk-200 dark:border-neutral-800 dark:hover:bg-neutral-800/50 dark:data-[state=selected]:bg-neutral-800",
         className,
       )}
       {...props}
@@ -94,7 +94,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
     <th
       ref={ref}
       className={cn(
-        "h-12 px-4 text-left align-middle font-inter font-medium text-neutral-600 [&:has([role=checkbox])]:pr-0",
+        "h-12 px-4 text-left align-middle font-inter font-medium text-neutral-600 has-[[role=checkbox]]:pr-0 dark:text-neutral-400",
         className,
       )}
       {...props}
@@ -112,7 +112,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
     <td
       ref={ref}
       className={cn(
-        "p-4 align-middle [&:has([role=checkbox])]:pr-0",
+        "p-4 align-middle has-[[role=checkbox]]:pr-0",
         className,
       )}
       {...props}
@@ -130,7 +130,7 @@ const TableCaption = React.forwardRef<HTMLTableCaptionElement, TableCaptionProps
     <caption
       ref={ref}
       className={cn(
-        "mt-4 text-b5 font-inter text-neutral-500",
+        "mt-4 text-b5 font-inter text-neutral-500 dark:text-neutral-400",
         className,
       )}
       {...props}

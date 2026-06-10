@@ -32,22 +32,22 @@ function Calendar({
         table: "w-full border-collapse space-y-1",
         head_row: "flex",
         head_cell:
-          "text-neutral-500 rounded-md w-9 font-inter font-normal text-b6",
+          "text-neutral-500 rounded-md w-9 font-inter font-normal text-b6 dark:text-neutral-400",
         row: "flex w-full mt-2",
-        cell: "h-9 w-9 text-center text-b5 p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-cornsilk-200/50 [&:has([aria-selected])]:bg-cornsilk-200 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+        cell: "h-9 w-9 text-center text-b5 p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day: cn(
           buttonVariants({ variant: "ghost" }),
           "h-9 w-9 p-0 font-inter font-normal aria-selected:opacity-100"
         ),
         day_range_end: "day-range-end",
         day_selected:
-          "bg-blush-500 text-cornsilk-100 hover:bg-blush-500 hover:text-cornsilk-100 focus:bg-blush-500 focus:text-cornsilk-100",
-        day_today: "bg-cornsilk-200 text-neutral-900",
+          "bg-blush-500 text-cornsilk-100 hover:bg-blush-500 hover:text-cornsilk-100 focus:bg-blush-500 focus:text-cornsilk-100 dark:bg-blush-600 dark:hover:bg-blush-600 dark:focus:bg-blush-600",
+        day_today: "bg-cornsilk-200 text-neutral-900 dark:bg-neutral-800 dark:text-cornsilk-100",
         day_outside:
-          "day-outside text-neutral-500 aria-selected:bg-cornsilk-200/50 aria-selected:text-neutral-500",
-        day_disabled: "text-neutral-400 opacity-50",
+          "day-outside text-neutral-500 aria-selected:bg-cornsilk-200/50 aria-selected:text-neutral-500 dark:text-neutral-400 dark:aria-selected:bg-neutral-800/50 dark:aria-selected:text-neutral-400",
+        day_disabled: "text-neutral-400 opacity-50 dark:text-neutral-600",
         day_range_middle:
-          "aria-selected:bg-cornsilk-200 aria-selected:text-neutral-900",
+          "aria-selected:bg-cornsilk-200 aria-selected:text-neutral-900 dark:aria-selected:bg-neutral-800 dark:aria-selected:text-cornsilk-100",
         day_hidden: "invisible",
         ...classNames,
       }}

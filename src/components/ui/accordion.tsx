@@ -36,7 +36,8 @@ const AccordionItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
-    className={cn("border-b border-cornsilk-300", className)}
+    // Ditambahkan border dark mode menggunakan warna warm stone gray (neutral-800)
+    className={cn("border-b border-cornsilk-300 dark:border-neutral-800", className)}
     {...props}
   />
 ))
@@ -52,14 +53,19 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between py-4 text-b4 font-inter font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+        // 1. Warna teks default disesuaikan (neutral-900 / neutral-100)
+        // 2. Transisi hover halus ke warna camel-600 / camel-400
+        // 3. Focus state (aksesibilitas) yang rapi menggunakan warna camel
+        // 4. Ketika open, ikon chevron berputar sekaligus berubah warna menjadi camel
+        "flex flex-1 items-center justify-between py-4 text-b4 font-inter font-medium text-neutral-900 dark:text-neutral-100 transition-all duration-200 hover:text-camel-600 dark:hover:text-camel-400 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-camel-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-1000 rounded-md [&[data-state=open]>svg]:rotate-180 [&[data-state=open]>svg]:text-camel-600 dark:data-[state=open]:text-camel-400 data-[state=open]:text-camel-600 dark:[&[data-state=open]>svg]:text-camel-400",
         className,
       )}
       {...props}
     >
       {children}
       <ChevronDown
-        className="h-4 w-4 shrink-0 motion-safe:transition-transform motion-safe:duration-200"
+        // Mengurangi kepekatan warna ikon default (neutral-400) agar fokus utama tetap pada teks
+        className="h-4 w-4 shrink-0 text-neutral-400 transition-transform duration-200 ease-in-out"
         aria-hidden="true"
       />
     </AccordionPrimitive.Trigger>
@@ -78,7 +84,10 @@ const AccordionContent = React.forwardRef<
     className="overflow-hidden text-b5 font-inter data-[state=closed]:motion-safe:animate-accordion-up data-[state=open]:motion-safe:animate-accordion-down"
     {...props}
   >
-    <div className={cn("pb-4 pt-0", className)}>{children}</div>
+    {/* Mengubah warna teks konten menjadi sedikit lebih lembut (neutral-600 / neutral-400) demi kenyamanan membaca */}
+    <div className={cn("pb-4 pt-0 text-neutral-600 dark:text-neutral-400 leading-relaxed", className)}>
+      {children}
+    </div>
   </AccordionPrimitive.Content>
 ))
 AccordionContent.displayName = AccordionPrimitive.Content.displayName

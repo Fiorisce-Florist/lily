@@ -65,7 +65,7 @@ export function FormShowcase() {
           </h3>
           <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
             <Select>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-45">
                 <SelectValue placeholder="Select a flower" />
               </SelectTrigger>
               <SelectContent>
@@ -132,7 +132,7 @@ export function FormShowcase() {
             Tabs
           </h3>
           <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
-            <Tabs defaultValue="account" className="w-[400px]">
+            <Tabs defaultValue="account" className="w-100">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="account">Account</TabsTrigger>
                 <TabsTrigger value="password">Password</TabsTrigger>
@@ -190,7 +190,7 @@ export function FormShowcase() {
               <TableCaption>A list of your recent invoices.</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[100px]">Invoice</TableHead>
+                  <TableHead className="w-25">Invoice</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Method</TableHead>
                   <TableHead className="text-right">Amount</TableHead>
