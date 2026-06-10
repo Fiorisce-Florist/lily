@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  
+  /* ── Camel ─────────────────────────────────────────────── */
+  --color-camel-100: rgba(255, 250, 246, 1);
+  --color-camel-200: rgba(255, 237, 220, 1);
+  --color-camel-300: rgba(249, 219, 190, 1);
+  --color-camel-400: rgba(243, 201, 160, 1);
+  --color-camel-500: rgba(214, 174, 135, 1);
+  --color-camel-600: rgba(185, 148, 112, 1);
+  --color-camel-700: rgba(156, 123, 90, 1);
+  --color-camel-800: rgba(127, 98, 70, 1);
+  --color-camel-900: rgba(98, 74, 51, 1);
+  --color-camel-1000: rgba(68, 51, 34, 1);
+
+  /* ── Cornsilk ───────────────────────────────────────────── */
+  --color-cornsilk-100: rgba(255, 254, 252, 1);
+  --color-cornsilk-200: rgba(254, 250, 224, 1);
+  --color-cornsilk-300: rgba(231, 227, 200, 1);
+  --color-cornsilk-400: rgba(209, 204, 177, 1);
+  --color-cornsilk-500: rgba(186, 182, 154, 1);
+  --color-cornsilk-600: rgba(163, 159, 132, 1);
+  --color-cornsilk-700: rgba(141, 137, 112, 1);
+  --color-cornsilk-800: rgba(118, 114, 91, 1);
+  --color-cornsilk-900: rgba(95, 92, 72, 1);
+  --color-cornsilk-1000: rgba(73, 70, 54, 1);
+
+  /* ── Olive ──────────────────────────────────────────────── */
+  --color-olive-100: rgba(253, 255, 251, 1);
+  --color-olive-200: rgba(244, 255, 235, 1);
+  --color-olive-300: rgba(235, 255, 219, 1);
+  --color-olive-400: rgba(217, 238, 200, 1);
+  --color-olive-500: rgba(192, 213, 174, 1);
+  --color-olive-600: rgba(167, 187, 150, 1);
+  --color-olive-700: rgba(142, 162, 126, 1);
+  --color-olive-800: rgba(118, 136, 104, 1);
+  --color-olive-900: rgba(95, 111, 82, 1);
+  --color-olive-1000: rgba(72, 86, 61, 1);
+
+  /* ── Blush ───────────────────────────────────────────────── */
+  --color-blush-100: rgba(255, 248, 248, 1);
+  --color-blush-200: rgba(255, 217, 217, 1);
+  --color-blush-300: rgba(255, 186, 186, 1);
+  --color-blush-400: rgba(232, 165, 165, 1);
+  --color-blush-500: rgba(206, 143, 143, 1);
+  --color-blush-600: rgba(181, 121, 121, 1);
+  --color-blush-700: rgba(155, 101, 101, 1);
+  --color-blush-800: rgba(130, 82, 82, 1);
+  --color-blush-900: rgba(105, 64, 64, 1);
+  --color-blush-1000: rgba(79, 47, 47, 1);
+
+  /* ── Font Families ──────────────────────────────────────── */
+  /* → font-inter   font-fraunces   font-jetbrains            */
+  --font-inter: "Inter", Helvetica, sans-serif;
+  --font-fraunces: "Fraunces", Helvetica, serif;
+  --font-jetbrains: "JetBrains Mono", Helvetica, monospace;
+
+  /* ── Body Text Sizes ────────────────────────────────────── */
+  /* → text-b1 … text-b6                                      */
+  --text-b1: 1.9375rem; /* 31px */
+  --text-b2: 1.5625rem; /* 25px */
+  --text-b3: 1.25rem; /* 20px */
+  --text-b4: 1rem; /* 16px */
+  --text-b5: 0.8125rem; /* 13px */
+  --text-b6: 0.625rem; /* 10px */
+
+  /* ── Heading Text Sizes ─────────────────────────────────── */
+  /* → text-h1 … text-h7                                      */
+  --text-h1: 2.4375rem; /* 39px */
+  --text-h2: 1.9375rem; /* 31px */
+  --text-h3: 1.5625rem; /* 25px */
+  --text-h4: 1.25rem; /* 20px */
+  --text-h5: 1rem; /* 16px */
+  --text-h6: 0.8125rem; /* 13px */
+  --text-h7: 0.625rem; /* 10px */
+
+  /* ── Mono Text Sizes ────────────────────────────────────── */
+  /* → text-m1 … text-m3                                      */
+  --text-m1: 1rem; /* 16px */
+  --text-m2: 0.8125rem; /* 13px */
+  --text-m3: 0.625rem; /* 10px */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
