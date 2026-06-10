@@ -158,7 +158,7 @@ export function CompoundShowcase() {
             <ScrollArea className="h-72 w-48 rounded-md border border-cornsilk-400 dark:border-neutral-800">
               <div className="p-4">
                 <h4 className="mb-4 text-b4 font-inter font-medium leading-none">Tags</h4>
-                {Array.from({ length: 50 }).map((_, i, a) => (
+                {Array.from({ length: 50 }).map((_, i) => (
                   <div key={i} className="text-b5 text-neutral-700 dark:text-neutral-300">
                     Flower Tag {i + 1}
                     <Separator className="my-2" />

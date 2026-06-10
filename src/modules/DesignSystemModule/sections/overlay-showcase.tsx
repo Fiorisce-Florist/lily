@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Button } from "@/components/ui/button"
+import * as React from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import {
   Sheet,
   SheetContent,
@@ -28,17 +28,17 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,8 +52,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Settings, User, CreditCard, LogOut, ChevronRight } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import { Settings, User, CreditCard, LogOut } from "lucide-react";
 
 export function OverlayShowcase() {
   return (
@@ -63,7 +63,8 @@ export function OverlayShowcase() {
           Overlays & Menus
         </h2>
         <p className="text-b4 text-neutral-600 dark:text-neutral-400 mb-8 max-w-2xl">
-          Interactive components that float above the main content like Dialogs, Dropdowns, and Sheets.
+          Interactive components that float above the main content like Dialogs,
+          Dropdowns, and Sheets.
         </p>
       </div>
 
@@ -73,7 +74,7 @@ export function OverlayShowcase() {
           <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
             Dialog
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex items-center justify-center min-h-[150px]">
+          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex items-center justify-center min-h-37.5">
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="outline">Open Dialog</Button>
@@ -82,11 +83,13 @@ export function OverlayShowcase() {
                 <DialogHeader>
                   <DialogTitle>Edit profile</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you're done.
+                    Make changes to your profile here. Click save when you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                  <div className="text-b4 text-neutral-700 dark:text-neutral-300">Form content would go here...</div>
+                  <div className="text-b4 text-neutral-700 dark:text-neutral-300">
+                    Form content would go here...
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -107,8 +110,8 @@ export function OverlayShowcase() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete your account
-                    and remove your data from our servers.
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -133,11 +136,14 @@ export function OverlayShowcase() {
                     {side}
                   </Button>
                 </SheetTrigger>
-                <SheetContent side={side as "top" | "right" | "bottom" | "left"}>
+                <SheetContent
+                  side={side as "top" | "right" | "bottom" | "left"}
+                >
                   <SheetHeader>
                     <SheetTitle>Edit profile</SheetTitle>
                     <SheetDescription>
-                      Make changes to your profile here. Click save when you're done.
+                      Make changes to your profile here. Click save when you&apos;re
+                      done.
                     </SheetDescription>
                   </SheetHeader>
                 </SheetContent>
@@ -159,7 +165,9 @@ export function OverlayShowcase() {
               <PopoverContent className="w-80">
                 <div className="grid gap-4">
                   <div className="space-y-2">
-                    <h4 className="font-medium leading-none text-b4">Dimensions</h4>
+                    <h4 className="font-medium leading-none text-b4">
+                      Dimensions
+                    </h4>
                     <p className="text-b5 text-neutral-500">
                       Set the dimensions for the layer.
                     </p>
@@ -250,5 +258,5 @@ export function OverlayShowcase() {
         </div>
       </div>
     </section>
-  )
+  );
 }
