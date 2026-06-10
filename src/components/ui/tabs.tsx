@@ -20,8 +20,8 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center rounded-lg bg-cornsilk-200 p-1 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400",
-      className,
+      "bg-cornsilk-200 inline-flex h-10 items-center justify-center rounded-lg p-1 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400",
+      className
     )}
     {...props}
   />
@@ -41,8 +41,8 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-b5 font-inter font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-cornsilk-100 data-[state=active]:text-neutral-900 data-[state=active]:shadow-sm dark:data-[state=active]:bg-neutral-900 dark:data-[state=active]:text-cornsilk-100",
-      className,
+      "text-b5 font-inter ring-offset-background focus-visible:ring-blush-500 data-[state=active]:bg-cornsilk-100 dark:data-[state=active]:text-cornsilk-100 inline-flex items-center justify-center rounded-md px-3 py-1.5 font-medium whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-neutral-900 data-[state=active]:shadow-sm dark:data-[state=active]:bg-neutral-900",
+      className
     )}
     {...props}
   />
@@ -62,8 +62,8 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2",
-      className,
+      "ring-offset-background focus-visible:ring-blush-500 mt-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+      className
     )}
     {...props}
   />

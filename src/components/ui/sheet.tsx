@@ -24,10 +24,10 @@ const SheetOverlay = React.forwardRef<
   <SheetPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-neutral-1000/60 dark:bg-neutral-1000/80",
+      "bg-neutral-1000/60 dark:bg-neutral-1000/80 fixed inset-0 z-50",
       "motion-safe:data-[state=open]:animate-fade-in",
       "motion-safe:data-[state=closed]:animate-fade-out",
-      className,
+      className
     )}
     {...props}
   />
@@ -52,13 +52,14 @@ const sheetVariants = cva(
     defaultVariants: {
       side: "right",
     },
-  },
+  }
 )
 
 /* -------------------------------- Content -------------------------------- */
 
 interface SheetContentProps
-  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+  extends
+    React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {}
 
 const SheetContent = React.forwardRef<
@@ -75,11 +76,11 @@ const SheetContent = React.forwardRef<
       {children}
       <SheetPrimitive.Close
         className={cn(
-          "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background",
+          "ring-offset-background absolute top-4 right-4 rounded-sm opacity-70",
           "transition-opacity hover:opacity-100",
-          "focus:outline-none focus:ring-2 focus:ring-blush-500 focus:ring-offset-2 text-neutral-700 dark:text-cornsilk-300",
+          "focus:ring-blush-500 dark:text-cornsilk-300 text-neutral-700 focus:ring-2 focus:ring-offset-2 focus:outline-none",
           "disabled:pointer-events-none",
-          "data-[state=open]:bg-cornsilk-200 dark:data-[state=open]:bg-neutral-800",
+          "data-[state=open]:bg-cornsilk-200 dark:data-[state=open]:bg-neutral-800"
         )}
       >
         <X className="h-4 w-4" aria-hidden="true" />
@@ -100,7 +101,7 @@ const SheetHeader = React.forwardRef<
     ref={ref}
     className={cn(
       "flex flex-col space-y-2 text-center sm:text-left",
-      className,
+      className
     )}
     {...props}
   />
@@ -117,7 +118,7 @@ const SheetFooter = React.forwardRef<
     ref={ref}
     className={cn(
       "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-      className,
+      className
     )}
     {...props}
   />
@@ -146,7 +147,10 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Description
     ref={ref}
-    className={cn("text-b5 font-inter text-neutral-600 dark:text-cornsilk-400", className)}
+    className={cn(
+      "text-b5 font-inter dark:text-cornsilk-400 text-neutral-600",
+      className
+    )}
     {...props}
   />
 ))

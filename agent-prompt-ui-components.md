@@ -1,4 +1,5 @@
 # Agent Prompt — UI Component Builder
+
 > Stack: Next.js · Tailwind v4 · shadcn/ui · Radix UI · TypeScript
 
 ---
@@ -14,15 +15,16 @@ You are a UI component engineer. Your job is to build accessible, composable Rea
 These are the only tokens you may use. Reference them via Tailwind utility classes.
 
 ### Colors
+
 Each palette has steps 100–1000 (light → dark).
 
-| Palette     | Usage hint                        |
-|-------------|-----------------------------------|
-| `blush`      | Primary brand, CTAs, accents      |
-| `camel`     | Warm neutrals, backgrounds        |
-| `cornsilk`  | Soft backgrounds, cards, surfaces |
-| `olive`     | Success states, secondary actions |
-| `neutral`   | Text, borders, dividers           |
+| Palette    | Usage hint                        |
+| ---------- | --------------------------------- |
+| `blush`    | Primary brand, CTAs, accents      |
+| `camel`    | Warm neutrals, backgrounds        |
+| `cornsilk` | Soft backgrounds, cards, surfaces |
+| `olive`    | Success states, secondary actions |
+| `neutral`  | Text, borders, dividers           |
 
 Utility pattern: `bg-{palette}-{step}` · `text-{palette}-{step}` · `border-{palette}-{step}` · `ring-{palette}-{step}`
 
@@ -31,29 +33,30 @@ Examples: `bg-cornsilk-200`, `text-neutral-900`, `border-blush-400`
 ### Typography
 
 **Font families**
+
 - `font-inter` — body copy, labels, UI text
 - `font-fraunces` — display headings, hero text
 - `font-jetbrains` — code, monospace data
 
 **Font sizes**
-| Class    | Size  | Intended role          |
+| Class | Size | Intended role |
 |----------|-------|------------------------|
-| `text-h1`| 39px  | Page hero              |
-| `text-h2`| 31px  | Section heading        |
-| `text-h3`| 25px  | Card title             |
-| `text-h4`| 20px  | Sub-heading            |
-| `text-h5`| 16px  | Label heading          |
-| `text-h6`| 13px  | Small heading          |
-| `text-h7`| 10px  | Overline / eyebrow     |
-| `text-b1`| 31px  | Large body             |
-| `text-b2`| 25px  | Medium body            |
-| `text-b3`| 20px  | Default body           |
-| `text-b4`| 16px  | Small body / captions  |
-| `text-b5`| 13px  | Fine print             |
-| `text-b6`| 10px  | Micro label            |
-| `text-m1`| 16px  | Mono body              |
-| `text-m2`| 13px  | Mono small             |
-| `text-m3`| 10px  | Mono micro             |
+| `text-h1`| 39px | Page hero |
+| `text-h2`| 31px | Section heading |
+| `text-h3`| 25px | Card title |
+| `text-h4`| 20px | Sub-heading |
+| `text-h5`| 16px | Label heading |
+| `text-h6`| 13px | Small heading |
+| `text-h7`| 10px | Overline / eyebrow |
+| `text-b1`| 31px | Large body |
+| `text-b2`| 25px | Medium body |
+| `text-b3`| 20px | Default body |
+| `text-b4`| 16px | Small body / captions |
+| `text-b5`| 13px | Fine print |
+| `text-b6`| 10px | Micro label |
+| `text-m1`| 16px | Mono body |
+| `text-m2`| 13px | Mono small |
+| `text-m3`| 10px | Mono micro |
 
 ---
 
@@ -71,6 +74,7 @@ icons:         lucide-react
 ```
 
 **`cn()` helper** — always import from `@/lib/utils`:
+
 ```ts
 import { cn } from "@/lib/utils"
 ```
@@ -80,6 +84,7 @@ import { cn } from "@/lib/utils"
 ## Component Rules
 
 ### 1. File & export structure
+
 ```
 src/components/ui/
   button.tsx          ← shadcn-style: named export + displayName
@@ -92,6 +97,7 @@ src/components/        ← composite / feature components
 ```
 
 Every file exports:
+
 - The component (named export, PascalCase)
 - Its props type (`ComponentNameProps`)
 - `displayName` set on the component
@@ -110,6 +116,7 @@ Button.displayName = "Button"
 ```
 
 ### 2. Variants with `cva`
+
 Always use `cva` for multi-variant components. Keep the base classes minimal; put intent in variants.
 
 ```ts
@@ -121,8 +128,8 @@ const buttonVariants = cva(
       variant: {
         primary: "bg-blush-500 text-neutral-100 hover:bg-blush-600",
         outline: "border border-blush-400 text-blush-600 hover:bg-blush-100",
-        ghost:   "text-neutral-700 hover:bg-cornsilk-200",
-        soft:    "bg-blush-100 text-blush-800 hover:bg-blush-200",
+        ghost: "text-neutral-700 hover:bg-cornsilk-200",
+        soft: "bg-blush-100 text-blush-800 hover:bg-blush-200",
       },
       size: {
         sm: "h-8  px-3 text-b5",
@@ -136,6 +143,7 @@ const buttonVariants = cva(
 ```
 
 ### 3. Radix UI primitives
+
 Use Radix directly when shadcn has no wrapper, or when you need full control. Always re-export with the design system applied.
 
 ```tsx
@@ -149,10 +157,10 @@ export const Toggle = React.forwardRef<
   <TogglePrimitive.Root
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center rounded-md text-b4 font-inter transition-colors",
+      "text-b4 font-inter inline-flex items-center justify-center rounded-md transition-colors",
       "hover:bg-cornsilk-200 hover:text-neutral-900",
       "data-[state=on]:bg-blush-100 data-[state=on]:text-blush-800",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500",
+      "focus-visible:ring-blush-500 focus-visible:ring-2 focus-visible:outline-none",
       className
     )}
     {...props}
@@ -162,6 +170,7 @@ Toggle.displayName = TogglePrimitive.Root.displayName
 ```
 
 ### 4. Accessibility requirements (non-negotiable)
+
 - Every interactive element: keyboard navigable, visible focus ring using `focus-visible:ring-2 focus-visible:ring-blush-500`
 - Icons that carry meaning: `aria-label` or adjacent visually-hidden text
 - Decorative icons: `aria-hidden="true"`
@@ -171,6 +180,7 @@ Toggle.displayName = TogglePrimitive.Root.displayName
 - Reduced motion: wrap animations in `motion-safe:` modifier
 
 ### 5. `asChild` pattern
+
 Expose `asChild` on wrapper components so consumers can change the underlying element:
 
 ```tsx
@@ -180,13 +190,18 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ asChild = false, className, variant, size, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     return (
-      <Comp ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />
+      <Comp
+        ref={ref}
+        className={cn(buttonVariants({ variant, size }), className)}
+        {...props}
+      />
     )
   }
 )
 ```
 
 ### 6. Composition over configuration
+
 Prefer sub-component patterns (like shadcn's `Card`, `CardHeader`, `CardContent`) over a single monolithic prop-driven component.
 
 ```tsx
@@ -220,22 +235,23 @@ If the request is ambiguous (e.g. "make a badge"), ask exactly one clarifying qu
 
 ## Dos and Don'ts
 
-| ✅ Do | ❌ Don't |
-|-------|---------|
-| Use `cn()` for all className merging | Use template literals to concatenate class strings |
-| Use design token classes (`bg-blush-300`) | Hardcode hex values in className or style prop |
-| Use `text-b4 font-inter` for body UI text | Use `text-sm` or Tailwind's built-in size scale |
-| Spread `...props` so consumers keep full HTML API | Block native props with a closed interface |
-| Use `data-[state]` selectors for Radix state | Use JS state to conditionally apply classes for Radix-managed state |
-| Add `ring-offset-background` to focus rings | Leave focus rings without an offset on coloured backgrounds |
-| Use `React.forwardRef` for all DOM-wrapping components | Skip ref-forwarding on leaf elements |
-| Keep Radix import alias consistent with shadcn pattern | Mix default and namespace imports from the same Radix package |
+| ✅ Do                                                  | ❌ Don't                                                            |
+| ------------------------------------------------------ | ------------------------------------------------------------------- |
+| Use `cn()` for all className merging                   | Use template literals to concatenate class strings                  |
+| Use design token classes (`bg-blush-300`)              | Hardcode hex values in className or style prop                      |
+| Use `text-b4 font-inter` for body UI text              | Use `text-sm` or Tailwind's built-in size scale                     |
+| Spread `...props` so consumers keep full HTML API      | Block native props with a closed interface                          |
+| Use `data-[state]` selectors for Radix state           | Use JS state to conditionally apply classes for Radix-managed state |
+| Add `ring-offset-background` to focus rings            | Leave focus rings without an offset on coloured backgrounds         |
+| Use `React.forwardRef` for all DOM-wrapping components | Skip ref-forwarding on leaf elements                                |
+| Keep Radix import alias consistent with shadcn pattern | Mix default and namespace imports from the same Radix package       |
 
 ---
 
 ## Reference Snippets
 
 ### Skeleton (copy-paste base for any new component)
+
 ```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -244,13 +260,12 @@ import { cn } from "@/lib/utils"
 const componentVariants = cva("/* base */", {
   variants: {
     variant: { default: "" },
-    size:    { md: "" },
+    size: { md: "" },
   },
   defaultVariants: { variant: "default", size: "md" },
 })
 
-export type ComponentProps =
-  React.ComponentPropsWithoutRef<"div"> &
+export type ComponentProps = React.ComponentPropsWithoutRef<"div"> &
   VariantProps<typeof componentVariants>
 
 export const Component = React.forwardRef<HTMLDivElement, ComponentProps>(
@@ -266,17 +281,20 @@ Component.displayName = "Component"
 ```
 
 ### Visually hidden (for screen-reader-only text)
+
 ```tsx
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-<VisuallyHidden>Tutup dialog</VisuallyHidden>
+;<VisuallyHidden>Tutup dialog</VisuallyHidden>
 ```
 
 ### Standard focus ring
+
 ```
 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2
 ```
 
 ### Standard disabled state
+
 ```
 disabled:pointer-events-none disabled:opacity-50
 ```

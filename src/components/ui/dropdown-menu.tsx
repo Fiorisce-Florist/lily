@@ -29,10 +29,10 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-default select-none items-center rounded-lg px-2 py-1.5 text-b5 font-inter outline-none",
+      "text-b5 font-inter flex cursor-default items-center rounded-lg px-2 py-1.5 outline-none select-none",
       "focus:bg-cornsilk-200 data-[state=open]:bg-cornsilk-200 dark:focus:bg-neutral-800 dark:data-[state=open]:bg-neutral-800",
       inset && "pl-8",
-      className,
+      className
     )}
     {...props}
   >
@@ -52,10 +52,10 @@ const DropdownMenuSubContent = React.forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      "z-50 min-w-[8rem] overflow-hidden rounded-xl border border-cornsilk-300 bg-cornsilk-100 p-1 text-neutral-900 shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:text-cornsilk-100",
+      "border-cornsilk-300 bg-cornsilk-100 dark:text-cornsilk-100 z-50 min-w-[8rem] overflow-hidden rounded-xl border p-1 text-neutral-900 shadow-md dark:border-neutral-700 dark:bg-neutral-900",
       "motion-safe:data-[state=open]:animate-fade-in",
       "motion-safe:data-[state=closed]:animate-fade-out",
-      className,
+      className
     )}
     {...props}
   />
@@ -74,10 +74,10 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-xl border border-cornsilk-300 bg-cornsilk-100 p-1 text-neutral-900 shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:text-cornsilk-100",
+        "border-cornsilk-300 bg-cornsilk-100 dark:text-cornsilk-100 z-50 min-w-[8rem] overflow-hidden rounded-xl border p-1 text-neutral-900 shadow-md dark:border-neutral-700 dark:bg-neutral-900",
         "motion-safe:data-[state=open]:animate-fade-in",
         "motion-safe:data-[state=closed]:animate-fade-out",
-        className,
+        className
       )}
       {...props}
     />
@@ -96,12 +96,12 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-lg px-2 py-1.5 text-b5 font-inter outline-none transition-colors",
-      "focus:bg-cornsilk-200 focus:text-neutral-900 dark:focus:bg-neutral-800 dark:focus:text-cornsilk-100",
+      "text-b5 font-inter relative flex cursor-default items-center gap-2 rounded-lg px-2 py-1.5 transition-colors outline-none select-none",
+      "focus:bg-cornsilk-200 dark:focus:text-cornsilk-100 focus:text-neutral-900 dark:focus:bg-neutral-800",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       "[&>svg]:size-4 [&>svg]:shrink-0",
       inset && "pl-8",
-      className,
+      className
     )}
     {...props}
   />
@@ -117,11 +117,11 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-lg py-1.5 pl-8 pr-2 text-b5 font-inter outline-none transition-colors",
-      "focus:bg-cornsilk-200 focus:text-neutral-900 dark:focus:bg-neutral-800 dark:focus:text-cornsilk-100",
+      "text-b5 font-inter relative flex cursor-default items-center gap-2 rounded-lg py-1.5 pr-2 pl-8 transition-colors outline-none select-none",
+      "focus:bg-cornsilk-200 dark:focus:text-cornsilk-100 focus:text-neutral-900 dark:focus:bg-neutral-800",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       "[&>svg]:size-4 [&>svg]:shrink-0",
-      className,
+      className
     )}
     checked={checked}
     {...props}
@@ -146,11 +146,11 @@ const DropdownMenuRadioItem = React.forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-lg py-1.5 pl-8 pr-2 text-b5 font-inter outline-none transition-colors",
-      "focus:bg-cornsilk-200 focus:text-neutral-900 dark:focus:bg-neutral-800 dark:focus:text-cornsilk-100",
+      "text-b5 font-inter relative flex cursor-default items-center gap-2 rounded-lg py-1.5 pr-2 pl-8 transition-colors outline-none select-none",
+      "focus:bg-cornsilk-200 dark:focus:text-cornsilk-100 focus:text-neutral-900 dark:focus:bg-neutral-800",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       "[&>svg]:size-4 [&>svg]:shrink-0",
-      className,
+      className
     )}
     {...props}
   >
@@ -175,9 +175,9 @@ const DropdownMenuLabel = React.forwardRef<
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn(
-      "px-2 py-1.5 text-b5 font-inter font-semibold",
+      "text-b5 font-inter px-2 py-1.5 font-semibold",
       inset && "pl-8",
-      className,
+      className
     )}
     {...props}
   />
@@ -192,7 +192,10 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 my-1 h-[1px] bg-cornsilk-300 dark:bg-neutral-800", className)}
+    className={cn(
+      "bg-cornsilk-300 -mx-1 my-1 h-[1px] dark:bg-neutral-800",
+      className
+    )}
     {...props}
   />
 ))
@@ -206,8 +209,8 @@ const DropdownMenuShortcut = ({
 }: React.HTMLAttributes<HTMLSpanElement>) => (
   <span
     className={cn(
-      "ml-auto text-b6 tracking-widest text-neutral-500 dark:text-neutral-400",
-      className,
+      "text-b6 ml-auto tracking-widest text-neutral-500 dark:text-neutral-400",
+      className
     )}
     {...props}
   />
@@ -226,7 +229,9 @@ type DropdownMenuGroupProps = React.ComponentPropsWithoutRef<
 type DropdownMenuPortalProps = React.ComponentPropsWithoutRef<
   typeof DropdownMenuPortal
 >
-type DropdownMenuSubProps = React.ComponentPropsWithoutRef<typeof DropdownMenuSub>
+type DropdownMenuSubProps = React.ComponentPropsWithoutRef<
+  typeof DropdownMenuSub
+>
 type DropdownMenuRadioGroupProps = React.ComponentPropsWithoutRef<
   typeof DropdownMenuRadioGroup
 >

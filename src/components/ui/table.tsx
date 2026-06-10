@@ -11,11 +11,11 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
     <div className="relative w-full overflow-auto">
       <table
         ref={ref}
-        className={cn("w-full caption-bottom text-b5 font-inter", className)}
+        className={cn("text-b5 font-inter w-full caption-bottom", className)}
         {...props}
       />
     </div>
-  ),
+  )
 )
 Table.displayName = "Table"
 
@@ -27,10 +27,13 @@ const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
   ({ className, ...props }, ref) => (
     <thead
       ref={ref}
-      className={cn("[&_tr]:border-b [&_tr]:border-cornsilk-300 dark:[&_tr]:border-neutral-800", className)}
+      className={cn(
+        "[&_tr]:border-cornsilk-300 [&_tr]:border-b dark:[&_tr]:border-neutral-800",
+        className
+      )}
       {...props}
     />
-  ),
+  )
 )
 TableHeader.displayName = "TableHeader"
 
@@ -45,7 +48,7 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
       className={cn("[&_tr:last-child]:border-0", className)}
       {...props}
     />
-  ),
+  )
 )
 TableBody.displayName = "TableBody"
 
@@ -58,12 +61,12 @@ const TableFooter = React.forwardRef<HTMLTableSectionElement, TableFooterProps>(
     <tfoot
       ref={ref}
       className={cn(
-        "border-t border-cornsilk-300 bg-cornsilk-200/50 font-medium [&>tr]:last:border-b-0 dark:border-neutral-800 dark:bg-neutral-800/50",
-        className,
+        "border-cornsilk-300 bg-cornsilk-200/50 border-t font-medium dark:border-neutral-800 dark:bg-neutral-800/50 [&>tr]:last:border-b-0",
+        className
       )}
       {...props}
     />
-  ),
+  )
 )
 TableFooter.displayName = "TableFooter"
 
@@ -76,12 +79,12 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
     <tr
       ref={ref}
       className={cn(
-        "border-b border-cornsilk-300 transition-colors hover:bg-cornsilk-200/50 data-[state=selected]:bg-cornsilk-200 dark:border-neutral-800 dark:hover:bg-neutral-800/50 dark:data-[state=selected]:bg-neutral-800",
-        className,
+        "border-cornsilk-300 hover:bg-cornsilk-200/50 data-[state=selected]:bg-cornsilk-200 border-b transition-colors dark:border-neutral-800 dark:hover:bg-neutral-800/50 dark:data-[state=selected]:bg-neutral-800",
+        className
       )}
       {...props}
     />
-  ),
+  )
 )
 TableRow.displayName = "TableRow"
 
@@ -94,12 +97,12 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
     <th
       ref={ref}
       className={cn(
-        "h-12 px-4 text-left align-middle font-inter font-medium text-neutral-600 has-[[role=checkbox]]:pr-0 dark:text-neutral-400",
-        className,
+        "font-inter h-12 px-4 text-left align-middle font-medium text-neutral-600 has-[[role=checkbox]]:pr-0 dark:text-neutral-400",
+        className
       )}
       {...props}
     />
-  ),
+  )
 )
 TableHead.displayName = "TableHead"
 
@@ -111,13 +114,10 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
   ({ className, ...props }, ref) => (
     <td
       ref={ref}
-      className={cn(
-        "p-4 align-middle has-[[role=checkbox]]:pr-0",
-        className,
-      )}
+      className={cn("p-4 align-middle has-[[role=checkbox]]:pr-0", className)}
       {...props}
     />
-  ),
+  )
 )
 TableCell.displayName = "TableCell"
 
@@ -125,18 +125,19 @@ TableCell.displayName = "TableCell"
 
 export type TableCaptionProps = React.ComponentPropsWithoutRef<"caption">
 
-const TableCaption = React.forwardRef<HTMLTableCaptionElement, TableCaptionProps>(
-  ({ className, ...props }, ref) => (
-    <caption
-      ref={ref}
-      className={cn(
-        "mt-4 text-b5 font-inter text-neutral-500 dark:text-neutral-400",
-        className,
-      )}
-      {...props}
-    />
-  ),
-)
+const TableCaption = React.forwardRef<
+  HTMLTableCaptionElement,
+  TableCaptionProps
+>(({ className, ...props }, ref) => (
+  <caption
+    ref={ref}
+    className={cn(
+      "text-b5 font-inter mt-4 text-neutral-500 dark:text-neutral-400",
+      className
+    )}
+    {...props}
+  />
+))
 TableCaption.displayName = "TableCaption"
 
 export {

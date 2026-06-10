@@ -1,6 +1,14 @@
 "use client"
 
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
@@ -49,21 +57,22 @@ export function FormShowcase() {
   return (
     <section className="space-y-8">
       <div>
-        <h2 className="text-h3 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100 border-b border-cornsilk-300 dark:border-neutral-800 pb-2 mb-6">
+        <h2 className="text-h3 font-fraunces dark:text-cornsilk-100 border-cornsilk-300 mb-6 border-b pb-2 font-bold text-neutral-900 dark:border-neutral-800">
           Forms & Navigation
         </h2>
-        <p className="text-b4 text-neutral-600 dark:text-neutral-400 mb-8 max-w-2xl">
-          Input mechanisms, structural navigation elements, and data presentation.
+        <p className="text-b4 mb-8 max-w-2xl text-neutral-600 dark:text-neutral-400">
+          Input mechanisms, structural navigation elements, and data
+          presentation.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
         {/* Select */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Select
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
+          <div className="border-cornsilk-300 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <Select>
               <SelectTrigger className="w-45">
                 <SelectValue placeholder="Select a flower" />
@@ -88,39 +97,52 @@ export function FormShowcase() {
 
         {/* Checkbox */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Checkbox
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 space-y-4">
+          <div className="border-cornsilk-300 space-y-4 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <div className="flex items-center space-x-2">
               <Checkbox id="terms" />
-              <Label htmlFor="terms" className="font-normal text-b4">Accept terms and conditions</Label>
+              <Label htmlFor="terms" className="text-b4 font-normal">
+                Accept terms and conditions
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox id="disabled" disabled />
-              <Label htmlFor="disabled" className="font-normal text-b4 opacity-50">Disabled option</Label>
+              <Label
+                htmlFor="disabled"
+                className="text-b4 font-normal opacity-50"
+              >
+                Disabled option
+              </Label>
             </div>
           </div>
         </div>
 
         {/* Radio Group */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Radio Group
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
+          <div className="border-cornsilk-300 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <RadioGroup defaultValue="standard">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="standard" id="r1" />
-                <Label htmlFor="r1" className="font-normal text-b4">Standard Delivery</Label>
+                <Label htmlFor="r1" className="text-b4 font-normal">
+                  Standard Delivery
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="express" id="r2" />
-                <Label htmlFor="r2" className="font-normal text-b4">Express Delivery</Label>
+                <Label htmlFor="r2" className="text-b4 font-normal">
+                  Express Delivery
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="same-day" id="r3" />
-                <Label htmlFor="r3" className="font-normal text-b4">Same Day Delivery</Label>
+                <Label htmlFor="r3" className="text-b4 font-normal">
+                  Same Day Delivery
+                </Label>
               </div>
             </RadioGroup>
           </div>
@@ -128,20 +150,30 @@ export function FormShowcase() {
 
         {/* Tabs */}
         <div className="space-y-4 md:col-span-2">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Tabs
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
+          <div className="border-cornsilk-300 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <Tabs defaultValue="account" className="w-100">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="account">Account</TabsTrigger>
                 <TabsTrigger value="password">Password</TabsTrigger>
               </TabsList>
-              <TabsContent value="account" className="p-4 bg-cornsilk-100 rounded-lg mt-2">
-                <p className="text-b4 text-neutral-700 dark:text-neutral-300">Make changes to your account here.</p>
+              <TabsContent
+                value="account"
+                className="bg-cornsilk-100 mt-2 rounded-lg p-4"
+              >
+                <p className="text-b4 text-neutral-700 dark:text-neutral-300">
+                  Make changes to your account here.
+                </p>
               </TabsContent>
-              <TabsContent value="password" className="p-4 bg-cornsilk-100 rounded-lg mt-2">
-                <p className="text-b4 text-neutral-700 dark:text-neutral-300">Change your password here.</p>
+              <TabsContent
+                value="password"
+                className="bg-cornsilk-100 mt-2 rounded-lg p-4"
+              >
+                <p className="text-b4 text-neutral-700 dark:text-neutral-300">
+                  Change your password here.
+                </p>
               </TabsContent>
             </Tabs>
           </div>
@@ -149,10 +181,10 @@ export function FormShowcase() {
 
         {/* Pagination */}
         <div className="space-y-4 md:col-span-2">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Pagination
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
+          <div className="border-cornsilk-300 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
@@ -182,10 +214,10 @@ export function FormShowcase() {
 
         {/* Table */}
         <div className="space-y-4 md:col-span-2">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Table
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
+          <div className="border-cornsilk-300 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <Table>
               <TableCaption>A list of your recent invoices.</TableCaption>
               <TableHeader>
@@ -199,10 +231,14 @@ export function FormShowcase() {
               <TableBody>
                 {invoices.map((invoice) => (
                   <TableRow key={invoice.invoice}>
-                    <TableCell className="font-medium">{invoice.invoice}</TableCell>
+                    <TableCell className="font-medium">
+                      {invoice.invoice}
+                    </TableCell>
                     <TableCell>{invoice.paymentStatus}</TableCell>
                     <TableCell>{invoice.paymentMethod}</TableCell>
-                    <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+                    <TableCell className="text-right">
+                      {invoice.totalAmount}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -8,14 +8,10 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-blush-500 text-cornsilk-100 hover:bg-blush-600",
-        secondary:
-          "bg-cornsilk-200 text-neutral-800 hover:bg-cornsilk-300",
-        outline:
-          "border border-cornsilk-400 text-neutral-400",
-        success:
-          "bg-olive-200 text-olive-900 hover:bg-olive-300",
+        default: "bg-blush-500 text-cornsilk-100 hover:bg-blush-600",
+        secondary: "bg-cornsilk-200 text-neutral-800 hover:bg-cornsilk-300",
+        outline: "border border-cornsilk-400 text-neutral-400",
+        success: "bg-olive-200 text-olive-900 hover:bg-olive-300",
       },
     },
     defaultVariants: {

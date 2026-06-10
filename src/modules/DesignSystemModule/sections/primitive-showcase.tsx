@@ -11,10 +11,10 @@ export function PrimitiveShowcase() {
   return (
     <section className="space-y-8">
       <div>
-        <h2 className="text-h3 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100 border-b border-cornsilk-300 dark:border-neutral-800 pb-2 mb-6">
+        <h2 className="text-h3 font-fraunces dark:text-cornsilk-100 border-cornsilk-300 mb-6 border-b pb-2 font-bold text-neutral-900 dark:border-neutral-800">
           Primitives
         </h2>
-        <p className="text-b4 text-neutral-600 dark:text-neutral-400 mb-8 max-w-2xl">
+        <p className="text-b4 mb-8 max-w-2xl text-neutral-600 dark:text-neutral-400">
           Core UI building blocks like Buttons, Inputs, Badges, and Skeletons.
         </p>
       </div>
@@ -22,40 +22,48 @@ export function PrimitiveShowcase() {
       <div className="space-y-12">
         {/* Buttons */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Buttons
           </h3>
-          <div className="flex flex-col gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
-            <div className="flex flex-wrap gap-4 items-center">
+          <div className="border-cornsilk-300 flex flex-col gap-6 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
+            <div className="flex flex-wrap items-center gap-4">
               <Button variant="primary">Primary</Button>
               <Button variant="secondary">Secondary</Button>
               <Button variant="outline">Outline</Button>
               <Button variant="ghost">Ghost</Button>
               <Button variant="link">Link</Button>
             </div>
-            <div className="flex flex-wrap gap-4 items-center">
+            <div className="flex flex-wrap items-center gap-4">
               <Button size="sm">Small</Button>
               <Button size="md">Medium</Button>
               <Button size="lg">Large</Button>
-              <Button size="icon"><Search /></Button>
+              <Button size="icon">
+                <Search />
+              </Button>
             </div>
-            <div className="flex flex-wrap gap-4 items-center">
+            <div className="flex flex-wrap items-center gap-4">
               <Button disabled>Disabled Primary</Button>
-              <Button variant="outline" disabled>Disabled Outline</Button>
+              <Button variant="outline" disabled>
+                Disabled Outline
+              </Button>
             </div>
           </div>
         </div>
 
         {/* Inputs & Textarea */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Inputs & Textarea
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
+          <div className="border-cornsilk-300 grid grid-cols-1 gap-8 rounded-xl border bg-white p-6 md:grid-cols-2 dark:border-neutral-800 dark:bg-neutral-900">
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input type="email" id="email" placeholder="hello@fiorisce.com" />
+                <Input
+                  type="email"
+                  id="email"
+                  placeholder="hello@fiorisce.com"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="disabled-input">Disabled Input</Label>
@@ -64,17 +72,21 @@ export function PrimitiveShowcase() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="message">Message</Label>
-              <Textarea id="message" placeholder="Type your message here..." className="h-32" />
+              <Textarea
+                id="message"
+                placeholder="Type your message here..."
+                className="h-32"
+              />
             </div>
           </div>
         </div>
 
         {/* Badges */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Badges
           </h3>
-          <div className="flex flex-wrap gap-4 items-center bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
+          <div className="border-cornsilk-300 flex flex-wrap items-center gap-4 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <Badge variant="default">DEFAULT</Badge>
             <Badge variant="secondary">SECONDARY</Badge>
             <Badge variant="outline">OUTLINE</Badge>
@@ -84,10 +96,10 @@ export function PrimitiveShowcase() {
 
         {/* Skeletons */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Skeleton
           </h3>
-          <div className="flex items-center space-x-4 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
+          <div className="border-cornsilk-300 flex items-center space-x-4 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <Skeleton className="h-12 w-12 rounded-full" />
             <div className="space-y-2">
               <Skeleton className="h-4 w-62.5" />
@@ -98,16 +110,20 @@ export function PrimitiveShowcase() {
 
         {/* Separator */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Separator
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800">
+          <div className="border-cornsilk-300 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <div className="space-y-1">
-              <h4 className="text-b4 font-inter font-medium text-neutral-900 dark:text-cornsilk-100">Radix Primitives</h4>
-              <p className="text-b5 text-neutral-500">Accessible unstyled UI components.</p>
+              <h4 className="text-b4 font-inter dark:text-cornsilk-100 font-medium text-neutral-900">
+                Radix Primitives
+              </h4>
+              <p className="text-b5 text-neutral-500">
+                Accessible unstyled UI components.
+              </p>
             </div>
             <Separator className="my-4" />
-            <div className="flex h-5 items-center space-x-4 text-b5 text-neutral-700 dark:text-neutral-300">
+            <div className="text-b5 flex h-5 items-center space-x-4 text-neutral-700 dark:text-neutral-300">
               <div>Blog</div>
               <Separator orientation="vertical" />
               <div>Docs</div>

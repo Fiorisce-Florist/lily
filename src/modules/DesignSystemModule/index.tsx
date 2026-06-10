@@ -56,18 +56,19 @@ export default function DesignSystemModule() {
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-12">
-        <h1 className="text-h1 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100 tracking-tight">
+        <h1 className="text-h1 font-fraunces dark:text-cornsilk-100 font-bold tracking-tight text-neutral-900">
           Lily Design System
         </h1>
-        <p className="mt-4 text-b3 text-neutral-600 dark:text-neutral-400 max-w-3xl">
-          A comprehensive showcase of all typography, color tokens, and 32 UI components built for Fiorisce.
+        <p className="text-b3 mt-4 max-w-3xl text-neutral-600 dark:text-neutral-400">
+          A comprehensive showcase of all typography, color tokens, and 32 UI
+          components built for Fiorisce.
         </p>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-12 items-start">
+      <div className="flex flex-col items-start gap-12 lg:flex-row">
         {/* Sidebar Navigation */}
-        <aside className="sticky top-24 hidden lg:block w-64 shrink-0 rounded-xl border border-cornsilk-300 dark:border-neutral-800 bg-cornsilk-200/50 dark:bg-neutral-900/50 p-6">
-          <h3 className="text-h6 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100 uppercase tracking-wider mb-4">
+        <aside className="border-cornsilk-300 bg-cornsilk-200/50 sticky top-24 hidden w-64 shrink-0 rounded-xl border p-6 lg:block dark:border-neutral-800 dark:bg-neutral-900/50">
+          <h3 className="text-h6 font-inter dark:text-cornsilk-100 mb-4 font-semibold tracking-wider text-neutral-900 uppercase">
             Contents
           </h3>
           <nav className="flex flex-col space-y-1">
@@ -75,10 +76,10 @@ export default function DesignSystemModule() {
               <button
                 key={section.id}
                 onClick={() => scrollToSection(section.id)}
-                className={`text-left px-3 py-2 rounded-lg text-b4 font-inter transition-colors ${
+                className={`text-b4 font-inter rounded-lg px-3 py-2 text-left transition-colors ${
                   activeSection === section.id
                     ? "bg-blush-100 dark:bg-blush-900/40 text-blush-800 dark:text-blush-300 font-medium"
-                    : "text-neutral-600 dark:text-neutral-400 hover:bg-cornsilk-300 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-cornsilk-100"
+                    : "hover:bg-cornsilk-300 dark:hover:text-cornsilk-100 text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800"
                 }`}
               >
                 {section.label}
@@ -88,15 +89,15 @@ export default function DesignSystemModule() {
         </aside>
 
         {/* Mobile Navigation (Dropdown could be here, but simple scroll list works) */}
-        <div className="lg:hidden flex overflow-x-auto w-full pb-4 gap-2 snap-x hide-scrollbar border-b border-cornsilk-300 dark:border-neutral-800 sticky top-16 bg-cornsilk-100/90 dark:bg-neutral-950/90 backdrop-blur z-40 py-2 -mx-4 px-4">
+        <div className="hide-scrollbar border-cornsilk-300 bg-cornsilk-100/90 sticky top-16 z-40 -mx-4 flex w-full snap-x gap-2 overflow-x-auto border-b px-4 py-2 pb-4 backdrop-blur lg:hidden dark:border-neutral-800 dark:bg-neutral-950/90">
           {sections.map((section) => (
             <button
               key={section.id}
               onClick={() => scrollToSection(section.id)}
-              className={`whitespace-nowrap px-4 py-2 rounded-full text-b5 font-inter transition-colors shrink-0 snap-start ${
+              className={`text-b5 font-inter shrink-0 snap-start rounded-full px-4 py-2 whitespace-nowrap transition-colors ${
                 activeSection === section.id
                   ? "bg-blush-500 text-cornsilk-100 font-medium"
-                  : "bg-cornsilk-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
+                  : "bg-cornsilk-200 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
               }`}
             >
               {section.label}
@@ -105,7 +106,7 @@ export default function DesignSystemModule() {
         </div>
 
         {/* Main Content Areas */}
-        <div className="flex-1 space-y-24 w-full">
+        <div className="w-full flex-1 space-y-24">
           {sections.map((section) => {
             const Component = section.component
             return (

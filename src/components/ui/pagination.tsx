@@ -56,11 +56,11 @@ const PaginationLink = React.forwardRef<HTMLAnchorElement, PaginationLinkProps>(
           variant: isActive ? "outline" : "ghost",
           size,
         }),
-        className,
+        className
       )}
       {...props}
     />
-  ),
+  )
 )
 PaginationLink.displayName = "PaginationLink"
 

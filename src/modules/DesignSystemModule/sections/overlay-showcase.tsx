@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { Button } from "@/components/ui/button";
+import * as React from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
 import {
   Sheet,
   SheetContent,
@@ -28,17 +28,17 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/components/ui/sheet"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/popover"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui/tooltip"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,38 +52,39 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Settings, User, CreditCard, LogOut } from "lucide-react";
+} from "@/components/ui/dropdown-menu"
+import { Settings, User, CreditCard, LogOut } from "lucide-react"
 
 export function OverlayShowcase() {
   return (
     <section className="space-y-8">
       <div>
-        <h2 className="text-h3 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100 border-b border-cornsilk-300 dark:border-neutral-800 pb-2 mb-6">
+        <h2 className="text-h3 font-fraunces dark:text-cornsilk-100 border-cornsilk-300 mb-6 border-b pb-2 font-bold text-neutral-900 dark:border-neutral-800">
           Overlays & Menus
         </h2>
-        <p className="text-b4 text-neutral-600 dark:text-neutral-400 mb-8 max-w-2xl">
+        <p className="text-b4 mb-8 max-w-2xl text-neutral-600 dark:text-neutral-400">
           Interactive components that float above the main content like Dialogs,
           Dropdowns, and Sheets.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
         {/* Dialog */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Dialog
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex items-center justify-center min-h-37.5">
+          <div className="border-cornsilk-300 flex min-h-37.5 items-center justify-center rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="outline">Open Dialog</Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="sm:max-w-106.25">
                 <DialogHeader>
                   <DialogTitle>Edit profile</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you&apos;re done.
+                    Make changes to your profile here. Click save when
+                    you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -98,10 +99,10 @@ export function OverlayShowcase() {
 
         {/* Alert Dialog */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Alert Dialog
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex items-center justify-center min-h-[150px]">
+          <div className="border-cornsilk-300 flex min-h-37.5 items-center justify-center rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="primary">Delete Account</Button>
@@ -125,10 +126,10 @@ export function OverlayShowcase() {
 
         {/* Sheet */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Sheet (Drawer)
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex flex-wrap gap-4 items-center justify-center min-h-[150px]">
+          <div className="border-cornsilk-300 flex min-h-37.5 flex-wrap items-center justify-center gap-4 rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             {["top", "right", "bottom", "left"].map((side) => (
               <Sheet key={side}>
                 <SheetTrigger asChild>
@@ -142,8 +143,8 @@ export function OverlayShowcase() {
                   <SheetHeader>
                     <SheetTitle>Edit profile</SheetTitle>
                     <SheetDescription>
-                      Make changes to your profile here. Click save when you&apos;re
-                      done.
+                      Make changes to your profile here. Click save when
+                      you&apos;re done.
                     </SheetDescription>
                   </SheetHeader>
                 </SheetContent>
@@ -154,10 +155,10 @@ export function OverlayShowcase() {
 
         {/* Popover */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Popover
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex items-center justify-center min-h-[150px]">
+          <div className="border-cornsilk-300 flex min-h-37.5 items-center justify-center rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline">Open Popover</Button>
@@ -165,7 +166,7 @@ export function OverlayShowcase() {
               <PopoverContent className="w-80">
                 <div className="grid gap-4">
                   <div className="space-y-2">
-                    <h4 className="font-medium leading-none text-b4">
+                    <h4 className="text-b4 leading-none font-medium">
                       Dimensions
                     </h4>
                     <p className="text-b5 text-neutral-500">
@@ -180,10 +181,10 @@ export function OverlayShowcase() {
 
         {/* Tooltip */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Tooltip
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex items-center justify-center min-h-[150px]">
+          <div className="border-cornsilk-300 flex min-h-37.5 items-center justify-center rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -199,10 +200,10 @@ export function OverlayShowcase() {
 
         {/* Dropdown Menu */}
         <div className="space-y-4">
-          <h3 className="text-h5 font-inter font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+          <h3 className="text-h5 font-inter mb-4 font-semibold tracking-wider text-neutral-500 uppercase">
             Dropdown Menu
           </h3>
-          <div className="bg-white dark:bg-neutral-900 p-6 rounded-xl border border-cornsilk-300 dark:border-neutral-800 flex items-center justify-center min-h-[150px]">
+          <div className="border-cornsilk-300 flex min-h-37.5 items-center justify-center rounded-xl border bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">Open Menu</Button>
@@ -258,5 +259,5 @@ export function OverlayShowcase() {
         </div>
       </div>
     </section>
-  );
+  )
 }

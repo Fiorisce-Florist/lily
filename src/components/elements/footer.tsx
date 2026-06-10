@@ -28,31 +28,36 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-olive-900 text-cornsilk-100">
+    <footer className="text-cornsilk-100 bg-olive-900">
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           {/* Brand & Newsletter */}
           <div className="space-y-8 xl:col-span-1">
             <Link href="/">
-              <span className="font-fraunces text-h3 font-bold tracking-tight text-cornsilk-100">
+              <span className="font-fraunces text-h3 text-cornsilk-100 font-bold tracking-tight">
                 Fiorisce
               </span>
             </Link>
-            <p className="text-b4 font-inter text-olive-200 leading-relaxed max-w-xs">
-              Bringing the beauty of nature into your everyday life with carefully curated, sustainable floral arrangements.
+            <p className="text-b4 font-inter max-w-xs leading-relaxed text-olive-200">
+              Bringing the beauty of nature into your everyday life with
+              carefully curated, sustainable floral arrangements.
             </p>
             <div className="space-y-4">
-              <h3 className="text-b5 font-inter font-semibold tracking-wider uppercase text-cornsilk-200">
+              <h3 className="text-b5 font-inter text-cornsilk-200 font-semibold tracking-wider uppercase">
                 Subscribe to our newsletter
               </h3>
               <form className="flex max-w-sm gap-2">
                 <Input
                   type="email"
                   placeholder="Enter your email"
-                  className="bg-olive-800 border-olive-700 text-cornsilk-100 placeholder:text-olive-400 focus-visible:ring-cornsilk-200"
+                  className="text-cornsilk-100 focus-visible:ring-cornsilk-200 border-olive-700 bg-olive-800 placeholder:text-olive-400"
                   required
                 />
-                <Button type="submit" variant="secondary" className="bg-cornsilk-200 text-olive-900 hover:bg-cornsilk-300">
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  className="bg-cornsilk-200 hover:bg-cornsilk-300 text-olive-900"
+                >
                   Subscribe
                 </Button>
               </form>
@@ -60,13 +65,18 @@ export function Footer() {
           </div>
 
           {/* Links Grid */}
-          <div className="mt-12 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0 md:grid-cols-3">
+          <div className="mt-12 grid grid-cols-2 gap-8 md:grid-cols-3 xl:col-span-2 xl:mt-0">
             <div>
-              <h3 className="text-b4 font-fraunces font-semibold text-cornsilk-100">Shop</h3>
+              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">
+                Shop
+              </h3>
               <ul className="mt-6 space-y-4">
                 {footerLinks.shop.map((link) => (
                   <li key={link.name}>
-                    <Link href={link.href} className="text-b5 font-inter text-olive-300 hover:text-cornsilk-100 transition-colors">
+                    <Link
+                      href={link.href}
+                      className="text-b5 font-inter hover:text-cornsilk-100 text-olive-300 transition-colors"
+                    >
                       {link.name}
                     </Link>
                   </li>
@@ -74,11 +84,16 @@ export function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-b4 font-fraunces font-semibold text-cornsilk-100">Support</h3>
+              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">
+                Support
+              </h3>
               <ul className="mt-6 space-y-4">
                 {footerLinks.support.map((link) => (
                   <li key={link.name}>
-                    <Link href={link.href} className="text-b5 font-inter text-olive-300 hover:text-cornsilk-100 transition-colors">
+                    <Link
+                      href={link.href}
+                      className="text-b5 font-inter hover:text-cornsilk-100 text-olive-300 transition-colors"
+                    >
                       {link.name}
                     </Link>
                   </li>
@@ -86,11 +101,16 @@ export function Footer() {
               </ul>
             </div>
             <div className="mt-12 md:mt-0">
-              <h3 className="text-b4 font-fraunces font-semibold text-cornsilk-100">Company</h3>
+              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">
+                Company
+              </h3>
               <ul className="mt-6 space-y-4">
                 {footerLinks.company.map((link) => (
                   <li key={link.name}>
-                    <Link href={link.href} className="text-b5 font-inter text-olive-300 hover:text-cornsilk-100 transition-colors">
+                    <Link
+                      href={link.href}
+                      className="text-b5 font-inter hover:text-cornsilk-100 text-olive-300 transition-colors"
+                    >
                       {link.name}
                     </Link>
                   </li>
@@ -105,16 +125,26 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-b5 font-inter text-olive-400">
-            &copy; {new Date().getFullYear()} Fiorisce Florist. All rights reserved.
+            &copy; {new Date().getFullYear()} Fiorisce Florist. All rights
+            reserved.
           </p>
           <div className="flex gap-6">
-            <Link href="#" className="text-b5 font-inter text-olive-400 hover:text-cornsilk-100 transition-colors">
+            <Link
+              href="#"
+              className="text-b5 font-inter hover:text-cornsilk-100 text-olive-400 transition-colors"
+            >
               Instagram
             </Link>
-            <Link href="#" className="text-b5 font-inter text-olive-400 hover:text-cornsilk-100 transition-colors">
+            <Link
+              href="#"
+              className="text-b5 font-inter hover:text-cornsilk-100 text-olive-400 transition-colors"
+            >
               Facebook
             </Link>
-            <Link href="#" className="text-b5 font-inter text-olive-400 hover:text-cornsilk-100 transition-colors">
+            <Link
+              href="#"
+              className="text-b5 font-inter hover:text-cornsilk-100 text-olive-400 transition-colors"
+            >
               Twitter
             </Link>
           </div>
