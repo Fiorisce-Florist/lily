@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   ChevronLeft,
   ChevronRight,
-  Heart,
   ShoppingBag,
   Star,
   Truck,
@@ -24,12 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 import { ALL_BOUQUETS } from "@/modules/ShopModule/data/bouquets";
 
@@ -79,12 +73,7 @@ function buildGalleryImages(baseUrl: string): string[] {
   // Extract base without query params and build 4 variants
   const alt1 = "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=600&q=80";
   const alt2 = "https://images.unsplash.com/photo-1490750967868-88df5691cc64?w=600&q=80";
-  return [
-    baseUrl,
-    baseUrl.replace("w=600", "w=200").replace("w=600", "w=600"),
-    alt1,
-    alt2,
-  ];
+  return [baseUrl, baseUrl.replace("w=600", "w=200").replace("w=600", "w=600"), alt1, alt2];
 }
 
 // ─── Star Rating ──────────────────────────────────────────────────────────────
@@ -152,7 +141,9 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
         {/* Zoom hint */}
         <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm px-2.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <ZoomIn className="h-3.5 w-3.5 text-neutral-600 dark:text-neutral-300" />
-          <span className="text-[11px] font-inter text-neutral-600 dark:text-neutral-300">Hover to zoom</span>
+          <span className="text-[11px] font-inter text-neutral-600 dark:text-neutral-300">
+            Hover to zoom
+          </span>
         </div>
 
         {/* Prev/Next arrows */}
@@ -182,9 +173,7 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
               onClick={() => setActiveIdx(i)}
               aria-label={`View image ${i + 1}`}
               className={`rounded-full transition-all duration-300 ${
-                i === activeIdx
-                  ? "bg-white w-5 h-2"
-                  : "bg-white/60 w-2 h-2 hover:bg-white/90"
+                i === activeIdx ? "bg-white w-5 h-2" : "bg-white/60 w-2 h-2 hover:bg-white/90"
               }`}
             />
           ))}
@@ -231,9 +220,7 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
     ? Math.round(bouquet.originalPrice * sizeMultiplier)
     : undefined;
 
-  const discountPct = displayOriginal
-    ? Math.round((1 - displayPrice / displayOriginal) * 100)
-    : 0;
+  const discountPct = displayOriginal ? Math.round((1 - displayPrice / displayOriginal) * 100) : 0;
 
   function handleAddToCart() {
     setAddedToCart(true);
@@ -245,14 +232,22 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
       {/* Badges */}
       <div className="flex flex-wrap items-center gap-2">
         {bouquet.isBestseller && (
-          <Badge variant="default" id="badge-bestseller">Bestseller</Badge>
+          <Badge variant="default" id="badge-bestseller">
+            Bestseller
+          </Badge>
         )}
         {bouquet.isNew && (
-          <Badge variant="success" id="badge-new">New Arrival</Badge>
+          <Badge variant="success" id="badge-new">
+            New Arrival
+          </Badge>
         )}
-        <Badge variant="outline" id="badge-occasion">{bouquet.occasion}</Badge>
+        <Badge variant="outline" id="badge-occasion">
+          {bouquet.occasion}
+        </Badge>
         {discountPct > 0 && (
-          <Badge variant="secondary" id="badge-discount">{discountPct}% off</Badge>
+          <Badge variant="secondary" id="badge-discount">
+            {discountPct}% off
+          </Badge>
         )}
       </div>
 
@@ -352,7 +347,10 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
             Bouquet size
           </p>
           <span className="text-b6 font-inter text-neutral-400">
-            Selected: <strong className="text-neutral-700 dark:text-neutral-200">{SIZE_OPTIONS.find(s => s.key === selectedSize)?.label}</strong>
+            Selected:{" "}
+            <strong className="text-neutral-700 dark:text-neutral-200">
+              {SIZE_OPTIONS.find((s) => s.key === selectedSize)?.label}
+            </strong>
           </span>
         </div>
         <div className="flex gap-3" role="group" aria-label="Select bouquet size">
@@ -368,10 +366,14 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
                   : "border-cornsilk-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:border-blush-300"
               }`}
             >
-              <span className={`text-b5 font-inter font-semibold ${selectedSize === opt.key ? "text-blush-600 dark:text-blush-400" : "text-neutral-700 dark:text-neutral-200"}`}>
+              <span
+                className={`text-b5 font-inter font-semibold ${selectedSize === opt.key ? "text-blush-600 dark:text-blush-400" : "text-neutral-700 dark:text-neutral-200"}`}
+              >
                 {opt.label}
               </span>
-              <span className={`text-[11px] font-jetbrains ${selectedSize === opt.key ? "text-blush-500" : "text-neutral-400"}`}>
+              <span
+                className={`text-[11px] font-jetbrains ${selectedSize === opt.key ? "text-blush-500" : "text-neutral-400"}`}
+              >
                 {formatPrice(Math.round(bouquet.price * opt.multiplier))}
               </span>
             </button>
@@ -431,30 +433,11 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
           className={`flex-1 transition-all duration-300 ${addedToCart ? "bg-olive-500 hover:bg-olive-600" : ""}`}
         >
           <ShoppingBag className="h-5 w-5" />
-          {!bouquet.inStock
-            ? "Sold Out"
-            : addedToCart
-            ? "Added to Cart ✓"
-            : "Add to Cart"}
+          {!bouquet.inStock ? "Sold Out" : addedToCart ? "Added to Cart ✓" : "Add to Cart"}
         </Button>
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                id="wishlist-toggle"
-                aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                onClick={() => setWishlisted((w) => !w)}
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300 ${
-                  wishlisted
-                    ? "border-blush-500 bg-blush-50 dark:bg-blush-950/30 text-blush-500"
-                    : "border-cornsilk-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-400 hover:border-blush-400 hover:text-blush-400"
-                }`}
-              >
-                <Heart
-                  className={`h-5 w-5 transition-all duration-300 ${wishlisted ? "fill-blush-500 scale-110" : ""}`}
-                />
-              </button>
-            </TooltipTrigger>
+            <TooltipTrigger asChild></TooltipTrigger>
             <TooltipContent>
               {wishlisted ? "Remove from wishlist" : "Save to wishlist"}
             </TooltipContent>
@@ -493,9 +476,7 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
       ) : (
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-neutral-400" />
-          <span className="text-b5 font-inter text-neutral-400">
-            Currently out of stock
-          </span>
+          <span className="text-b5 font-inter text-neutral-400">Currently out of stock</span>
         </div>
       )}
     </div>
@@ -558,8 +539,12 @@ function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
           <table className="w-full text-b5 font-inter">
             <thead>
               <tr className="bg-cornsilk-100 dark:bg-neutral-800 border-b border-cornsilk-300 dark:border-neutral-700">
-                <th className="px-4 py-3 text-left font-semibold text-neutral-600 dark:text-neutral-300">Flower</th>
-                <th className="px-4 py-3 text-left font-semibold text-neutral-600 dark:text-neutral-300">Type</th>
+                <th className="px-4 py-3 text-left font-semibold text-neutral-600 dark:text-neutral-300">
+                  Flower
+                </th>
+                <th className="px-4 py-3 text-left font-semibold text-neutral-600 dark:text-neutral-300">
+                  Type
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -567,7 +552,9 @@ function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
                 <tr
                   key={flower}
                   className={`border-b border-cornsilk-200 dark:border-neutral-800 last:border-0 ${
-                    i % 2 === 0 ? "bg-white dark:bg-neutral-900" : "bg-cornsilk-50 dark:bg-neutral-800/50"
+                    i % 2 === 0
+                      ? "bg-white dark:bg-neutral-900"
+                      : "bg-cornsilk-50 dark:bg-neutral-800/50"
                   }`}
                 >
                   <td className="px-4 py-3 font-medium text-neutral-800 dark:text-neutral-200">
@@ -637,10 +624,7 @@ function ReviewsTab({ bouquet }: { bouquet: Bouquet }) {
                 <span className="text-[11px] font-inter text-neutral-400 w-3">{stars}</span>
                 <Star className="h-3 w-3 fill-camel-400 text-camel-400" />
                 <div className="flex-1 h-1.5 rounded-full bg-cornsilk-200 dark:bg-neutral-700 overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-camel-400"
-                    style={{ width: `${pct}%` }}
-                  />
+                  <div className="h-full rounded-full bg-camel-400" style={{ width: `${pct}%` }} />
                 </div>
                 <span className="text-[11px] font-inter text-neutral-400 w-6">{pct}%</span>
               </div>
@@ -797,8 +781,7 @@ function RelatedProducts({ bouquet }: { bouquet: Bouquet }) {
   const related = ALL_BOUQUETS.filter(
     (b) =>
       b.id !== bouquet.id &&
-      (b.occasion === bouquet.occasion ||
-        b.flowers.some((f) => bouquet.flowers.includes(f)))
+      (b.occasion === bouquet.occasion || b.flowers.some((f) => bouquet.flowers.includes(f)))
   ).slice(0, 4);
 
   if (related.length === 0) return null;
@@ -847,7 +830,9 @@ function RelatedCard({ bouquet }: { bouquet: Bouquet }) {
           />
           {bouquet.isBestseller && (
             <div className="absolute top-2 left-2">
-              <Badge variant="default" className="text-[10px] shadow">Bestseller</Badge>
+              <Badge variant="default" className="text-[10px] shadow">
+                Bestseller
+              </Badge>
             </div>
           )}
         </div>
@@ -891,12 +876,18 @@ export function ProductDetailModule({ bouquet }: { bouquet: Bouquet }) {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-linear-to-b from-cornsilk-100/60 to-transparent dark:from-neutral-900/60 dark:to-transparent" />
 
         <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-
           {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-2 text-b5 font-inter text-neutral-400">
-            <Link href="/" className="hover:text-blush-500 transition-colors">Home</Link>
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-8 flex items-center gap-2 text-b5 font-inter text-neutral-400"
+          >
+            <Link href="/" className="hover:text-blush-500 transition-colors">
+              Home
+            </Link>
             <ChevronRight className="h-3.5 w-3.5" />
-            <Link href="/shop" className="hover:text-blush-500 transition-colors">Shop</Link>
+            <Link href="/shop" className="hover:text-blush-500 transition-colors">
+              Shop
+            </Link>
             <ChevronRight className="h-3.5 w-3.5" />
             <span className="text-neutral-700 dark:text-neutral-200 font-medium">
               {bouquet.name}

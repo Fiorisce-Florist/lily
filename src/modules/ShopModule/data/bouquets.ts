@@ -20,18 +20,30 @@ export interface Bouquet {
 
 // Placeholder gradient images per bouquet color theme
 const IMAGES = {
-  blush: "https://images.unsplash.com/photo-1487530811015-780c39b75e5a?w=600&q=80",
-  wildflower: "https://images.unsplash.com/photo-1490750967868-88df5691cc64?w=600&q=80",
-  white: "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?w=600&q=80",
-  sunflower: "https://images.unsplash.com/photo-1537530360953-3b8b369e01fe?w=600&q=80",
-  burgundy: "https://images.unsplash.com/photo-1561181286-d5c73431a97b?w=600&q=80",
-  lavender: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80",
-  peach: "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=600&q=80",
-  tropical: "https://images.unsplash.com/photo-1596438459194-f275f413d6ff?w=600&q=80",
-  garden: "https://images.unsplash.com/photo-1471086569966-db3eebc25a59?w=600&q=80",
-  classic: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600&q=80",
-  dusty: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=600&q=80",
-  coral: "https://images.unsplash.com/photo-1588701716668-44c7bd2d72ba?w=600&q=80",
+  blush:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  wildflower:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  white:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  sunflower:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  burgundy:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  lavender:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  peach:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  tropical:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  garden:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  classic:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  dusty:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  coral:
+    "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
 };
 
 export const ALL_BOUQUETS: Bouquet[] = [
@@ -69,7 +81,8 @@ export const ALL_BOUQUETS: Bouquet[] = [
     isNew: true,
     isBestseller: false,
     image: IMAGES.wildflower,
-    description: "A hand-tied gathering of seasonal wildflowers, as if picked straight from a field.",
+    description:
+      "A hand-tied gathering of seasonal wildflowers, as if picked straight from a field.",
   },
   {
     id: 3,
@@ -87,7 +100,8 @@ export const ALL_BOUQUETS: Bouquet[] = [
     isNew: false,
     isBestseller: true,
     image: IMAGES.white,
-    description: "White oriental lilies with cascading eucalyptus for a timeless, minimalist elegance.",
+    description:
+      "White oriental lilies with cascading eucalyptus for a timeless, minimalist elegance.",
   },
   {
     id: 4,

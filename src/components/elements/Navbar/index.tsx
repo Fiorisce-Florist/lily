@@ -73,12 +73,14 @@ export function Navbar() {
           >
             <User className="h-5 w-5" />
           </Button>
+          <Link href={"/cart"}>
           <Button variant="ghost" size="icon" aria-label="Cart" className="relative">
             <ShoppingBag className="h-5 w-5" />
             <span className="bg-blush-500 text-cornsilk-100 absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold">
               3
             </span>
           </Button>
+          </Link>
         </div>
       </div>
     </header>
