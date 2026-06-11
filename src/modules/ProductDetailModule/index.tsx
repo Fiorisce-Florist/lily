@@ -27,6 +27,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 import { ALL_BOUQUETS } from "@/modules/ShopModule/data/bouquets";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -850,23 +851,13 @@ export function ProductDetailModule({ bouquet }: { bouquet: Bouquet }) {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-linear-to-b from-cornsilk-100/60 to-transparent dark:from-neutral-900/60 dark:to-transparent" />
 
         <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          {/* Breadcrumb */}
-          <nav
-            aria-label="Breadcrumb"
-            className="mb-8 flex items-center gap-2 text-b5 font-inter text-neutral-400"
-          >
-            <Link href="/" className="hover:text-blush-500 transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="h-3.5 w-3.5" />
-            <Link href="/shop" className="hover:text-blush-500 transition-colors">
-              Shop
-            </Link>
-            <ChevronRight className="h-3.5 w-3.5" />
-            <span className="text-neutral-700 dark:text-neutral-200 font-medium">
-              {bouquet.name}
-            </span>
-          </nav>
+          <Breadcrumb
+            className="mb-8"
+            items={[
+              { label: "Shop", href: "/shop" },
+              { label: bouquet.name },
+            ]}
+          />
 
           {/* 2-column product section */}
           <div className="flex flex-col gap-12 lg:flex-row lg:gap-16">
