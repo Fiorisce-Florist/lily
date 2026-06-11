@@ -12,9 +12,9 @@ export function ThemeToggle() {
   // triggering a setState-in-effect. The server snapshot returns false;
   // the client snapshot returns true — no useEffect needed.
   const mounted = React.useSyncExternalStore(
-    () => () => {},  // no external store to subscribe to
-    () => true,      // client: always mounted
-    () => false      // server: not yet mounted
+    () => () => {}, // no external store to subscribe to
+    () => true, // client: always mounted
+    () => false // server: not yet mounted
   );
 
   // Sleek skeleton to match the new shape
@@ -59,7 +59,7 @@ export function ThemeToggle() {
             isDark ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"
           )}
         />
-        
+
         {/* Animated Moon Icon inside thumb */}
         <Moon
           className={cn(

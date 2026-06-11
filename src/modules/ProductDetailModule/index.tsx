@@ -38,7 +38,6 @@ function formatPrice(v: number) {
   }).format(v);
 }
 
-
 type Size = "small" | "standard" | "grand";
 const SIZE_OPTIONS: { key: Size; label: string; multiplier: number }[] = [
   { key: "small", label: "Small", multiplier: 0.8 },
@@ -169,7 +168,7 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
                 : "opacity-70 hover:opacity-100"
             }`}
           >
-          <Image
+            <Image
               src={src}
               alt={`${bouquet.name} thumbnail ${i + 1}`}
               fill

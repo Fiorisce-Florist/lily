@@ -30,7 +30,8 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         ),
         month_grid: "w-full border-collapse space-y-1",
         weekdays: "flex",
-        weekday: "text-neutral-500 rounded-md w-9 font-inter font-normal text-b6 dark:text-neutral-400",
+        weekday:
+          "text-neutral-500 rounded-md w-9 font-inter font-normal text-b6 dark:text-neutral-400",
         week: "flex w-full mt-2",
         day: "h-9 w-9 text-center text-b5 p-0 relative [&:has([aria-selected].range_end)]:rounded-r-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day_button: cn(

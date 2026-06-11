@@ -25,7 +25,13 @@ function formatPrice(v: number) {
   }).format(v);
 }
 
-export function CartSummary({ subtotal, shipping, total, itemCount, selectedCount }: CartSummaryProps) {
+export function CartSummary({
+  subtotal,
+  shipping,
+  total,
+  itemCount,
+  selectedCount,
+}: CartSummaryProps) {
   const [promoCode, setPromoCode] = React.useState("");
   const [promoApplied, setPromoApplied] = React.useState(false);
   const [promoError, setPromoError] = React.useState(false);
@@ -50,10 +56,13 @@ export function CartSummary({ subtotal, shipping, total, itemCount, selectedCoun
           Order Summary
         </h2>
         <p className="text-b6 font-inter text-neutral-500 dark:text-neutral-400 mt-0.5">
-          {selectedCount > 0
-            ? <>{selectedCount} of {itemCount} {itemCount === 1 ? "item" : "items"} selected</>
-            : <span className="text-neutral-400 dark:text-neutral-500">No items selected</span>
-          }
+          {selectedCount > 0 ? (
+            <>
+              {selectedCount} of {itemCount} {itemCount === 1 ? "item" : "items"} selected
+            </>
+          ) : (
+            <span className="text-neutral-400 dark:text-neutral-500">No items selected</span>
+          )}
         </p>
       </div>
 
@@ -119,7 +128,9 @@ export function CartSummary({ subtotal, shipping, total, itemCount, selectedCoun
           disabled={selectedCount === 0}
           className="w-full py-5 text-b4 font-inter font-semibold rounded-2xl shadow-md shadow-blush-200/50 dark:shadow-black/30 transition-all duration-200 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
         >
-          {selectedCount === 0 ? "Select items to checkout" : `Checkout ${selectedCount} ${selectedCount === 1 ? "item" : "items"}`}
+          {selectedCount === 0
+            ? "Select items to checkout"
+            : `Checkout ${selectedCount} ${selectedCount === 1 ? "item" : "items"}`}
           {selectedCount > 0 && <ChevronRight className="h-4 w-4 ml-1" />}
         </Button>
 

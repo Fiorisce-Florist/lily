@@ -17,7 +17,8 @@ export function EmptyCart() {
         Your cart is blooming empty
       </h2>
       <p className="text-b4 font-inter text-neutral-500 dark:text-neutral-400 mt-3 max-w-sm leading-relaxed">
-        Looks like you haven&apos;t added any beautiful bouquets yet. Discover our fresh collection and find the perfect arrangement.
+        Looks like you haven&apos;t added any beautiful bouquets yet. Discover our fresh collection
+        and find the perfect arrangement.
       </p>
 
       <Button
