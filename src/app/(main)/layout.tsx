@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
@@ -6,18 +8,18 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-900">Fiorisce</h1>
             <div className="flex gap-4">
-              <a href="/" className="text-gray-700 hover:text-gray-900">
+              <Link href="/" className="text-gray-700 hover:text-gray-900">
                 Home
-              </a>
-              <a href="/products" className="text-gray-700 hover:text-gray-900">
+              </Link>
+              <Link href="/products" className="text-gray-700 hover:text-gray-900">
                 Products
-              </a>
-              <a href="/cart" className="text-gray-700 hover:text-gray-900">
+              </Link>
+              <Link href="/cart" className="text-gray-700 hover:text-gray-900">
                 Cart
-              </a>
-              <a href="/login" className="text-gray-700 hover:text-gray-900">
+              </Link>
+              <Link href="/login" className="text-gray-700 hover:text-gray-900">
                 Login
-              </a>
+              </Link>
             </div>
           </div>
         </nav>
