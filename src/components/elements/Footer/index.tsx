@@ -4,27 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-
-const footerLinks = {
-  shop: [
-    { name: "All Flowers", href: "#" },
-    { name: "Subscriptions", href: "#" },
-    { name: "Gift Cards", href: "#" },
-    { name: "Vases & Pots", href: "#" },
-  ],
-  support: [
-    { name: "FAQ", href: "#" },
-    { name: "Shipping & Returns", href: "#" },
-    { name: "Care Guide", href: "#" },
-    { name: "Contact Us", href: "#" },
-  ],
-  company: [
-    { name: "Our Story", href: "#" },
-    { name: "Journal", href: "#" },
-    { name: "Sustainability", href: "#" },
-    { name: "Careers", href: "#" },
-  ],
-};
+import { FOOTER_MENU } from "./const";
 
 export function Footer() {
   return (
@@ -69,7 +49,7 @@ export function Footer() {
             <div>
               <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">Shop</h3>
               <ul className="mt-6 space-y-4">
-                {footerLinks.shop.map((link) => (
+                {FOOTER_MENU.shop.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
@@ -84,7 +64,7 @@ export function Footer() {
             <div>
               <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">Support</h3>
               <ul className="mt-6 space-y-4">
-                {footerLinks.support.map((link) => (
+                {FOOTER_MENU.support.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
@@ -99,7 +79,7 @@ export function Footer() {
             <div className="mt-12 md:mt-0">
               <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">Company</h3>
               <ul className="mt-6 space-y-4">
-                {footerLinks.company.map((link) => (
+                {FOOTER_MENU.company.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
@@ -122,24 +102,16 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Fiorisce Florist. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <Link
-              href="#"
-              className="text-b5 font-inter hover:text-cornsilk-100 text-olive-400 transition-colors"
-            >
-              Instagram
-            </Link>
-            <Link
-              href="#"
-              className="text-b5 font-inter hover:text-cornsilk-100 text-olive-400 transition-colors"
-            >
-              Facebook
-            </Link>
-            <Link
-              href="#"
-              className="text-b5 font-inter hover:text-cornsilk-100 text-olive-400 transition-colors"
-            >
-              Twitter
-            </Link>
+            {FOOTER_MENU.social.map((social) => (
+              <Link
+                key={`${social.name}-${social.href}`}
+                href={social.href}
+                target="blank"
+                className="text-b5 font-inter hover:text-cornsilk-100 text-olive-400 transition-colors"
+              >
+                {social.name}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

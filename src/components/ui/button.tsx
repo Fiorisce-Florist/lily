@@ -14,7 +14,7 @@ const buttonVariants = cva(
         outline:
           "border border-cornsilk-400 text-neutral-800 bg-transparent  hover:bg-cornsilk-300 active:bg-cornsilk-500  hover:text-neutral-800",
         ghost:
-          "text-neutral-700 hover:bg-cornsilk-200 hover:text-neutral-800 active:bg-cornsilk-500",
+          "text-neutral-700 dark:text-neutral-400 hover:bg-cornsilk-200 dark:hover:text-neutral-800 active:bg-cornsilk-500",
         link: "text-blush-500 underline-offset-4 hover:underline active:text-blush-700",
       },
       size: {

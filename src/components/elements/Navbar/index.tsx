@@ -1,17 +1,11 @@
 import * as React from "react";
 import Link from "next/link";
-import { Menu, Search, ShoppingBag, User } from "lucide-react";
+import { Menu, ShoppingBag, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ThemeToggle } from "./theme-toggle";
-
-const navLinks = [
-  { name: "Shop", href: "/shop" },
-  { name: "Subscriptions", href: "/subscriptions" },
-  { name: "Occasions", href: "/occasions" },
-  { name: "Journal", href: "/journal" },
-];
+import { ThemeToggle } from "../theme-toggle";
+import { NAV_MENU } from "./const";
 
 export function Navbar() {
   return (
@@ -32,7 +26,7 @@ export function Navbar() {
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-4 py-8">
-                {navLinks.map((link) => (
+                {NAV_MENU.map((link) => (
                   <Link
                     key={link.name}
                     href={link.href}
@@ -57,7 +51,7 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden flex-1 items-center justify-center gap-8 md:flex">
-          {navLinks.map((link) => (
+          {NAV_MENU.map((link) => (
             <Link
               key={link.name}
               href={link.href}
@@ -71,19 +65,16 @@ export function Navbar() {
         {/* Actions */}
         <div className="flex flex-1 items-center justify-end gap-2 md:gap-4">
           <ThemeToggle />
-          <Button variant="ghost" size="icon" aria-label="Search">
-            <Search className="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
-          </Button>
           <Button
             variant="ghost"
             size="icon"
             aria-label="Account"
             className="hidden sm:inline-flex"
           >
-            <User className="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
+            <User className="h-5 w-5" />
           </Button>
           <Button variant="ghost" size="icon" aria-label="Cart" className="relative">
-            <ShoppingBag className="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
+            <ShoppingBag className="h-5 w-5" />
             <span className="bg-blush-500 text-cornsilk-100 absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold">
               3
             </span>

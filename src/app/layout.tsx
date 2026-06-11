@@ -27,8 +27,8 @@ export const metadata: Metadata = {
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
-import { Navbar } from "@/components/elements/navbar";
-import { Footer } from "@/components/elements/footer";
+import { Navbar } from "@/components/elements/Navbar";
+import { Footer } from "@/components/elements/Footer";
 import { ThemeProvider } from "@/context/theme-provider";
 
 export default function RootLayout({
