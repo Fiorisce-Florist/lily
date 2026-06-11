@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ShoppingBag, Heart, Star, Eye } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,7 +23,6 @@ function formatPrice(v: number) {
 }
 
 function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
-  const [liked, setLiked] = React.useState(false);
   const [imgLoaded, setImgLoaded] = React.useState(false);
 
   if (list) {
@@ -33,7 +32,10 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
         className="group flex gap-5 rounded-2xl border border-cornsilk-300 bg-white p-4 transition-shadow hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900"
       >
         {/* Image */}
-        <Link href={`/shop/${bouquet.slug}`} className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl block">
+        <Link
+          href={`/shop/${bouquet.slug}`}
+          className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl block"
+        >
           {!imgLoaded && <Skeleton className="absolute inset-0" />}
           <img
             src={bouquet.image}
@@ -60,12 +62,18 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
               <div>
                 <div className="flex gap-1.5 mb-1 flex-wrap">
                   {bouquet.isBestseller && (
-                    <Badge variant="default" className="text-[10px]">Bestseller</Badge>
+                    <Badge variant="default" className="text-[10px]">
+                      Bestseller
+                    </Badge>
                   )}
                   {bouquet.isNew && (
-                    <Badge variant="success" className="text-[10px]">New</Badge>
+                    <Badge variant="success" className="text-[10px]">
+                      New
+                    </Badge>
                   )}
-                  <Badge variant="secondary" className="text-[10px]">{bouquet.occasion}</Badge>
+                  <Badge variant="secondary" className="text-[10px]">
+                    {bouquet.occasion}
+                  </Badge>
                 </div>
                 <Link href={`/shop/${bouquet.slug}`}>
                   <h3 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 hover:text-blush-600 dark:hover:text-blush-400 transition-colors">
@@ -73,24 +81,10 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
                   </h3>
                 </Link>
               </div>
-              <button
-                onClick={() => setLiked((p) => !p)}
-                aria-label={liked ? "Remove from wishlist" : "Add to wishlist"}
-                className="shrink-0 text-neutral-400 hover:text-blush-500 transition-colors"
-              >
-                <Heart className={cn("h-5 w-5", liked && "fill-blush-500 text-blush-500")} />
-              </button>
             </div>
             <p className="text-b6 mt-1 text-neutral-500 dark:text-neutral-400 line-clamp-2">
               {bouquet.description}
             </p>
-            <div className="mt-1.5 flex items-center gap-1">
-              <Star className="h-3.5 w-3.5 fill-camel-500 text-camel-500" />
-              <span className="text-b6 font-inter font-medium text-neutral-700 dark:text-neutral-300">
-                {bouquet.rating}
-              </span>
-              <span className="text-b6 text-neutral-400">({bouquet.reviewCount})</span>
-            </div>
           </div>
 
           <div className="flex items-center justify-between mt-3">
@@ -125,7 +119,10 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
       className="group relative flex flex-col rounded-2xl border border-cornsilk-300 bg-white overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 dark:border-neutral-800 dark:bg-neutral-900"
     >
       {/* Image */}
-      <Link href={`/shop/${bouquet.slug}`} className="relative block aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800">
+      <Link
+        href={`/shop/${bouquet.slug}`}
+        className="relative block aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800"
+      >
         {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
         <img
           src={bouquet.image}
@@ -138,34 +135,26 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
         />
 
         {/* Overlay actions on hover */}
-        <div className="absolute inset-0 flex items-end justify-center gap-2 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-linear-to-t from-black/20 to-transparent">
-          <span
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-neutral-700 shadow"
-            aria-label="View product"
-          >
-            <Eye className="h-4 w-4" />
-          </span>
-        </div>
+        <div className="absolute inset-0 flex items-end justify-center gap-2 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-linear-to-t from-black/20 to-transparent"></div>
 
         {/* Badges */}
         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
-          {bouquet.isBestseller && <Badge variant="default" className="text-[10px] shadow">Bestseller</Badge>}
-          {bouquet.isNew && <Badge variant="success" className="text-[10px] shadow">New</Badge>}
+          {bouquet.isBestseller && (
+            <Badge variant="default" className="text-[10px] shadow">
+              Bestseller
+            </Badge>
+          )}
+          {bouquet.isNew && (
+            <Badge variant="success" className="text-[10px] shadow">
+              New
+            </Badge>
+          )}
           {bouquet.originalPrice && (
             <Badge variant="secondary" className="text-[10px] shadow">
               {Math.round((1 - bouquet.price / bouquet.originalPrice) * 100)}% off
             </Badge>
           )}
         </div>
-
-        {/* Wishlist */}
-        <button
-          onClick={() => setLiked((p) => !p)}
-          aria-label={liked ? "Remove from wishlist" : "Add to wishlist"}
-          className="absolute top-2.5 right-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow transition-all hover:bg-white"
-        >
-          <Heart className={cn("h-4 w-4", liked ? "fill-blush-500 text-blush-500" : "text-neutral-400")} />
-        </button>
 
         {/* Out of stock overlay */}
         {!bouquet.inStock && (
@@ -180,13 +169,9 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
       {/* Content */}
       <div className="flex flex-1 flex-col p-4">
         <div className="flex items-start justify-between gap-2 mb-1">
-          <Badge variant="outline" className="text-[10px]">{bouquet.occasion}</Badge>
-          <div className="flex items-center gap-0.5 shrink-0">
-            <Star className="h-3.5 w-3.5 fill-camel-500 text-camel-500" />
-            <span className="text-b6 font-inter text-neutral-600 dark:text-neutral-400">
-              {bouquet.rating} ({bouquet.reviewCount})
-            </span>
-          </div>
+          <Badge variant="outline" className="text-[10px]">
+            {bouquet.occasion}
+          </Badge>
         </div>
 
         <Link href={`/shop/${bouquet.slug}`}>

@@ -14,7 +14,7 @@ const SUGGESTIONS = ["Roses", "Wedding", "Birthday", "Sunflower", "Lavender", "P
 
 export function ShopHero({ query, onQueryChange }: ShopHeroProps) {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-blush-100 via-cornsilk-100 to-camel-100 dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900">
+    <section className="relative overflow-hidden bg-linear-to-br from-blush-100 via-cornsilk-100 to-camel-100 dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900">
       {/* Decorative petals */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute -top-12 -right-12 h-64 w-64 rounded-full bg-blush-200/40 blur-3xl dark:bg-blush-900/20" />
@@ -24,14 +24,6 @@ export function ShopHero({ query, onQueryChange }: ShopHeroProps) {
 
       <div className="relative container mx-auto px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          {/* Label */}
-          <div className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-blush-100 px-3 py-1 dark:bg-blush-900/40">
-            <Sparkles className="h-3.5 w-3.5 text-blush-600 dark:text-blush-400" />
-            <span className="text-b6 font-inter font-medium tracking-wider text-blush-700 dark:text-blush-300 uppercase">
-              Fresh daily arrangements
-            </span>
-          </div>
-
           <h1 className="text-h1 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100">
             Discover Your
             <span className="relative ml-3 inline-block">
@@ -58,7 +50,7 @@ export function ShopHero({ query, onQueryChange }: ShopHeroProps) {
               placeholder="Search roses, birthday, lavender…"
               value={query}
               onChange={(e) => onQueryChange(e.target.value)}
-              className="h-14 rounded-2xl pl-12 pr-4 text-b4 shadow-md border-cornsilk-300 bg-white/90 dark:bg-neutral-900/90 dark:border-neutral-700 backdrop-blur-sm focus:ring-blush-500"
+              className="h-14 rounded-2xl pl-6 pr-4 text-b4 shadow-md border-cornsilk-300 bg-white/90 dark:bg-neutral-900/90 dark:border-neutral-700 backdrop-blur-sm focus:ring-blush-500"
               aria-label="Search bouquets"
             />
           </div>

@@ -2,67 +2,68 @@
 
 import * as React from "react";
 import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
-  // useEffect only runs on the client, so now we can safely show the UI
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
+  // Sleek skeleton to match the new shape
   if (!mounted) {
-    // Return a placeholder or null to avoid layout shift before hydration
-    return <div className="h-8 w-8" />;
+    return (
+      <div className="relative inline-flex h-8 w-15 shrink-0 rounded-full bg-cornsilk-200 dark:bg-neutral-800 animate-pulse" />
+    );
   }
+
+  const isDark = resolvedTheme === "dark";
 
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="rounded-md bg-gray-200 p-2 text-gray-800 transition-colors dark:bg-gray-800 dark:text-gray-200"
-      aria-label="Toggle Dark Mode"
-    >
-      {theme === "dark" ? (
-        // Sun icon (Light mode)
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="4"></circle>
-          <path d="M12 2v2"></path>
-          <path d="M12 20v2"></path>
-          <path d="m4.93 4.93 1.41 1.41"></path>
-          <path d="m17.66 17.66 1.41 1.41"></path>
-          <path d="M2 12h2"></path>
-          <path d="M20 12h2"></path>
-          <path d="m6.34 17.66-1.41 1.41"></path>
-          <path d="m19.07 4.93-1.41 1.41"></path>
-        </svg>
-      ) : (
-        // Moon icon (Dark mode)
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-        </svg>
+      role="switch"
+      aria-checked={isDark}
+      aria-label="Toggle dark mode"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className={cn(
+        "group relative inline-flex h-8 w-15 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-950",
+        isDark ? "bg-neutral-800 hover:bg-neutral-700" : "bg-cornsilk-300 hover:bg-cornsilk-400"
       )}
+    >
+      {/* Background Track Icons */}
+      <span className="pointer-events-none absolute inset-0 flex items-center justify-between px-1.5">
+        <Sun className="h-3.5 w-3.5 text-white dark:text-neutral-600 transition-colors" />
+        <Moon className="h-3.5 w-3.5 text-cornsilk-500 dark:text-neutral-500 transition-colors" />
+      </span>
+
+      {/* Sliding Thumb */}
+      <span
+        className={cn(
+          "pointer-events-none relative z-10 flex h-6 w-6 items-center justify-center rounded-full shadow-sm ring-0 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+          isDark
+            ? "translate-x-8 bg-neutral-950 shadow-black/50"
+            : "translate-x-0.5 bg-white shadow-cornsilk-500/50"
+        )}
+      >
+        {/* Animated Sun Icon inside thumb */}
+        <Sun
+          className={cn(
+            "absolute h-3.5 w-3.5 transition-all duration-500 ease-in-out text-blush-500",
+            isDark ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"
+          )}
+        />
+        
+        {/* Animated Moon Icon inside thumb */}
+        <Moon
+          className={cn(
+            "absolute h-3.5 w-3.5 transition-all duration-500 ease-in-out text-cornsilk-100",
+            isDark ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"
+          )}
+        />
+      </span>
     </button>
   );
 }
