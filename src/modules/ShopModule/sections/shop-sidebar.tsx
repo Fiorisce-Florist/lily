@@ -16,38 +16,38 @@ interface ShopSidebarProps {
 
 // ── Flower badge config ──────────────────────────────────────────────────────
 
-const FLOWER_META: Record<string, { emoji: string; label: string }> = {
-  "Rose":             { emoji: "🌹", label: "Rose" },
-  "Peony":            { emoji: "🌸", label: "Peony" },
-  "Lily":             { emoji: "🌷", label: "Lily" },
-  "Sunflower":        { emoji: "🌻", label: "Sunflower" },
-  "Daisy":            { emoji: "🌼", label: "Daisy" },
-  "Lavender":         { emoji: "💜", label: "Lavender" },
-  "Wildflower":       { emoji: "🌿", label: "Wildflower" },
-  "Baby's Breath":    { emoji: "🤍", label: "Baby's Breath" },
-  "Ranunculus":       { emoji: "🏵️", label: "Ranunculus" },
-  "Eucalyptus":       { emoji: "🍃", label: "Eucalyptus" },
-  "Bird of Paradise": { emoji: "🦜", label: "Bird of Paradise" },
-  "Protea":           { emoji: "🌺", label: "Protea" },
-  "Sweet Pea":        { emoji: "🌱", label: "Sweet Pea" },
-  "Cosmos":           { emoji: "✨", label: "Cosmos" },
-  "Foxglove":         { emoji: "🎐", label: "Foxglove" },
-  "Scabiosa":         { emoji: "🔮", label: "Scabiosa" },
-  "Dried Grass":      { emoji: "🌾", label: "Dried Grass" },
+const FLOWER_META: Record<string, { label: string }> = {
+  Rose: { label: "Rose" },
+  Peony: { label: "Peony" },
+  Lily: { label: "Lily" },
+  Sunflower: { label: "Sunflower" },
+  Daisy: { label: "Daisy" },
+  Lavender: { label: "Lavender" },
+  Wildflower: { label: "Wildflower" },
+  "Baby's Breath": { label: "Baby's Breath" },
+  Ranunculus: { label: "Ranunculus" },
+  Eucalyptus: { label: "Eucalyptus" },
+  "Bird of Paradise": { label: "Bird of Paradise" },
+  Protea: { label: "Protea" },
+  "Sweet Pea": { label: "Sweet Pea" },
+  Cosmos: { label: "Cosmos" },
+  Foxglove: { label: "Foxglove" },
+  Scabiosa: { label: "Scabiosa" },
+  "Dried Grass": { label: "Dried Grass" },
 };
 
 // ── Color dot config ─────────────────────────────────────────────────────────
 
 const COLOR_DOT: Record<string, string> = {
-  Pink:    "bg-pink-300",
-  White:   "bg-neutral-100 border border-neutral-300",
-  Green:   "bg-green-400",
-  Yellow:  "bg-yellow-300",
-  Orange:  "bg-orange-400",
-  Purple:  "bg-purple-400",
-  Red:     "bg-red-500",
-  Burgundy:"bg-rose-900",
-  Peach:   "bg-orange-200",
+  Pink: "bg-pink-300",
+  White: "bg-neutral-100 border border-neutral-300",
+  Green: "bg-green-400",
+  Yellow: "bg-yellow-300",
+  Orange: "bg-orange-400",
+  Purple: "bg-purple-400",
+  Red: "bg-red-500",
+  Burgundy: "bg-rose-900",
+  Peach: "bg-orange-200",
 };
 
 function formatPrice(v: number) {
@@ -97,13 +97,12 @@ export function ShopSidebar({ filters, onFiltersChange }: ShopSidebarProps) {
 
   return (
     <div className="space-y-5 rounded-2xl border border-cornsilk-300 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900">
-
       {/* ── Flower Type ───────────────────────────────────────────────── */}
       <FilterSection title="Flower Type">
         <div className="flex flex-wrap gap-2">
           {FLOWERS.map((flower) => {
             const active = filters.flowers.includes(flower);
-            const meta = FLOWER_META[flower] ?? { emoji: "🌸", label: flower };
+            const meta = FLOWER_META[flower];
             return (
               <button
                 key={flower}
@@ -117,7 +116,6 @@ export function ShopSidebar({ filters, onFiltersChange }: ShopSidebarProps) {
                     : "border-cornsilk-300 bg-cornsilk-100 text-neutral-600 hover:border-blush-300 hover:bg-blush-50 hover:text-blush-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-blush-700 dark:hover:bg-blush-900/20 dark:hover:text-blush-300"
                 )}
               >
-                <span className="text-sm leading-none" aria-hidden>{meta.emoji}</span>
                 <span>{meta.label}</span>
               </button>
             );
@@ -166,9 +164,7 @@ export function ShopSidebar({ filters, onFiltersChange }: ShopSidebarProps) {
           max={MAX_PRICE}
           step={25000}
           value={[filters.priceRange[0], filters.priceRange[1]]}
-          onValueChange={([min, max]) =>
-            onFiltersChange({ ...filters, priceRange: [min, max] })
-          }
+          onValueChange={([min, max]) => onFiltersChange({ ...filters, priceRange: [min, max] })}
           className="mt-4"
         />
         <div className="mt-3 flex justify-between">
@@ -202,7 +198,10 @@ export function ShopSidebar({ filters, onFiltersChange }: ShopSidebarProps) {
                 )}
               >
                 <span
-                  className={cn("h-3 w-3 rounded-full shrink-0", COLOR_DOT[color] ?? "bg-neutral-300")}
+                  className={cn(
+                    "h-3 w-3 rounded-full shrink-0",
+                    COLOR_DOT[color] ?? "bg-neutral-300"
+                  )}
                 />
                 {color}
               </button>

@@ -7,11 +7,15 @@ import { cn } from "@/lib/utils";
 
 export function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
 
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  // useSyncExternalStore is the correct way to handle SSR hydration without
+  // triggering a setState-in-effect. The server snapshot returns false;
+  // the client snapshot returns true — no useEffect needed.
+  const mounted = React.useSyncExternalStore(
+    () => () => {},  // no external store to subscribe to
+    () => true,      // client: always mounted
+    () => false      // server: not yet mounted
+  );
 
   // Sleek skeleton to match the new shape
   if (!mounted) {

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ChevronLeft,
   ChevronRight,
@@ -37,29 +38,6 @@ function formatPrice(v: number) {
   }).format(v);
 }
 
-const FLOWER_EMOJI: Record<string, string> = {
-  Rose: "🌹",
-  Peony: "🌸",
-  Lily: "🌷",
-  Sunflower: "🌻",
-  Daisy: "🌼",
-  Lavender: "💜",
-  Wildflower: "🌿",
-  "Baby's Breath": "🤍",
-  Ranunculus: "🏵️",
-  Eucalyptus: "🍃",
-  "Bird of Paradise": "🦜",
-  Protea: "🌺",
-  "Sweet Pea": "🌱",
-  Cosmos: "✨",
-  Foxglove: "🎐",
-  Scabiosa: "🔮",
-  "Dried Grass": "🌾",
-};
-
-function getFlowerEmoji(flower: string) {
-  return FLOWER_EMOJI[flower] ?? "🌸";
-}
 
 type Size = "small" | "standard" | "grand";
 const SIZE_OPTIONS: { key: Size; label: string; multiplier: number }[] = [
@@ -111,11 +89,6 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
   const prev = () => setActiveIdx((i) => (i - 1 + images.length) % images.length);
   const next = () => setActiveIdx((i) => (i + 1) % images.length);
 
-  // reset loading state on image change
-  React.useEffect(() => {
-    setImgLoaded(false);
-  }, [activeIdx]);
-
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* Main image */}
@@ -126,11 +99,13 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
       >
         {!imgLoaded && <Skeleton className="absolute inset-0 rounded-2xl" />}
 
-        <img
+        <Image
+          key={images[activeIdx]}
           src={images[activeIdx]}
           alt={`${bouquet.name} — view ${activeIdx + 1}`}
+          fill
           onLoad={() => setImgLoaded(true)}
-          className={`h-full w-full object-cover transition-all duration-700 ${
+          className={`object-cover transition-all duration-700 ${
             zoomed ? "scale-110" : "scale-100"
           } ${imgLoaded ? "opacity-100" : "opacity-0"}`}
         />
@@ -194,10 +169,11 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
                 : "opacity-70 hover:opacity-100"
             }`}
           >
-            <img
+          <Image
               src={src}
               alt={`${bouquet.name} thumbnail ${i + 1}`}
-              className="h-full w-full object-cover"
+              fill
+              className="object-cover"
             />
           </button>
         ))}
@@ -314,7 +290,6 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
               key={flower}
               className="flex items-center gap-1.5 rounded-full border border-cornsilk-400 dark:border-neutral-700 bg-cornsilk-100 dark:bg-neutral-800 px-3 py-1 text-b5 font-inter text-neutral-700 dark:text-neutral-200"
             >
-              <span>{getFlowerEmoji(flower)}</span>
               {flower}
             </span>
           ))}
@@ -558,7 +533,6 @@ function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
                   }`}
                 >
                   <td className="px-4 py-3 font-medium text-neutral-800 dark:text-neutral-200">
-                    <span className="mr-2">{getFlowerEmoji(flower)}</span>
                     {flower}
                   </td>
                   <td className="px-4 py-3 text-neutral-500 dark:text-neutral-400 capitalize">
@@ -820,11 +794,12 @@ function RelatedCard({ bouquet }: { bouquet: Bouquet }) {
       <Link href={`/shop/${bouquet.slug}`} className="block" tabIndex={-1} aria-hidden="true">
         <div className="relative aspect-square overflow-hidden bg-cornsilk-100 dark:bg-neutral-800">
           {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
-          <img
+          <Image
             src={bouquet.image}
             alt={bouquet.name}
+            fill
             onLoad={() => setImgLoaded(true)}
-            className={`h-full w-full object-cover transition-all duration-500 group-hover:scale-105 ${
+            className={`object-cover transition-all duration-500 group-hover:scale-105 ${
               imgLoaded ? "opacity-100" : "opacity-0"
             }`}
           />

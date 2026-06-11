@@ -11,23 +11,6 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { CartItemType } from "../index";
 
-const FLOWER_EMOJI: Record<string, string> = {
-  Rose: "🌹",
-  Peony: "🌸",
-  Lily: "🌷",
-  Sunflower: "🌻",
-  Daisy: "🌼",
-  Lavender: "💜",
-  Wildflower: "🌿",
-  "Baby's Breath": "🤍",
-  Ranunculus: "🏵️",
-  Eucalyptus: "🍃",
-  "Bird of Paradise": "🦜",
-  Protea: "🌺",
-  "Sweet Pea": "🌱",
-  Cosmos: "✨",
-};
-
 function formatPrice(v: number) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -163,7 +146,6 @@ export function CartItems({
                   <div className="mt-2 flex flex-wrap gap-1">
                     {item.bouquet.flowers.slice(0, 3).map((f) => (
                       <Badge key={f} variant={"outline"} className="text-m3">
-                        <span>{FLOWER_EMOJI[f] ?? "🌸"}</span>
                         {f}
                       </Badge>
                     ))}
