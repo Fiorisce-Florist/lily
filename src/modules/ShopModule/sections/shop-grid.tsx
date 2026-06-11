@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { ShoppingBag, Heart, Star, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +33,7 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
         className="group flex gap-5 rounded-2xl border border-cornsilk-300 bg-white p-4 transition-shadow hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900"
       >
         {/* Image */}
-        <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl">
+        <Link href={`/shop/${bouquet.slug}`} className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl block">
           {!imgLoaded && <Skeleton className="absolute inset-0" />}
           <img
             src={bouquet.image}
@@ -50,7 +51,7 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
               </span>
             </div>
           )}
-        </div>
+        </Link>
 
         {/* Info */}
         <div className="flex flex-1 flex-col justify-between min-w-0">
@@ -66,9 +67,11 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
                   )}
                   <Badge variant="secondary" className="text-[10px]">{bouquet.occasion}</Badge>
                 </div>
-                <h3 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-                  {bouquet.name}
-                </h3>
+                <Link href={`/shop/${bouquet.slug}`}>
+                  <h3 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 hover:text-blush-600 dark:hover:text-blush-400 transition-colors">
+                    {bouquet.name}
+                  </h3>
+                </Link>
               </div>
               <button
                 onClick={() => setLiked((p) => !p)}
@@ -122,7 +125,7 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
       className="group relative flex flex-col rounded-2xl border border-cornsilk-300 bg-white overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 dark:border-neutral-800 dark:bg-neutral-900"
     >
       {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-cornsilk-100 dark:bg-neutral-800">
+      <Link href={`/shop/${bouquet.slug}`} className="relative block aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800">
         {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
         <img
           src={bouquet.image}
@@ -135,13 +138,13 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
         />
 
         {/* Overlay actions on hover */}
-        <div className="absolute inset-0 flex items-end justify-center gap-2 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gradient-to-t from-black/20 to-transparent">
-          <button
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-neutral-700 shadow hover:bg-white transition-all"
-            aria-label="Quick view"
+        <div className="absolute inset-0 flex items-end justify-center gap-2 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-linear-to-t from-black/20 to-transparent">
+          <span
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-neutral-700 shadow"
+            aria-label="View product"
           >
             <Eye className="h-4 w-4" />
-          </button>
+          </span>
         </div>
 
         {/* Badges */}
@@ -172,7 +175,7 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
             </span>
           </div>
         )}
-      </div>
+      </Link>
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-4">
@@ -186,9 +189,11 @@ function BouquetCard({ bouquet, list }: { bouquet: Bouquet; list?: boolean }) {
           </div>
         </div>
 
-        <h3 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 leading-tight">
-          {bouquet.name}
-        </h3>
+        <Link href={`/shop/${bouquet.slug}`}>
+          <h3 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 leading-tight hover:text-blush-600 dark:hover:text-blush-400 transition-colors">
+            {bouquet.name}
+          </h3>
+        </Link>
         <p className="text-b6 mt-1 text-neutral-500 dark:text-neutral-400 line-clamp-2 flex-1">
           {bouquet.description}
         </p>
