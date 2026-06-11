@@ -1,9 +1,18 @@
 import * as React from "react";
 import Link from "next/link";
-import { Menu, ShoppingBag, User } from "lucide-react";
+import { LucidePackage, LucideUserCircle, Menu, ShoppingBag, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "../theme-toggle";
 import { NAV_MENU } from "./const";
 
@@ -65,14 +74,45 @@ export function Navbar() {
         {/* Actions */}
         <div className="flex flex-1 items-center justify-end gap-2 md:gap-4">
           <ThemeToggle />
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Account"
-            className="hidden sm:inline-flex"
-          >
-            <User className="h-5 w-5" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Account"
+                className="hidden sm:inline-flex"
+              >
+                <User className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="font-fraunces">My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                  <Link href="/profile" className="cursor-pointer w-full">
+                    <LucideUserCircle />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/orders" className="cursor-pointer w-full">
+                    <LucidePackage />
+                    Orders
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/login"
+                  className="cursor-pointer w-full text-blush-600 dark:text-blush-400"
+                >
+                  Sign In
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Link href={"/cart"}>
             <Button variant="ghost" size="icon" aria-label="Cart" className="relative">
               <ShoppingBag className="h-5 w-5" />
