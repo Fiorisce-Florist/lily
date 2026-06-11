@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useTheme } from "next-themes"
+import * as React from "react";
+import { useTheme } from "next-themes";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
 
   // useEffect only runs on the client, so now we can safely show the UI
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   if (!mounted) {
     // Return a placeholder or null to avoid layout shift before hydration
-    return <div className="h-8 w-8" />
+    return <div className="h-8 w-8" />;
   }
 
   return (
@@ -64,5 +64,5 @@ export function ThemeToggle() {
         </svg>
       )}
     </button>
-  )
+  );
 }

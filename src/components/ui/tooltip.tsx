@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+import * as React from "react";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-const TooltipProvider = TooltipPrimitive.Provider
+const TooltipProvider = TooltipPrimitive.Provider;
 
-const Tooltip = TooltipPrimitive.Root
+const Tooltip = TooltipPrimitive.Root;
 
-const TooltipTrigger = TooltipPrimitive.Trigger
+const TooltipTrigger = TooltipPrimitive.Trigger;
 
 /* -------------------------------- Content -------------------------------- */
 
@@ -30,23 +30,16 @@ const TooltipContent = React.forwardRef<
       {...props}
     />
   </TooltipPrimitive.Portal>
-))
-TooltipContent.displayName = TooltipPrimitive.Content.displayName
+));
+TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
 /* -------------------------------- Types --------------------------------- */
 
-type TooltipProviderProps = React.ComponentPropsWithoutRef<
-  typeof TooltipProvider
->
-type TooltipProps = React.ComponentPropsWithoutRef<typeof Tooltip>
-type TooltipTriggerProps = React.ComponentPropsWithoutRef<typeof TooltipTrigger>
-type TooltipContentProps = React.ComponentPropsWithoutRef<typeof TooltipContent>
+type TooltipProviderProps = React.ComponentPropsWithoutRef<typeof TooltipProvider>;
+type TooltipProps = React.ComponentPropsWithoutRef<typeof Tooltip>;
+type TooltipTriggerProps = React.ComponentPropsWithoutRef<typeof TooltipTrigger>;
+type TooltipContentProps = React.ComponentPropsWithoutRef<typeof TooltipContent>;
 
-export { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent }
+export { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent };
 
-export type {
-  TooltipProviderProps,
-  TooltipProps,
-  TooltipTriggerProps,
-  TooltipContentProps,
-}
+export type { TooltipProviderProps, TooltipProps, TooltipTriggerProps, TooltipContentProps };

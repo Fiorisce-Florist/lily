@@ -37,10 +37,7 @@ declare module "midtrans-client" {
     transaction: {
       status(orderId: string): Promise<Record<string, string>>;
       cancel(orderId: string): Promise<Record<string, unknown>>;
-      refund(
-        orderId: string,
-        params: Record<string, unknown>
-      ): Promise<Record<string, unknown>>;
+      refund(orderId: string, params: Record<string, unknown>): Promise<Record<string, unknown>>;
     };
   }
 }

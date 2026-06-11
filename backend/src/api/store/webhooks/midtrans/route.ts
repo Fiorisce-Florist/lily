@@ -1,18 +1,13 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
 import crypto from "crypto";
 
-export async function POST(
-  req: MedusaRequest,
-  res: MedusaResponse
-): Promise<void> {
+export async function POST(req: MedusaRequest, res: MedusaResponse): Promise<void> {
   const serverKey = process.env.MIDTRANS_SERVER_KEY ?? "";
   const body = req.body as Record<string, string>;
 
   const signatureKey = crypto
     .createHash("sha512")
-    .update(
-      `${body.order_id}${body.status_code}${body.gross_amount}${serverKey}`
-    )
+    .update(`${body.order_id}${body.status_code}${body.gross_amount}${serverKey}`)
     .digest("hex");
 
   if (signatureKey !== body.signature_key) {

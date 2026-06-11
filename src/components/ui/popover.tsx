@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as PopoverPrimitive from "@radix-ui/react-popover"
+import * as React from "react";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-const Popover = PopoverPrimitive.Root
+const Popover = PopoverPrimitive.Root;
 
-const PopoverTrigger = PopoverPrimitive.Trigger
+const PopoverTrigger = PopoverPrimitive.Trigger;
 
-const PopoverAnchor = PopoverPrimitive.Anchor
+const PopoverAnchor = PopoverPrimitive.Anchor;
 
 /* -------------------------------- Content -------------------------------- */
 
@@ -31,21 +31,16 @@ const PopoverContent = React.forwardRef<
       {...props}
     />
   </PopoverPrimitive.Portal>
-))
-PopoverContent.displayName = PopoverPrimitive.Content.displayName
+));
+PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
 /* -------------------------------- Types --------------------------------- */
 
-type PopoverProps = React.ComponentPropsWithoutRef<typeof Popover>
-type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
-type PopoverAnchorProps = React.ComponentPropsWithoutRef<typeof PopoverAnchor>
-type PopoverContentProps = React.ComponentPropsWithoutRef<typeof PopoverContent>
+type PopoverProps = React.ComponentPropsWithoutRef<typeof Popover>;
+type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
+type PopoverAnchorProps = React.ComponentPropsWithoutRef<typeof PopoverAnchor>;
+type PopoverContentProps = React.ComponentPropsWithoutRef<typeof PopoverContent>;
 
-export { Popover, PopoverTrigger, PopoverAnchor, PopoverContent }
+export { Popover, PopoverTrigger, PopoverAnchor, PopoverContent };
 
-export type {
-  PopoverProps,
-  PopoverTriggerProps,
-  PopoverAnchorProps,
-  PopoverContentProps,
-}
+export type { PopoverProps, PopoverTriggerProps, PopoverAnchorProps, PopoverContentProps };

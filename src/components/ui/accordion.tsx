@@ -1,32 +1,28 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDown } from "lucide-react"
+import * as React from "react";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { ChevronDown } from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 /* ---------------------------------- Types --------------------------------- */
 
-export type AccordionProps = React.ComponentPropsWithoutRef<
-  typeof AccordionPrimitive.Root
->
+export type AccordionProps = React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Root>;
 
-export type AccordionItemProps = React.ComponentPropsWithoutRef<
-  typeof AccordionPrimitive.Item
->
+export type AccordionItemProps = React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>;
 
 export type AccordionTriggerProps = React.ComponentPropsWithoutRef<
   typeof AccordionPrimitive.Trigger
->
+>;
 
 export type AccordionContentProps = React.ComponentPropsWithoutRef<
   typeof AccordionPrimitive.Content
->
+>;
 
 /* ------------------------------- Accordion -------------------------------- */
 
-const Accordion = AccordionPrimitive.Root
+const Accordion = AccordionPrimitive.Root;
 
 /* ----------------------------- AccordionItem ------------------------------ */
 
@@ -37,14 +33,11 @@ const AccordionItem = React.forwardRef<
   <AccordionPrimitive.Item
     ref={ref}
     // Ditambahkan border dark mode menggunakan warna warm stone gray (neutral-800)
-    className={cn(
-      "border-cornsilk-300 border-b dark:border-neutral-800",
-      className
-    )}
+    className={cn("border-cornsilk-300 border-b dark:border-neutral-800", className)}
     {...props}
   />
-))
-AccordionItem.displayName = "AccordionItem"
+));
+AccordionItem.displayName = "AccordionItem";
 
 /* ---------------------------- AccordionTrigger ---------------------------- */
 
@@ -73,8 +66,8 @@ const AccordionTrigger = React.forwardRef<
       />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
-))
-AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
+));
+AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 
 /* ---------------------------- AccordionContent ---------------------------- */
 
@@ -89,17 +82,14 @@ const AccordionContent = React.forwardRef<
   >
     {/* Mengubah warna teks konten menjadi sedikit lebih lembut (neutral-600 / neutral-400) demi kenyamanan membaca */}
     <div
-      className={cn(
-        "pt-0 pb-4 leading-relaxed text-neutral-600 dark:text-neutral-400",
-        className
-      )}
+      className={cn("pt-0 pb-4 leading-relaxed text-neutral-600 dark:text-neutral-400", className)}
     >
       {children}
     </div>
   </AccordionPrimitive.Content>
-))
-AccordionContent.displayName = AccordionPrimitive.Content.displayName
+));
+AccordionContent.displayName = AccordionPrimitive.Content.displayName;
 
 /* -------------------------------- Exports --------------------------------- */
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };

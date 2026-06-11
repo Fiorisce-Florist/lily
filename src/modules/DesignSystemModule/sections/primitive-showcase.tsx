@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Separator } from "@/components/ui/separator"
-import { Search } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+import { Search } from "lucide-react";
 
 export function PrimitiveShowcase() {
   return (
@@ -59,11 +59,7 @@ export function PrimitiveShowcase() {
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input
-                  type="email"
-                  id="email"
-                  placeholder="hello@fiorisce.com"
-                />
+                <Input type="email" id="email" placeholder="hello@fiorisce.com" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="disabled-input">Disabled Input</Label>
@@ -72,11 +68,7 @@ export function PrimitiveShowcase() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="message">Message</Label>
-              <Textarea
-                id="message"
-                placeholder="Type your message here..."
-                className="h-32"
-              />
+              <Textarea id="message" placeholder="Type your message here..." className="h-32" />
             </div>
           </div>
         </div>
@@ -118,9 +110,7 @@ export function PrimitiveShowcase() {
               <h4 className="text-b4 font-inter dark:text-cornsilk-100 font-medium text-neutral-900">
                 Radix Primitives
               </h4>
-              <p className="text-b5 text-neutral-500">
-                Accessible unstyled UI components.
-              </p>
+              <p className="text-b5 text-neutral-500">Accessible unstyled UI components.</p>
             </div>
             <Separator className="my-4" />
             <div className="text-b5 flex h-5 items-center space-x-4 text-neutral-700 dark:text-neutral-300">
@@ -134,5 +124,5 @@ export function PrimitiveShowcase() {
         </div>
       </div>
     </section>
-  )
+  );
 }

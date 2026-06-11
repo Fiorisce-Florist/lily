@@ -3,8 +3,13 @@ export default function Home() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <section className="text-center py-20">
         <h1 className="text-5xl font-bold text-gray-900 mb-4">Welcome to Fiorisce</h1>
-        <p className="text-xl text-gray-600 mb-8">Premium Florist - Beautiful Bouquets for Every Occasion</p>
-        <a href="/products" className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition">
+        <p className="text-xl text-gray-600 mb-8">
+          Premium Florist - Beautiful Bouquets for Every Occasion
+        </p>
+        <a
+          href="/products"
+          className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition"
+        >
           Shop Now
         </a>
       </section>

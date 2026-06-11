@@ -1,23 +1,17 @@
-import * as React from "react"
-import Link from "next/link"
-import { Menu, Search, ShoppingBag, User } from "lucide-react"
+import * as React from "react";
+import Link from "next/link";
+import { Menu, Search, ShoppingBag, User } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import { ThemeToggle } from "./theme-toggle"
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ThemeToggle } from "./theme-toggle";
 
 const navLinks = [
   { name: "Shop", href: "/shop" },
   { name: "Subscriptions", href: "/subscriptions" },
   { name: "Occasions", href: "/occasions" },
   { name: "Journal", href: "/journal" },
-]
+];
 
 export function Navbar() {
   return (
@@ -88,12 +82,7 @@ export function Navbar() {
           >
             <User className="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Cart"
-            className="relative"
-          >
+          <Button variant="ghost" size="icon" aria-label="Cart" className="relative">
             <ShoppingBag className="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
             <span className="bg-blush-500 text-cornsilk-100 absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold">
               3
@@ -102,5 +91,5 @@ export function Navbar() {
         </div>
       </div>
     </header>
-  )
+  );
 }

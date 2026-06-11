@@ -76,7 +76,7 @@ icons:         lucide-react
 **`cn()` helper** — always import from `@/lib/utils`:
 
 ```ts
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 ```
 
 ---
@@ -139,7 +139,7 @@ const buttonVariants = cva(
     },
     defaultVariants: { variant: "primary", size: "md" },
   }
-)
+);
 ```
 
 ### 3. Radix UI primitives
@@ -148,7 +148,7 @@ Use Radix directly when shadcn has no wrapper, or when you need full control. Al
 
 ```tsx
 // ✅ Wrapping a Radix primitive
-import * as TogglePrimitive from "@radix-ui/react-toggle"
+import * as TogglePrimitive from "@radix-ui/react-toggle";
 
 export const Toggle = React.forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
@@ -165,8 +165,8 @@ export const Toggle = React.forwardRef<
     )}
     {...props}
   />
-))
-Toggle.displayName = TogglePrimitive.Root.displayName
+));
+Toggle.displayName = TogglePrimitive.Root.displayName;
 ```
 
 ### 4. Accessibility requirements (non-negotiable)
@@ -184,20 +184,16 @@ Toggle.displayName = TogglePrimitive.Root.displayName
 Expose `asChild` on wrapper components so consumers can change the underlying element:
 
 ```tsx
-import { Slot } from "@radix-ui/react-slot"
+import { Slot } from "@radix-ui/react-slot";
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ asChild = false, className, variant, size, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+    const Comp = asChild ? Slot : "button";
     return (
-      <Comp
-        ref={ref}
-        className={cn(buttonVariants({ variant, size }), className)}
-        {...props}
-      />
-    )
+      <Comp ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />
+    );
   }
-)
+);
 ```
 
 ### 6. Composition over configuration
@@ -253,9 +249,9 @@ If the request is ambiguous (e.g. "make a badge"), ask exactly one clarifying qu
 ### Skeleton (copy-paste base for any new component)
 
 ```tsx
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 const componentVariants = cva("/* base */", {
   variants: {
@@ -263,28 +259,24 @@ const componentVariants = cva("/* base */", {
     size: { md: "" },
   },
   defaultVariants: { variant: "default", size: "md" },
-})
+});
 
 export type ComponentProps = React.ComponentPropsWithoutRef<"div"> &
-  VariantProps<typeof componentVariants>
+  VariantProps<typeof componentVariants>;
 
 export const Component = React.forwardRef<HTMLDivElement, ComponentProps>(
   ({ className, variant, size, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(componentVariants({ variant, size }), className)}
-      {...props}
-    />
+    <div ref={ref} className={cn(componentVariants({ variant, size }), className)} {...props} />
   )
-)
-Component.displayName = "Component"
+);
+Component.displayName = "Component";
 ```
 
 ### Visually hidden (for screen-reader-only text)
 
 ```tsx
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-;<VisuallyHidden>Tutup dialog</VisuallyHidden>
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+<VisuallyHidden>Tutup dialog</VisuallyHidden>;
 ```
 
 ### Standard focus ring

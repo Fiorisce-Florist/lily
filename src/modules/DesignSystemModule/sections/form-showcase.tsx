@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Select,
@@ -8,11 +8,11 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Pagination,
   PaginationContent,
@@ -21,7 +21,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -30,7 +30,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
 const invoices = [
   {
@@ -51,7 +51,7 @@ const invoices = [
     totalAmount: "$350.00",
     paymentMethod: "Bank Transfer",
   },
-]
+];
 
 export function FormShowcase() {
   return (
@@ -61,8 +61,7 @@ export function FormShowcase() {
           Forms & Navigation
         </h2>
         <p className="text-b4 mb-8 max-w-2xl text-neutral-600 dark:text-neutral-400">
-          Input mechanisms, structural navigation elements, and data
-          presentation.
+          Input mechanisms, structural navigation elements, and data presentation.
         </p>
       </div>
 
@@ -109,10 +108,7 @@ export function FormShowcase() {
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox id="disabled" disabled />
-              <Label
-                htmlFor="disabled"
-                className="text-b4 font-normal opacity-50"
-              >
+              <Label htmlFor="disabled" className="text-b4 font-normal opacity-50">
                 Disabled option
               </Label>
             </div>
@@ -159,18 +155,12 @@ export function FormShowcase() {
                 <TabsTrigger value="account">Account</TabsTrigger>
                 <TabsTrigger value="password">Password</TabsTrigger>
               </TabsList>
-              <TabsContent
-                value="account"
-                className="bg-cornsilk-100 mt-2 rounded-lg p-4"
-              >
+              <TabsContent value="account" className="bg-cornsilk-100 mt-2 rounded-lg p-4">
                 <p className="text-b4 text-neutral-700 dark:text-neutral-300">
                   Make changes to your account here.
                 </p>
               </TabsContent>
-              <TabsContent
-                value="password"
-                className="bg-cornsilk-100 mt-2 rounded-lg p-4"
-              >
+              <TabsContent value="password" className="bg-cornsilk-100 mt-2 rounded-lg p-4">
                 <p className="text-b4 text-neutral-700 dark:text-neutral-300">
                   Change your password here.
                 </p>
@@ -231,14 +221,10 @@ export function FormShowcase() {
               <TableBody>
                 {invoices.map((invoice) => (
                   <TableRow key={invoice.invoice}>
-                    <TableCell className="font-medium">
-                      {invoice.invoice}
-                    </TableCell>
+                    <TableCell className="font-medium">{invoice.invoice}</TableCell>
                     <TableCell>{invoice.paymentStatus}</TableCell>
                     <TableCell>{invoice.paymentMethod}</TableCell>
-                    <TableCell className="text-right">
-                      {invoice.totalAmount}
-                    </TableCell>
+                    <TableCell className="text-right">{invoice.totalAmount}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -247,5 +233,5 @@ export function FormShowcase() {
         </div>
       </div>
     </section>
-  )
+  );
 }

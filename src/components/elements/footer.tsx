@@ -1,9 +1,9 @@
-import * as React from "react"
-import Link from "next/link"
+import * as React from "react";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 const footerLinks = {
   shop: [
@@ -24,7 +24,7 @@ const footerLinks = {
     { name: "Sustainability", href: "#" },
     { name: "Careers", href: "#" },
   ],
-}
+};
 
 export function Footer() {
   return (
@@ -39,8 +39,8 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-b4 font-inter max-w-xs leading-relaxed text-olive-200">
-              Bringing the beauty of nature into your everyday life with
-              carefully curated, sustainable floral arrangements.
+              Bringing the beauty of nature into your everyday life with carefully curated,
+              sustainable floral arrangements.
             </p>
             <div className="space-y-4">
               <h3 className="text-b5 font-inter text-cornsilk-200 font-semibold tracking-wider uppercase">
@@ -67,9 +67,7 @@ export function Footer() {
           {/* Links Grid */}
           <div className="mt-12 grid grid-cols-2 gap-8 md:grid-cols-3 xl:col-span-2 xl:mt-0">
             <div>
-              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">
-                Shop
-              </h3>
+              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">Shop</h3>
               <ul className="mt-6 space-y-4">
                 {footerLinks.shop.map((link) => (
                   <li key={link.name}>
@@ -84,9 +82,7 @@ export function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">
-                Support
-              </h3>
+              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">Support</h3>
               <ul className="mt-6 space-y-4">
                 {footerLinks.support.map((link) => (
                   <li key={link.name}>
@@ -101,9 +97,7 @@ export function Footer() {
               </ul>
             </div>
             <div className="mt-12 md:mt-0">
-              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">
-                Company
-              </h3>
+              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">Company</h3>
               <ul className="mt-6 space-y-4">
                 {footerLinks.company.map((link) => (
                   <li key={link.name}>
@@ -125,8 +119,7 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-b5 font-inter text-olive-400">
-            &copy; {new Date().getFullYear()} Fiorisce Florist. All rights
-            reserved.
+            &copy; {new Date().getFullYear()} Fiorisce Florist. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link
@@ -151,5 +144,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

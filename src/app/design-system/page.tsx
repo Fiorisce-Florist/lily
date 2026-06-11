@@ -1,5 +1,5 @@
-import DesignSystemModule from "@/modules/DesignSystemModule"
+import DesignSystemModule from "@/modules/DesignSystemModule";
 
 export default function DesignSystemPage() {
-  return <DesignSystemModule />
+  return <DesignSystemModule />;
 }

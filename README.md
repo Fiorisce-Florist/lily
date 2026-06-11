@@ -14,6 +14,7 @@ Modern e-commerce platform for Fiorisce Florist built with Next.js 16, TypeScrip
 ## Architecture
 
 ### Project Structure
+
 ```
 app/
 ├── (auth)/              # Authentication pages (login, register)
@@ -50,33 +51,39 @@ MySQL database with entities: Users, Products, Categories, Orders, Payments, Car
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 20+
 - MySQL 8.0+
 
 ### Installation
 
 1. Install dependencies
+
 ```bash
 npm install
 ```
 
 2. Setup environment variables
+
 ```bash
 cp .env.example .env
 ```
 
 Edit `.env`:
+
 - `DATABASE_URL`: MySQL connection
 - `NEXTAUTH_URL`, `NEXTAUTH_SECRET`
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
 
 3. Setup database
+
 ```bash
 npx prisma migrate dev
 npx prisma generate
 ```
 
 4. Run development server
+
 ```bash
 npm run dev
 ```
@@ -86,11 +93,13 @@ Visit `http://localhost:3000`
 ## Development
 
 ### Code Quality
+
 ```bash
 npm run lint
 ```
 
 ### Database
+
 ```bash
 npx prisma studio    # Open database GUI
 npx prisma migrate dev --name migration_name

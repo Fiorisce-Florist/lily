@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 export function ColorShowcase() {
-  const steps = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+  const steps = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
   const palettes = [
     {
@@ -84,15 +84,15 @@ export function ColorShowcase() {
         1000: "bg-neutral-1000",
       },
     },
-  ]
+  ];
 
   return (
     <section className="space-y-8">
       <div>
         <h2 className="text-h2 font-fraunces">Colors</h2>
         <p className="text-b4 text-neutral-500">
-          The Lily design system uses semantic color palettes. Each palette has
-          10 steps (100 to 1000).
+          The Lily design system uses semantic color palettes. Each palette has 10 steps (100 to
+          1000).
         </p>
       </div>
 
@@ -109,8 +109,7 @@ export function ColorShowcase() {
 
             <div className="grid grid-cols-5 gap-2 md:grid-cols-10">
               {steps.map((step) => {
-                const className =
-                  palette.classes[step as keyof typeof palette.classes]
+                const className = palette.classes[step as keyof typeof palette.classes];
 
                 return (
                   <div key={step}>
@@ -124,12 +123,12 @@ export function ColorShowcase() {
                       {step}
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
           </div>
         ))}
       </div>
     </section>
-  )
+  );
 }

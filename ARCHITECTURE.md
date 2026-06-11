@@ -5,6 +5,7 @@
 This project follows Clean Architecture and Domain-Driven Design principles:
 
 ### 1. **Separation of Concerns**
+
 - **Presentation Layer** (`app/components`, `app/(auth)`, `app/(main)`): UI components and pages
 - **Business Logic Layer** (`app/lib`, `app/api`): Business rules and API routes
 - **Data Layer** (`prisma/schema.prisma`): Database models and queries

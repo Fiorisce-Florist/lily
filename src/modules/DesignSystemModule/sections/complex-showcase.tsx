@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Calendar } from "@/components/ui/calendar"
-import { Combobox } from "@/components/ui/combobox"
-import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
+import * as React from "react";
+import { Calendar } from "@/components/ui/calendar";
+import { Combobox } from "@/components/ui/combobox";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel"
-import { DataTable } from "@/components/ui/data-table"
-import { ColumnDef } from "@tanstack/react-table"
+} from "@/components/ui/carousel";
+import { DataTable } from "@/components/ui/data-table";
+import { ColumnDef } from "@tanstack/react-table";
 
 // Data Table Mock Data
 type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
+  id: string;
+  amount: number;
+  status: "pending" | "processing" | "success" | "failed";
+  email: string;
+};
 
 const data: Payment[] = [
   { id: "m5gr84i9", amount: 316, status: "success", email: "ken99@yahoo.com" },
@@ -44,7 +44,7 @@ const data: Payment[] = [
     status: "failed",
     email: "carmella@hotmail.com",
   },
-]
+];
 
 const columns: ColumnDef<Payment>[] = [
   { accessorKey: "status", header: "Status" },
@@ -53,20 +53,18 @@ const columns: ColumnDef<Payment>[] = [
     accessorKey: "amount",
     header: "Amount",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const amount = parseFloat(row.getValue("amount"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-      }).format(amount)
-      return (
-        <div className="font-jetbrains text-right font-medium">{formatted}</div>
-      )
+      }).format(amount);
+      return <div className="font-jetbrains text-right font-medium">{formatted}</div>;
     },
   },
-]
+];
 
 export function ComplexShowcase() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   return (
     <section className="space-y-8">
@@ -157,10 +155,7 @@ export function ComplexShowcase() {
             >
               Default Toast
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => toast.success("Subscription updated!")}
-            >
+            <Button variant="outline" onClick={() => toast.success("Subscription updated!")}>
               Success Toast
             </Button>
             <Button
@@ -183,5 +178,5 @@ export function ComplexShowcase() {
         </div>
       </div>
     </section>
-  )
+  );
 }

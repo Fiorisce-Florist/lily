@@ -1,38 +1,33 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-const Tabs = TabsPrimitive.Root
+const Tabs = TabsPrimitive.Root;
 
 // ---------- TabsList ----------
 
-export type TabsListProps = React.ComponentPropsWithoutRef<
-  typeof TabsPrimitive.List
->
+export type TabsListProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>;
 
-const TabsList = React.forwardRef<
-  React.ComponentRef<typeof TabsPrimitive.List>,
-  TabsListProps
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      "bg-cornsilk-200 inline-flex h-10 items-center justify-center rounded-lg p-1 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400",
-      className
-    )}
-    {...props}
-  />
-))
-TabsList.displayName = TabsPrimitive.List.displayName
+const TabsList = React.forwardRef<React.ComponentRef<typeof TabsPrimitive.List>, TabsListProps>(
+  ({ className, ...props }, ref) => (
+    <TabsPrimitive.List
+      ref={ref}
+      className={cn(
+        "bg-cornsilk-200 inline-flex h-10 items-center justify-center rounded-lg p-1 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400",
+        className
+      )}
+      {...props}
+    />
+  )
+);
+TabsList.displayName = TabsPrimitive.List.displayName;
 
 // ---------- TabsTrigger ----------
 
-export type TabsTriggerProps = React.ComponentPropsWithoutRef<
-  typeof TabsPrimitive.Trigger
->
+export type TabsTriggerProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>;
 
 const TabsTrigger = React.forwardRef<
   React.ComponentRef<typeof TabsPrimitive.Trigger>,
@@ -46,14 +41,12 @@ const TabsTrigger = React.forwardRef<
     )}
     {...props}
   />
-))
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
+));
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 // ---------- TabsContent ----------
 
-export type TabsContentProps = React.ComponentPropsWithoutRef<
-  typeof TabsPrimitive.Content
->
+export type TabsContentProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>;
 
 const TabsContent = React.forwardRef<
   React.ComponentRef<typeof TabsPrimitive.Content>,
@@ -67,7 +60,7 @@ const TabsContent = React.forwardRef<
     )}
     {...props}
   />
-))
-TabsContent.displayName = TabsPrimitive.Content.displayName
+));
+TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+export { Tabs, TabsList, TabsTrigger, TabsContent };

@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { TypographyShowcase } from "./sections/typography-showcase"
-import { ColorShowcase } from "./sections/color-showcase"
-import { PrimitiveShowcase } from "./sections/primitive-showcase"
-import { CompoundShowcase } from "./sections/compound-showcase"
-import { OverlayShowcase } from "./sections/overlay-showcase"
-import { FormShowcase } from "./sections/form-showcase"
-import { ComplexShowcase } from "./sections/complex-showcase"
+import * as React from "react";
+import { TypographyShowcase } from "./sections/typography-showcase";
+import { ColorShowcase } from "./sections/color-showcase";
+import { PrimitiveShowcase } from "./sections/primitive-showcase";
+import { CompoundShowcase } from "./sections/compound-showcase";
+import { OverlayShowcase } from "./sections/overlay-showcase";
+import { FormShowcase } from "./sections/form-showcase";
+import { ComplexShowcase } from "./sections/complex-showcase";
 
 const sections = [
   { id: "typography", label: "Typography", component: TypographyShowcase },
@@ -17,20 +17,20 @@ const sections = [
   { id: "overlays", label: "Overlays & Menus", component: OverlayShowcase },
   { id: "forms", label: "Forms & Nav", component: FormShowcase },
   { id: "complex", label: "Complex Features", component: ComplexShowcase },
-]
+];
 
 export default function DesignSystemModule() {
-  const [activeSection, setActiveSection] = React.useState("typography")
+  const [activeSection, setActiveSection] = React.useState("typography");
 
   const scrollToSection = (id: string) => {
-    setActiveSection(id)
-    const element = document.getElementById(id)
+    setActiveSection(id);
+    const element = document.getElementById(id);
     if (element) {
       // Adjust scroll position for the fixed header
-      const y = element.getBoundingClientRect().top + window.scrollY - 100
-      window.scrollTo({ top: y, behavior: "smooth" })
+      const y = element.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
-  }
+  };
 
   // Optional: Intersection observer to update active section on scroll
   React.useEffect(() => {
@@ -38,20 +38,20 @@ export default function DesignSystemModule() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
+            setActiveSection(entry.target.id);
           }
-        })
+        });
       },
       { rootMargin: "-20% 0px -80% 0px" } // trigger when near top of viewport
-    )
+    );
 
     sections.forEach((s) => {
-      const el = document.getElementById(s.id)
-      if (el) observer.observe(el)
-    })
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    });
 
-    return () => observer.disconnect()
-  }, [])
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -60,8 +60,8 @@ export default function DesignSystemModule() {
           Lily Design System
         </h1>
         <p className="text-b3 mt-4 max-w-3xl text-neutral-600 dark:text-neutral-400">
-          A comprehensive showcase of all typography, color tokens, and 32 UI
-          components built for Fiorisce.
+          A comprehensive showcase of all typography, color tokens, and 32 UI components built for
+          Fiorisce.
         </p>
       </div>
 
@@ -108,15 +108,15 @@ export default function DesignSystemModule() {
         {/* Main Content Areas */}
         <div className="w-full flex-1 space-y-24">
           {sections.map((section) => {
-            const Component = section.component
+            const Component = section.component;
             return (
               <div key={section.id} id={section.id} className="scroll-mt-24">
                 <Component />
               </div>
-            )
+            );
           })}
         </div>
       </div>
     </div>
-  )
+  );
 }

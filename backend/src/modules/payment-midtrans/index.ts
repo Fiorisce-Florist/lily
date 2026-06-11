@@ -75,10 +75,7 @@ class MidtransPaymentProvider extends AbstractPaymentProvider<MidtransOptions> {
     const orderId = input.data?.order_id as string;
 
     const status = await this.core.transaction.status(orderId);
-    const sessionStatus = this.mapTransactionStatus(
-      status.transaction_status,
-      status.fraud_status
-    );
+    const sessionStatus = this.mapTransactionStatus(status.transaction_status, status.fraud_status);
 
     return {
       status: sessionStatus,
@@ -105,10 +102,7 @@ class MidtransPaymentProvider extends AbstractPaymentProvider<MidtransOptions> {
     try {
       const status = await this.core.transaction.status(orderId);
       return {
-        status: this.mapTransactionStatus(
-          status.transaction_status,
-          status.fraud_status
-        ),
+        status: this.mapTransactionStatus(status.transaction_status, status.fraud_status),
       };
     } catch {
       return { status: "pending" };
