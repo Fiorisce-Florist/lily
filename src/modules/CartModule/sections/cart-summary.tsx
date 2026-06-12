@@ -126,6 +126,11 @@ export function CartSummary({
           id="proceed-to-checkout"
           variant="primary"
           disabled={selectedCount === 0}
+          onClick={() => {
+            if (selectedCount > 0) {
+              window.location.href = "/checkout";
+            }
+          }}
           className="w-full py-5 text-b4 font-inter font-semibold rounded-2xl shadow-md shadow-blush-200/50 dark:shadow-black/30 transition-all duration-200 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
         >
           {selectedCount === 0
