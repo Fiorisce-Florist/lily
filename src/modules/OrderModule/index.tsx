@@ -49,8 +49,8 @@ export function OrderModule() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-neutral-950 pb-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl pt-8 sm:pt-12">
+    <div className="space-y-8">
+      <div>
         {/* Header & Breadcrumb */}
         <div className="mb-8">
           <Breadcrumb 
