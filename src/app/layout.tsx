@@ -42,7 +42,10 @@ export default function RootLayout({
       className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="font-inter bg-cornsilk-100 dark:text-cornsilk-100 flex min-h-full flex-col text-neutral-900 dark:bg-neutral-950">
+      <body 
+        className="font-inter bg-cornsilk-100 dark:text-cornsilk-100 flex min-h-full flex-col text-neutral-900 dark:bg-neutral-950"
+        suppressHydrationWarning
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
