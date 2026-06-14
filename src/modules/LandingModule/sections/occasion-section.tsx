@@ -1,15 +1,52 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const occasions = [
-  { name: "Birthday", slug: "birthday", image: "/images/landing/occasion-birthday-v3.png", colSpan: "col-span-12 md:col-span-6 lg:col-span-4", rowSpan: "row-span-2" },
-  { name: "Anniversary", slug: "anniversary", image: "/images/landing/occasion-anniversary-new.png", colSpan: "col-span-12 md:col-span-6 lg:col-span-4", rowSpan: "row-span-1" },
-  { name: "Congratulations", slug: "congratulations", image: "/images/landing/occasion-congrats-new.png", colSpan: "col-span-6 md:col-span-6 lg:col-span-4", rowSpan: "row-span-1" },
-  { name: "Sympathy", slug: "sympathy", image: "/images/landing/occasion-sympathy-new.png", colSpan: "col-span-6 md:col-span-6 lg:col-span-4", rowSpan: "row-span-1" },
-  { name: "Wedding", slug: "wedding", image: "/images/landing/occasion-wedding-new.png", colSpan: "col-span-12 md:col-span-6 lg:col-span-4", rowSpan: "row-span-2" },
-  { name: "Grand Opening", slug: "grand-opening", image: "/images/landing/occasion-grand-opening-new.png", colSpan: "col-span-12 lg:col-span-4", rowSpan: "row-span-1" },
+  {
+    name: "Birthday",
+    slug: "birthday",
+    image: "/images/landing/occasion-birthday-v3.png",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-4",
+    rowSpan: "row-span-1 md:row-span-2",
+  },
+  {
+    name: "Anniversary",
+    slug: "anniversary",
+    image: "/images/landing/occasion-anniversary-new.png",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-4",
+    rowSpan: "row-span-1",
+  },
+  {
+    name: "Wedding",
+    slug: "wedding",
+    image: "/images/landing/occasion-wedding-new.png",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-4",
+    rowSpan: "row-span-1 md:row-span-2",
+  },
+  {
+    name: "Sympathy",
+    slug: "sympathy",
+    image: "/images/landing/occasion-sympathy-new.png",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-4",
+    rowSpan: "row-span-1",
+  },
+  {
+    name: "Congratulations",
+    slug: "congratulations",
+    image: "/images/landing/occasion-congrats-new.png",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-6",
+    rowSpan: "row-span-1",
+  },
+  {
+    name: "Grand Opening",
+    slug: "grand-opening",
+    image: "/images/landing/occasion-grand-opening-new.png",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-6",
+    rowSpan: "row-span-1",
+  },
 ];
 
 export function OccasionSection() {
@@ -25,7 +62,7 @@ export function OccasionSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-12 auto-rows-[220px] gap-4 sm:gap-6">
+        <div className="grid grid-cols-12 auto-rows-[200px] md:auto-rows-[240px] lg:auto-rows-[280px] gap-4 sm:gap-6">
           {occasions.map((occasion) => (
             <Link
               key={occasion.slug}
@@ -36,17 +73,24 @@ export function OccasionSection() {
                 occasion.rowSpan
               )}
             >
-              <div className="absolute inset-0 z-10 bg-neutral-900/30 transition-colors duration-300 group-hover:bg-neutral-900/50" />
+              <div className="absolute inset-0 z-10 bg-gradient-to-t from-neutral-900/90 via-neutral-900/30 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-90" />
               <Image
                 src={occasion.image}
                 alt={occasion.name}
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
-              <div className="absolute inset-0 z-20 flex items-center justify-center p-4">
-                <h3 className="font-fraunces text-h4 text-cornsilk-100 border-cornsilk-100/50 border-2 px-6 py-3 font-semibold tracking-wide uppercase backdrop-blur-sm transition-all duration-300 group-hover:border-cornsilk-100 group-hover:bg-cornsilk-100/10 rounded-lg text-center">
-                  {occasion.name}
-                </h3>
+              <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 sm:p-8">
+                <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
+                  <h3 className="font-fraunces text-2xl sm:text-3xl text-cornsilk-100 font-medium tracking-wide">
+                    {occasion.name}
+                  </h3>
+                  <div className="mt-3 overflow-hidden">
+                    <span className="flex items-center text-sm font-medium text-cornsilk-100/90 transform translate-y-full opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+                      Shop Collection <ArrowRight className="ml-2 h-4 w-4" />
+                    </span>
+                  </div>
+                </div>
               </div>
             </Link>
           ))}
