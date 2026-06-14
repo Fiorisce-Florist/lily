@@ -5,14 +5,14 @@ export function AboutSection() {
     <section className="bg-olive-900 py-24 text-cornsilk-100">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="font-fraunces text-h2 mb-4 font-bold text-cornsilk-100">About Fiorisce</h2>
-          <p className="font-fraunces text-h4 text-camel-300 mb-16 italic tracking-wide">
+          <h2 className="font-fraunces text-h2 font-bold text-cornsilk-100">About Fiorisce</h2>
+          <p className="font-fraunces text-h4 text-camel-300 mb-10 italic tracking-wide">
             &ldquo;Where Every Bloom Tells A Story&rdquo;
           </p>
 
           <div className="space-y-8">
             <div className="bg-olive-1000/60 backdrop-blur-sm border border-olive-700 p-8 md:p-12 rounded-2xl">
-              <p className="font-inter text-b3 leading-relaxed text-cornsilk-200">
+              <p className="font-inter text-b3 max-md:text-b5 leading-relaxed text-cornsilk-200">
                 At Fiorisce Floristry, we believe flowers do more than look beautiful. They carry
                 feelings, mark special moments, and say things words sometimes cannot. Every
                 arrangement is carefully made by hand, with flowers chosen to feel personal, warm,

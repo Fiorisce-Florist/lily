@@ -20,11 +20,11 @@ export function CategorySection() {
           <p className="font-inter text-[11px] sm:text-xs text-camel-600 dark:text-camel-400 mb-4 font-semibold uppercase tracking-[0.2em]">
             Curated For You
           </p>
-          <h2 className="font-fraunces text-4xl sm:text-5xl text-neutral-900 dark:text-cornsilk-100 mb-6 font-bold tracking-tight">
-            Explore Our Collections
+          <h2 className="font-fraunces text-h2 md:text-h1 text-neutral-900 dark:text-cornsilk-100 mb-6 font-bold tracking-tight">
+            Explore Our Collections 
           </h2>
           <div className="h-px w-24 bg-camel-300 dark:bg-camel-800 mb-6" />
-          <p className="font-inter text-b3 text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
+          <p className="font-inter text-b3 max-md:text-b5 text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
             From elegant fresh arrangements to lasting artificial blooms and grand papan bunga, find
             the perfect floral expression for any moment.
           </p>

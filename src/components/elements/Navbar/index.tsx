@@ -26,7 +26,7 @@ export function Navbar() {
     <header className="border-cornsilk-300 bg-cornsilk-100/80 sticky top-0 z-50 w-full border-b backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/80">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Mobile Menu */}
-        <div className="flex md:hidden">
+        <div className="flex lg:hidden">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Menu">
@@ -35,7 +35,7 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="left" className="w-75 sm:w-100">
               <SheetHeader>
-                <SheetTitle className="font-fraunces text-h4 dark:text-cornsilk-100 text-left text-neutral-900">
+                <SheetTitle className="font-fraunces text-h4 text-blush-800 dark:text-blush-400 text-left ">
                   Fiorisce
                 </SheetTitle>
               </SheetHeader>
@@ -73,7 +73,7 @@ export function Navbar() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden flex-1 items-center justify-center gap-8 md:flex">
+        <nav className="hidden flex-1 items-center justify-center gap-8 lg:flex">
           {NAV_MENU.map((link) => {
             const isActive =
               pathname === link.href || (link.href !== "/" && pathname?.startsWith(link.href));

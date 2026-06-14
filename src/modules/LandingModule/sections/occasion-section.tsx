@@ -57,7 +57,7 @@ export function OccasionSection() {
           <h2 className="font-fraunces text-h2 text-neutral-900 dark:text-cornsilk-100 mb-4 font-bold">
             For Every Moment
           </h2>
-          <p className="font-inter text-b4 text-neutral-600 dark:text-neutral-400 mx-auto max-w-2xl">
+          <p className="font-inter text-b4 max-md:text-b5 text-neutral-600 dark:text-neutral-400 mx-auto max-w-2xl">
             Whether it&apos;s a celebration, a milestone, or a gesture of comfort, we have the
             perfect floral arrangement to express your feelings.
           </p>

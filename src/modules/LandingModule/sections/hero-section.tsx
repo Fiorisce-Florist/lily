@@ -42,10 +42,10 @@ export function HeroSection() {
 
       <div className="container relative z-10 mx-auto px-4 text-center sm:px-6 lg:px-8">
         <div className="motion-safe:animate-fade-in mx-auto max-w-3xl space-y-8">
-          <h1 className="font-fraunces text-h1 text-cornsilk-100 font-bold tracking-tight">
+          <h1 className="font-fraunces text-h1 max-md:text-h3 text-cornsilk-100 font-bold tracking-tight">
             Where Every Bloom Tells a Story
           </h1>
-          <p className="font-inter text-b3 text-cornsilk-200 mx-auto max-w-xl">
+          <p className="font-inter text-b3 max-md:text-b5 text-cornsilk-200 mx-auto max-w-xl">
             Discover our premium collection of artisanal floral arrangements, curated to bring
             elegance and joy to your most cherished moments.
           </p>
