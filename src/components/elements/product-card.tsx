@@ -50,7 +50,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
       >
         {/* Image */}
         <Link
-          href={`/shop/products/${product.slug}`}
+          href={`/shop/${product.slug}`}
           className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl block"
         >
           {!imgLoaded && <Skeleton className="absolute inset-0" />}
@@ -94,7 +94,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
                     </Badge>
                   )}
                 </div>
-                <Link href={`/shop/products/${product.slug}`}>
+                <Link href={`/shop/${product.slug}`}>
                   <h3 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 hover:text-blush-600 dark:hover:text-blush-400 transition-colors">
                     {product.name}
                   </h3>
@@ -147,7 +147,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
     >
       {/* Image */}
       <Link
-        href={`/shop/products/${product.slug}`}
+        href={`/shop/${product.slug}`}
         className="relative block aspect-4/5 sm:aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800"
       >
         {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
@@ -205,7 +205,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
           </div>
         )}
 
-        <Link href={`/shop/products/${product.slug}`}>
+        <Link href={`/shop/${product.slug}`}>
           <h3 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 leading-tight hover:text-blush-600 dark:hover:text-blush-400 transition-colors">
             {product.name}
           </h3>

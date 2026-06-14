@@ -10,7 +10,7 @@ export function LocationSection() {
           {/* Map Side */}
           <div className="relative h-87.5 w-full overflow-hidden rounded-3xl border border-white/60 shadow-xl dark:border-neutral-800 md:h-125">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.2!2d106.83!3d-6.37!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ec1a1e9d1c8f%3A0x0!2sKukusan%2C+Beji%2C+Depok!5e0!3m2!1sid!2sid"
+              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d991.3007481797332!2d106.81883851751343!3d-6.367770700534074!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69eda8e6f40f4b%3A0x27307b87b0e1fdee!2sFiorisce%20Floristry!5e0!3m2!1sen!2sus!4v1781419077036!5m2!1sen!2sus"
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -105,7 +105,7 @@ export function LocationSection() {
                     </p>
                     <p>
                       <a
-                        href="https://api.whatsapp.com/send/?phone=6287726120040&text&type=phone_number&app_absent=0"
+                        href="https://wa.me/6287726120040"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="hover:text-blush-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 rounded-sm"

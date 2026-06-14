@@ -1,5 +1,8 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { LucidePackage, LucideUserCircle, Menu, ShoppingBag, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -17,6 +20,8 @@ import { ThemeToggle } from "../theme-toggle";
 import { NAV_MENU } from "./const";
 
 export function Navbar() {
+  const pathname = usePathname();
+
   return (
     <header className="border-cornsilk-300 bg-cornsilk-100/80 sticky top-0 z-50 w-full border-b backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/80">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -35,15 +40,22 @@ export function Navbar() {
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-4 py-8">
-                {NAV_MENU.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="text-h5 font-fraunces hover:text-blush-600 dark:hover:text-blush-400 text-neutral-800 transition-colors dark:text-neutral-200"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+                {NAV_MENU.map((link) => {
+                  const isActive = pathname === link.href || (link.href !== "/" && pathname?.startsWith(link.href));
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={`text-h5 font-fraunces transition-colors hover:text-blush-600 dark:hover:text-blush-400 ${
+                        isActive
+                          ? "text-blush-600 dark:text-blush-400 font-semibold"
+                          : "text-neutral-800 dark:text-neutral-200"
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
               </div>
             </SheetContent>
           </Sheet>
@@ -60,15 +72,22 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden flex-1 items-center justify-center gap-8 md:flex">
-          {NAV_MENU.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="text-b4 font-inter hover:text-blush-600 dark:hover:text-blush-400 font-medium text-neutral-700 transition-colors dark:text-neutral-300"
-            >
-              {link.name}
-            </Link>
-          ))}
+          {NAV_MENU.map((link) => {
+            const isActive = pathname === link.href || (link.href !== "/" && pathname?.startsWith(link.href));
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`text-b4 font-inter font-medium transition-colors hover:text-blush-600 dark:hover:text-blush-400 ${
+                  isActive
+                    ? "text-blush-600 dark:text-blush-400"
+                    : "text-neutral-700 dark:text-neutral-300"
+                }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Actions */}

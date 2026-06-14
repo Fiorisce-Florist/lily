@@ -19,7 +19,7 @@ export const FOOTER_MENU = {
   ],
   social: [
     { name: "Instagram", href: "https://www.instagram.com/fiorisce_id/" },
-    { name: "Facebook", href: "#" },
-    { name: "Twitter", href: "#" },
+    { name: "Tiktok", href: "https://www.tiktok.com/@fiorisce_id" },
+    { name: "WhatsApp", href: "https://wa.me/6287726120040" },
   ],
 };
