@@ -3,7 +3,6 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +10,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const products = [
@@ -58,40 +56,27 @@ export function FeaturedSection() {
           <CarouselContent className="-ml-4">
             {products.map((product) => (
               <CarouselItem key={product.id} className="pl-4 basis-1/2 lg:basis-1/4">
-                <Card className="bg-cornsilk-100 dark:bg-neutral-800 group h-full overflow-hidden border-none shadow-sm">
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <Link
-                      href={`/shop/products/${product.slug}`}
-                      className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 block h-full"
-                    >
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </Link>
-                    <div className="absolute right-3 top-3 opacity-0 transition-opacity group-hover:opacity-100">
-                      <Button
-                        size="icon"
-                        className="bg-blush-500 hover:bg-blush-600 text-cornsilk-100 h-10 w-10 rounded-full shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
-                      >
-                        <ShoppingBag className="h-4 w-4" aria-hidden="true" />
-                        <span className="sr-only">Add {product.name} to cart</span>
-                      </Button>
-                    </div>
+                <Link
+                  href={`/shop/products/${product.slug}`}
+                  className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
+                >
+                  <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-[3/4] overflow-hidden rounded-lg">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
                   </div>
-                  <CardContent className="p-4 sm:p-5">
-                    <Link href={`/shop/products/${product.slug}`}>
-                      <h3 className="font-fraunces text-b4 text-neutral-900 dark:text-cornsilk-100 group-hover:text-blush-600 mb-1 font-semibold transition-colors">
-                        {product.name}
-                      </h3>
-                    </Link>
-                    <p className="font-inter text-b5 text-olive-700 dark:text-olive-400 font-medium">
+                  <div className="space-y-1 text-left">
+                    <h3 className="font-fraunces text-b5 sm:text-b4 text-neutral-900 dark:text-cornsilk-100 group-hover:text-blush-600 font-semibold uppercase tracking-wider transition-colors line-clamp-1">
+                      {product.name}
+                    </h3>
+                    <p className="font-inter text-b5 text-neutral-500 dark:text-neutral-400">
                       {product.price}
                     </p>
-                  </CardContent>
-                </Card>
+                  </div>
+                </Link>
               </CarouselItem>
             ))}
           </CarouselContent>

@@ -23,7 +23,7 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section className="relative flex h-[80vh] min-h-[600px] w-full items-center justify-center overflow-hidden">
+    <section className="relative flex h-[80vh] min-h-150 w-full items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0 bg-neutral-900">
         {heroImages.map((src, index) => (
           <Image
@@ -63,7 +63,7 @@ export function HeroSection() {
               className="border-cornsilk-300 text-cornsilk-100 hover:bg-cornsilk-100/10 hover:text-cornsilk-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
               asChild
             >
-              <Link href="/shop">Explore Collections</Link>
+              <Link href="#explore-collection">Explore Collections</Link>
             </Button>
           </div>
         </div>

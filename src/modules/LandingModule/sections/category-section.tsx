@@ -10,7 +10,7 @@ const categories = [
 
 export function CategorySection() {
   return (
-    <section className="bg-cornsilk-100 dark:bg-neutral-950 py-20">
+    <section id="explore-collection" className="bg-cornsilk-100 dark:bg-neutral-950 py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
           <h2 className="font-fraunces text-h2 text-neutral-900 dark:text-cornsilk-100 mb-4 font-bold">
