@@ -125,7 +125,9 @@ export function RegisterModule() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="phone">Phone Number <span className="text-neutral-400 font-normal">(optional)</span></Label>
+          <Label htmlFor="phone">
+            Phone Number <span className="text-neutral-400 font-normal">(optional)</span>
+          </Label>
           <Input
             type="tel"
             id="phone"
@@ -160,9 +162,9 @@ export function RegisterModule() {
           )}
         </div>
 
-        <Button 
-          type="submit" 
-          variant="primary" 
+        <Button
+          type="submit"
+          variant="primary"
           className="w-full h-12 text-b4 mt-2 relative overflow-hidden"
           disabled={isSubmitting}
         >

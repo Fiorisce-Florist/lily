@@ -53,14 +53,11 @@ export function OrderModule() {
       <div>
         {/* Header & Breadcrumb */}
         <div className="mb-8">
-          <Breadcrumb 
+          <Breadcrumb
             className="mb-4"
-            items={[
-              { label: "My Account", href: "/profile" },
-              { label: "Orders" }
-            ]} 
+            items={[{ label: "My Account", href: "/profile" }, { label: "Orders" }]}
           />
-          
+
           <h1 className="text-h2 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100">
             Order History
           </h1>
@@ -79,7 +76,8 @@ export function OrderModule() {
               No orders found
             </h2>
             <p className="text-b4 font-inter text-neutral-500 dark:text-neutral-400 max-w-md mb-8">
-              Looks like you haven&apos;t placed any orders yet. Discover our collection of beautifully curated blooms.
+              Looks like you haven&apos;t placed any orders yet. Discover our collection of
+              beautifully curated blooms.
             </p>
             <Link href="/shop">
               <Button variant="primary" className="h-12 px-8 font-inter flex items-center gap-2">
@@ -96,21 +94,23 @@ export function OrderModule() {
               <TabsTrigger value="completed">Completed</TabsTrigger>
               <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="all">
-              {renderOrderList(orders)}
-            </TabsContent>
-            
+
+            <TabsContent value="all">{renderOrderList(orders)}</TabsContent>
+
             <TabsContent value="active">
-              {renderOrderList(orders.filter(o => ["PENDING", "PAID", "PROCESSING", "SHIPPED"].includes(o.status)))}
+              {renderOrderList(
+                orders.filter((o) =>
+                  ["PENDING", "PAID", "PROCESSING", "SHIPPED"].includes(o.status)
+                )
+              )}
             </TabsContent>
-            
+
             <TabsContent value="completed">
-              {renderOrderList(orders.filter(o => o.status === "COMPLETED"))}
+              {renderOrderList(orders.filter((o) => o.status === "COMPLETED"))}
             </TabsContent>
-            
+
             <TabsContent value="cancelled">
-              {renderOrderList(orders.filter(o => o.status === "CANCELLED"))}
+              {renderOrderList(orders.filter((o) => o.status === "CANCELLED"))}
             </TabsContent>
           </Tabs>
         )}

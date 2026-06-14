@@ -35,16 +35,36 @@ export function OrderCard({ order }: OrderCardProps) {
     switch (status) {
       case "PENDING":
       case "PROCESSING":
-        return <Badge className="text-xs bg-camel-100 text-camel-800 dark:bg-camel-900/40 dark:text-camel-400 hover:bg-camel-200 border-camel-200 dark:border-camel-800/50">{status}</Badge>;
+        return (
+          <Badge className="text-xs bg-camel-100 text-camel-800 dark:bg-camel-900/40 dark:text-camel-400 hover:bg-camel-200 border-camel-200 dark:border-camel-800/50">
+            {status}
+          </Badge>
+        );
       case "PAID":
       case "SHIPPED":
-        return <Badge className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-400 hover:bg-blue-200 border-blue-200 dark:border-blue-800/50">{status}</Badge>;
+        return (
+          <Badge className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-400 hover:bg-blue-200 border-blue-200 dark:border-blue-800/50">
+            {status}
+          </Badge>
+        );
       case "COMPLETED":
-        return <Badge variant="success" className="text-xs">{status}</Badge>;
+        return (
+          <Badge variant="success" className="text-xs">
+            {status}
+          </Badge>
+        );
       case "CANCELLED":
-        return <Badge className="text-xs bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-400 hover:bg-red-200 border-red-200 dark:border-red-800/50">{status}</Badge>;
+        return (
+          <Badge className="text-xs bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-400 hover:bg-red-200 border-red-200 dark:border-red-800/50">
+            {status}
+          </Badge>
+        );
       default:
-        return <Badge variant="outline" className="text-xs">{status}</Badge>;
+        return (
+          <Badge variant="outline" className="text-xs">
+            {status}
+          </Badge>
+        );
     }
   };
 
@@ -80,12 +100,7 @@ export function OrderCard({ order }: OrderCardProps) {
             <li key={item.id} className="flex items-center gap-4">
               <div className="relative h-16 w-16 rounded-lg overflow-hidden bg-cornsilk-100 dark:bg-neutral-800 shrink-0">
                 {item.image ? (
-                  <Image
-                    src={item.image}
-                    alt={item.productName}
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={item.image} alt={item.productName} fill className="object-cover" />
                 ) : (
                   <div className="flex items-center justify-center h-full w-full">
                     <Package className="h-6 w-6 text-neutral-400" />

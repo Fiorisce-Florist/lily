@@ -853,10 +853,7 @@ export function ProductDetailModule({ bouquet }: { bouquet: Bouquet }) {
         <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <Breadcrumb
             className="mb-8"
-            items={[
-              { label: "Shop", href: "/shop" },
-              { label: bouquet.name },
-            ]}
+            items={[{ label: "Shop", href: "/shop" }, { label: bouquet.name }]}
           />
 
           {/* 2-column product section */}
