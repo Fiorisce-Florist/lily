@@ -4,7 +4,11 @@ import Link from "next/link";
 
 const categories = [
   { name: "Fresh Flowers", slug: "fresh-flowers", image: "/images/landing/cat-bouquet.png" },
-  { name: "Artificial Flowers", slug: "artificial-flowers", image: "/images/landing/cat-flower-box-2.png" },
+  {
+    name: "Artificial Flowers",
+    slug: "artificial-flowers",
+    image: "/images/landing/cat-flower-box-2.png",
+  },
   { name: "Papan Bunga", slug: "papan-bunga", image: "/images/landing/cat-standing-flower-2.png" },
 ];
 
@@ -17,7 +21,8 @@ export function CategorySection() {
             Explore Our Collections
           </h2>
           <p className="font-inter text-b4 text-neutral-600 dark:text-neutral-400 mx-auto max-w-2xl">
-            From elegant fresh arrangements to lasting artificial blooms and grand papan bunga, find the perfect floral expression for any moment.
+            From elegant fresh arrangements to lasting artificial blooms and grand papan bunga, find
+            the perfect floral expression for any moment.
           </p>
         </div>
 
@@ -26,7 +31,7 @@ export function CategorySection() {
             <Link
               key={category.slug}
               href={`/shop?category=${category.slug}`}
-              className="group relative block aspect-[4/5] md:aspect-square overflow-hidden rounded-xl"
+              className="group relative block aspect-4/5 md:aspect-square overflow-hidden rounded-xl"
             >
               <div className="absolute inset-0 z-10 bg-neutral-900/20 transition-colors duration-300 group-hover:bg-neutral-900/40" />
               <Image

@@ -8,7 +8,7 @@ export function LocationSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Map Side */}
-          <div className="bg-cornsilk-200 dark:bg-neutral-900 border-cornsilk-300 dark:border-neutral-800 relative h-[350px] w-full overflow-hidden rounded-2xl border shadow-sm md:h-[480px]">
+          <div className="relative h-87.5 w-full overflow-hidden rounded-3xl border border-white/60 shadow-xl dark:border-neutral-800 md:h-125">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.2!2d106.83!3d-6.37!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ec1a1e9d1c8f%3A0x0!2sKukusan%2C+Beji%2C+Depok!5e0!3m2!1sid!2sid"
               width="100%"
@@ -18,7 +18,10 @@ export function LocationSection() {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               title="Fiorisce Floristry Location"
+              className="h-full w-full border-0 opacity-90 grayscale-50 transition-all duration-700 hover:opacity-100 hover:grayscale-0 dark:invert dark:hue-rotate-180 dark:grayscale-20 dark:contrast-75"
             ></iframe>
+            {/* Inner shadow overlay for depth */}
+            <div className="pointer-events-none absolute inset-0 rounded-3xl shadow-[inset_0_0_20px_rgba(0,0,0,0.05)] ring-1 ring-inset ring-black/5 dark:shadow-[inset_0_0_30px_rgba(0,0,0,0.3)] dark:ring-white/10" />
           </div>
 
           {/* Info Side */}
@@ -27,14 +30,17 @@ export function LocationSection() {
               <h2 className="font-fraunces text-h2 text-neutral-900 dark:text-cornsilk-100 mb-2 font-bold">
                 Where To Find Us
               </h2>
-              <div className="h-[2px] w-16 bg-camel-500 mt-4" />
+              <div className="h-0.5 w-16 bg-camel-500 mt-4" />
             </div>
 
             <div className="space-y-6">
               {/* Address */}
               <div className="flex items-start gap-4">
                 <div className="bg-camel-200 dark:bg-camel-900 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
-                  <MapPin className="h-5 w-5 text-camel-700 dark:text-camel-300" aria-hidden="true" />
+                  <MapPin
+                    className="h-5 w-5 text-camel-700 dark:text-camel-300"
+                    aria-hidden="true"
+                  />
                 </div>
                 <div>
                   <h3 className="font-fraunces text-b3 text-neutral-900 dark:text-cornsilk-100 font-semibold">
@@ -49,7 +55,10 @@ export function LocationSection() {
               {/* Opening Hours */}
               <div className="flex items-start gap-4">
                 <div className="bg-camel-200 dark:bg-camel-900 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
-                  <Clock className="h-5 w-5 text-camel-700 dark:text-camel-300" aria-hidden="true" />
+                  <Clock
+                    className="h-5 w-5 text-camel-700 dark:text-camel-300"
+                    aria-hidden="true"
+                  />
                 </div>
                 <div>
                   <h3 className="font-fraunces text-b3 text-neutral-900 dark:text-cornsilk-100 font-semibold">
@@ -64,7 +73,10 @@ export function LocationSection() {
               {/* Social Media */}
               <div className="flex items-start gap-4">
                 <div className="bg-camel-200 dark:bg-camel-900 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
-                  <Camera className="h-5 w-5 text-camel-700 dark:text-camel-300" aria-hidden="true" />
+                  <Camera
+                    className="h-5 w-5 text-camel-700 dark:text-camel-300"
+                    aria-hidden="true"
+                  />
                 </div>
                 <div>
                   <h3 className="font-fraunces text-b3 text-neutral-900 dark:text-cornsilk-100 font-semibold">

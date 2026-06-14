@@ -58,7 +58,8 @@ export function OccasionSection() {
             For Every Moment
           </h2>
           <p className="font-inter text-b4 text-neutral-600 dark:text-neutral-400 mx-auto max-w-2xl">
-            Whether it&apos;s a celebration, a milestone, or a gesture of comfort, we have the perfect floral arrangement to express your feelings.
+            Whether it&apos;s a celebration, a milestone, or a gesture of comfort, we have the
+            perfect floral arrangement to express your feelings.
           </p>
         </div>
 
@@ -73,7 +74,7 @@ export function OccasionSection() {
                 occasion.rowSpan
               )}
             >
-              <div className="absolute inset-0 z-10 bg-gradient-to-t from-neutral-900/90 via-neutral-900/30 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-90" />
+              <div className="absolute inset-0 z-10 bg-linear-to-t from-neutral-900/90 via-neutral-900/30 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-90" />
               <Image
                 src={occasion.image}
                 alt={occasion.name}

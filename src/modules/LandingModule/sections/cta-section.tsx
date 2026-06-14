@@ -49,7 +49,7 @@ export function CtaSection() {
               Subscribe
             </Button>
           </form>
-          
+
           <p className="font-inter text-b5 text-neutral-500 dark:text-neutral-500 mt-4">
             By subscribing, you agree to our Terms &amp; Conditions and Privacy Policy.
           </p>

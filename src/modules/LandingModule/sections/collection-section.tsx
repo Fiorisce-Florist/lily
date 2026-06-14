@@ -26,17 +26,23 @@ const bgVariants = {
   muted: "bg-cornsilk-200 dark:bg-neutral-1000",
 };
 
-export function CollectionSection({ title, href, products, variant = "light", imageFit = "cover" }: CollectionSectionProps) {
+export function CollectionSection({
+  title,
+  href,
+  products,
+  variant = "light",
+  imageFit = "cover",
+}: CollectionSectionProps) {
   return (
     <section className={cn("py-20", bgVariants[variant])}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header with decorative lines */}
         <div className="mb-12 flex items-center justify-center gap-6">
-          <div className="h-[1px] w-16 bg-camel-400 hidden sm:block" />
+          <div className="h-px w-16 bg-camel-400 hidden sm:block" />
           <h2 className="font-fraunces text-h3 text-neutral-900 dark:text-cornsilk-100 uppercase tracking-widest font-medium text-center">
             {title}
           </h2>
-          <div className="h-[1px] w-16 bg-camel-400 hidden sm:block" />
+          <div className="h-px w-16 bg-camel-400 hidden sm:block" />
         </div>
 
         <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 lg:gap-8 mb-12">
@@ -46,7 +52,7 @@ export function CollectionSection({ title, href, products, variant = "light", im
               href={`/shop/products/${product.slug}`}
               className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
             >
-              <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-[3/4] overflow-hidden rounded-lg">
+              <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
                 <Image
                   src={product.image}
                   alt={product.name}

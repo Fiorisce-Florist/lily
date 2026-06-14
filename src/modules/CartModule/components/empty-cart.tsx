@@ -8,7 +8,7 @@ export function EmptyCart() {
       {/* Decorative blobs */}
       <div className="relative mb-8">
         <div className="absolute -inset-6 rounded-full bg-blush-100/60 dark:bg-blush-900/20 blur-2xl" />
-        <div className="relative flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-blush-100 to-cornsilk-200 dark:from-neutral-800 dark:to-neutral-700 border border-blush-200 dark:border-neutral-600 shadow-inner">
+        <div className="relative flex h-28 w-28 items-center justify-center rounded-full bg-linear-to-br from-blush-100 to-cornsilk-200 dark:from-neutral-800 dark:to-neutral-700 border border-blush-200 dark:border-neutral-600 shadow-inner">
           <Flower2 className="h-12 w-12 text-blush-500 dark:text-blush-400" />
         </div>
       </div>

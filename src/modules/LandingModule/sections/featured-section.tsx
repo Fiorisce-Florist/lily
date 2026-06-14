@@ -14,15 +14,57 @@ import { Button } from "@/components/ui/button";
 
 const products = [
   // 3 Fresh Flowers
-  { id: "ff1", name: "Joyful Affection (L)", price: "RP 495.000", image: "/images/landing/ff_joyful_affection.png", slug: "joyful-affection-l" },
-  { id: "ff2", name: "Sweet Promise (M)", price: "RP 265.000", image: "/images/landing/ff_sweet_promises.png", slug: "sweet-promise-m" },
-  { id: "ff3", name: "Pure Love (L)", price: "RP 365.000", image: "/images/landing/ff_pure_love.png", slug: "pure-love-l" },
+  {
+    id: "ff1",
+    name: "Joyful Affection (L)",
+    price: "RP 495.000",
+    image: "/images/landing/ff_joyful_affection.png",
+    slug: "joyful-affection-l",
+  },
+  {
+    id: "ff2",
+    name: "Sweet Promise (M)",
+    price: "RP 265.000",
+    image: "/images/landing/ff_sweet_promises.png",
+    slug: "sweet-promise-m",
+  },
+  {
+    id: "ff3",
+    name: "Pure Love (L)",
+    price: "RP 365.000",
+    image: "/images/landing/ff_pure_love.png",
+    slug: "pure-love-l",
+  },
   // 2 Artificial Flowers
-  { id: "af1", name: "Cotton Pearl (XL)", price: "RP 515.000", image: "/images/landing/af_cotton_pearl.png", slug: "cotton-pearl-xl" },
-  { id: "af2", name: "Enchanted (L)", price: "RP 405.000", image: "/images/landing/af_enchanted.png", slug: "enchanted-l" },
+  {
+    id: "af1",
+    name: "Cotton Pearl (XL)",
+    price: "RP 515.000",
+    image: "/images/landing/af_cotton_pearl.png",
+    slug: "cotton-pearl-xl",
+  },
+  {
+    id: "af2",
+    name: "Enchanted (L)",
+    price: "RP 405.000",
+    image: "/images/landing/af_enchanted.png",
+    slug: "enchanted-l",
+  },
   // 2 Papan Bunga
-  { id: "pb1", name: "Bunga 2 Titik", price: "RP 1.500.000", image: "/images/landing/pb_bunga-2-titik.png", slug: "bunga-2-titik" },
-  { id: "pb2", name: "Bunga 2 Titik, 2 Kuping", price: "RP 2.000.000", image: "/images/landing/pb_2-titik-2-kuping.png", slug: "bunga-2-titik-2-kuping" },
+  {
+    id: "pb1",
+    name: "Bunga 2 Titik",
+    price: "RP 1.500.000",
+    image: "/images/landing/pb_bunga-2-titik.png",
+    slug: "bunga-2-titik",
+  },
+  {
+    id: "pb2",
+    name: "Bunga 2 Titik, 2 Kuping",
+    price: "RP 2.000.000",
+    image: "/images/landing/pb_2-titik-2-kuping.png",
+    slug: "bunga-2-titik-2-kuping",
+  },
 ];
 
 export function FeaturedSection() {
@@ -60,7 +102,7 @@ export function FeaturedSection() {
                   href={`/shop/products/${product.slug}`}
                   className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
                 >
-                  <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-[3/4] overflow-hidden rounded-lg">
+                  <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
                     <Image
                       src={product.image}
                       alt={product.name}

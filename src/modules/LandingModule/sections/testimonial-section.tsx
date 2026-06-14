@@ -15,28 +15,32 @@ const testimonials = [
     id: 1,
     name: "Amanda Sari",
     role: "Loyal Customer",
-    content: "The flowers I ordered for my mother's birthday were absolutely stunning. They arrived fresh and on time. The packaging was so elegant. Will definitely order again!",
+    content:
+      "The flowers I ordered for my mother's birthday were absolutely stunning. They arrived fresh and on time. The packaging was so elegant. Will definitely order again!",
     rating: 5,
   },
   {
     id: 2,
     name: "Kevin Wijaya",
     role: "First-time Buyer",
-    content: "Needed a last-minute anniversary gift and Fiorisce saved the day with their same-day delivery. The arrangement was beautiful and exactly as pictured.",
+    content:
+      "Needed a last-minute anniversary gift and Fiorisce saved the day with their same-day delivery. The arrangement was beautiful and exactly as pictured.",
     rating: 5,
   },
   {
     id: 3,
     name: "Sarah T.",
     role: "Bride",
-    content: "They did the floral arrangements for my intimate wedding. Everything was beyond perfect. The florists truly understood my vision and brought it to life beautifully.",
+    content:
+      "They did the floral arrangements for my intimate wedding. Everything was beyond perfect. The florists truly understood my vision and brought it to life beautifully.",
     rating: 5,
   },
   {
     id: 4,
     name: "Budi Santoso",
     role: "Regular Customer",
-    content: "Always reliable and the quality of the roses is unmatched. The customer service team is also very responsive and helpful.",
+    content:
+      "Always reliable and the quality of the roses is unmatched. The customer service team is also very responsive and helpful.",
     rating: 4,
   },
 ];
@@ -50,8 +54,8 @@ export function TestimonialSection() {
             What Our Customers Say
           </h2>
           <p className="font-inter text-b4 mx-auto max-w-2xl text-olive-200">
-            Don&apos;t just take our word for it. Hear from those who have experienced the magic of our
-            floral arrangements.
+            Don&apos;t just take our word for it. Hear from those who have experienced the magic of
+            our floral arrangements.
           </p>
         </div>
 

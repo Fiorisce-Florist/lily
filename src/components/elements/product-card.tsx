@@ -43,7 +43,10 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
     return (
       <article
         id={`product-${product.slug}`}
-        className={cn("group flex gap-5 rounded-2xl border border-cornsilk-300 bg-white p-4 transition-shadow hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900", className)}
+        className={cn(
+          "group flex gap-5 rounded-2xl border border-cornsilk-300 bg-white p-4 transition-shadow hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900",
+          className
+        )}
       >
         {/* Image */}
         <Link
@@ -124,7 +127,9 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
               className="z-10"
             >
               <ShoppingBag className="h-4 w-4" />
-              <span className="hidden sm:inline-block ml-2">{inStock ? "Add to Cart" : "Sold Out"}</span>
+              <span className="hidden sm:inline-block ml-2">
+                {inStock ? "Add to Cart" : "Sold Out"}
+              </span>
             </Button>
           </div>
         </div>
@@ -135,12 +140,15 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
   return (
     <article
       id={`product-${product.slug}`}
-      className={cn("group relative flex h-full flex-col rounded-2xl border border-cornsilk-300 bg-white overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 dark:border-neutral-800 dark:bg-neutral-900", className)}
+      className={cn(
+        "group relative flex h-full flex-col rounded-2xl border border-cornsilk-300 bg-white overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 dark:border-neutral-800 dark:bg-neutral-900",
+        className
+      )}
     >
       {/* Image */}
       <Link
         href={`/shop/products/${product.slug}`}
-        className="relative block aspect-[4/5] sm:aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800"
+        className="relative block aspect-4/5 sm:aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800"
       >
         {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
         <img
@@ -154,7 +162,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
         />
 
         {/* Overlay actions on hover */}
-        <div className="absolute inset-0 flex items-end justify-center gap-2 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gradient-to-t from-black/20 to-transparent"></div>
+        <div className="absolute inset-0 flex items-end justify-center gap-2 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-linear-to-t from-black/20 to-transparent"></div>
 
         {/* Badges */}
         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
@@ -168,11 +176,13 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
               New
             </Badge>
           )}
-          {product.originalPrice && typeof product.price === "number" && typeof product.originalPrice === "number" && (
-            <Badge variant="secondary" className="text-[10px] shadow">
-              {Math.round((1 - product.price / product.originalPrice) * 100)}% off
-            </Badge>
-          )}
+          {product.originalPrice &&
+            typeof product.price === "number" &&
+            typeof product.originalPrice === "number" && (
+              <Badge variant="secondary" className="text-[10px] shadow">
+                {Math.round((1 - product.price / product.originalPrice) * 100)}% off
+              </Badge>
+            )}
         </div>
 
         {/* Out of stock overlay */}
