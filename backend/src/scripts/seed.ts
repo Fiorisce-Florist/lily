@@ -57,7 +57,7 @@ export default async function seed({ container }: ExecArgs) {
           name: "Indonesia",
           currency_code: "idr",
           countries: ["id"],
-          payment_providers: ["midtrans"],
+          payment_providers: [],
         },
       ],
     },

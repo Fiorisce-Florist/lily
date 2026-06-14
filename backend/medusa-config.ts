@@ -24,16 +24,16 @@ module.exports = defineConfig({
       resolve: "@medusajs/medusa/payment",
       options: {
         providers: [
-          {
-            // Custom Midtrans provider — see src/modules/payment-midtrans
-            resolve: "./src/modules/payment-midtrans",
-            id: "midtrans",
-            options: {
-              serverKey: process.env.MIDTRANS_SERVER_KEY,
-              clientKey: process.env.MIDTRANS_CLIENT_KEY,
-              isProduction: process.env.MIDTRANS_IS_PRODUCTION === "true",
-            },
-          },
+          // {
+          //   // Custom Midtrans provider — see src/modules/payment-midtrans
+          //   resolve: "./src/modules/payment-midtrans",
+          //   id: "midtrans",
+          //   options: {
+          //     serverKey: process.env.MIDTRANS_SERVER_KEY,
+          //     clientKey: process.env.MIDTRANS_CLIENT_KEY,
+          //     isProduction: process.env.MIDTRANS_IS_PRODUCTION === "true",
+          //   },
+          // },
         ],
       },
     },
