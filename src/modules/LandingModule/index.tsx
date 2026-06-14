@@ -123,7 +123,7 @@ export default function LandingModule() {
         href="/shop?category=papan-bunga"
         products={papanBunga}
         variant="light"
-        imageFit="contain"
+        imageFit="cover"
       />
       <OccasionSection />
       <AboutSection />
