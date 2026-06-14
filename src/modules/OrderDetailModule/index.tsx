@@ -56,9 +56,9 @@ export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
           Order Not Found
         </h2>
         <p className="text-neutral-500 mt-2 mb-6">We couldn&apos;t find order {orderNumber}.</p>
-        <Link href="/orders">
-          <Button variant="primary">Back to Orders</Button>
-        </Link>
+        <Button variant="primary" asChild>
+          <Link href="/orders">Back to Orders</Link>
+        </Button>
       </div>
     );
   }

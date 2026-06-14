@@ -29,12 +29,16 @@ export function OrderModule() {
           <p className="text-b4 font-inter text-neutral-500 dark:text-neutral-400 max-w-sm mb-6">
             Looks like you don&apos;t have any orders in this category yet.
           </p>
-          <Link href="/shop">
-            <Button variant="primary" className="h-10 px-6 font-inter flex items-center gap-2">
+          <Button
+            asChild
+            variant="primary"
+            className="h-10 px-6 font-inter flex items-center gap-2"
+          >
+            <Link href="/shop">
               Start Shopping
               <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       );
     }
@@ -79,12 +83,12 @@ export function OrderModule() {
               Looks like you haven&apos;t placed any orders yet. Discover our collection of
               beautifully curated blooms.
             </p>
-            <Link href="/shop">
-              <Button variant="primary" className="h-12 px-8 font-inter flex items-center gap-2">
+            <Button variant="primary" className="h-12 px-8 font-inter flex items-center gap-2">
+              <Link href="/shop">
                 Start Shopping
                 <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         ) : (
           <Tabs defaultValue="all" className="w-full">

@@ -131,11 +131,11 @@ export function OrderCard({ order }: OrderCardProps) {
         <Button variant="outline" size="sm" className="w-full sm:w-auto font-inter">
           View Invoice
         </Button>
-        <Link href={`/orders/${order.orderNumber}`} className="w-full sm:w-auto">
-          <Button variant="primary" size="sm" className="w-full sm:w-auto font-inter">
+        <Button asChild variant="primary" size="sm" className="w-full sm:w-auto font-inter">
+          <Link href={`/orders/${order.orderNumber}`} className="w-full sm:w-auto">
             Track Order
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </div>
   );

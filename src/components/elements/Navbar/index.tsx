@@ -41,7 +41,9 @@ export function Navbar() {
               </SheetHeader>
               <div className="flex flex-col gap-4 py-8">
                 {NAV_MENU.map((link) => {
-                  const isActive = pathname === link.href || (link.href !== "/" && pathname?.startsWith(link.href));
+                  const isActive =
+                    pathname === link.href ||
+                    (link.href !== "/" && pathname?.startsWith(link.href));
                   return (
                     <Link
                       key={link.name}
@@ -73,7 +75,8 @@ export function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden flex-1 items-center justify-center gap-8 md:flex">
           {NAV_MENU.map((link) => {
-            const isActive = pathname === link.href || (link.href !== "/" && pathname?.startsWith(link.href));
+            const isActive =
+              pathname === link.href || (link.href !== "/" && pathname?.startsWith(link.href));
             return (
               <Link
                 key={link.name}
@@ -132,14 +135,14 @@ export function Navbar() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Link href={"/cart"}>
-            <Button variant="ghost" size="icon" aria-label="Cart" className="relative">
+          <Button variant="ghost" size="icon" aria-label="Cart" className="relative" asChild>
+            <Link href={"/cart"}>
               <ShoppingBag className="h-5 w-5" />
               <span className="bg-blush-500 text-cornsilk-100 absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold">
                 3
               </span>
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     </header>

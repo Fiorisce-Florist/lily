@@ -176,7 +176,7 @@ export default function NotFound() {
         </div>
 
         {/* Divider */}
-        <div className="flex w-full max-w-[220px] items-center gap-4 opacity-40">
+        <div className="flex w-full max-w-55 items-center gap-4 opacity-40">
           <div className="h-px flex-1 bg-neutral-500" />
           <span
             aria-hidden="true"
