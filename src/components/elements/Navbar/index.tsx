@@ -3,7 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LucidePackage, LucideUserCircle, Menu, ShoppingBag, User } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { LucidePackage, LucideUserCircle, Menu, ShoppingBag, User, LogOut } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -21,6 +22,7 @@ import { NAV_MENU } from "./const";
 
 export function Navbar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <header className="border-cornsilk-300 bg-cornsilk-100/80 sticky top-0 z-50 w-full border-b backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/80">
@@ -125,14 +127,21 @@ export function Navbar() {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/login"
-                  className="cursor-pointer w-full text-blush-600 dark:text-blush-400"
-                >
-                  Sign In
-                </Link>
-              </DropdownMenuItem>
+              {session ? (
+                <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })} className="cursor-pointer text-sm w-full text-blush-600 dark:text-blush-400">
+                  <LogOut />
+                  Log Out
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/login"
+                    className="cursor-pointer w-full text-blush-600 dark:text-blush-400"
+                  >
+                    Sign In
+                  </Link>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
           <Button variant="ghost" size="icon" aria-label="Cart" className="relative" asChild>

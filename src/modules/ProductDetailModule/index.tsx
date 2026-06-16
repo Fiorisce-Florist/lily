@@ -770,7 +770,7 @@ function RelatedProducts({ bouquet }: { bouquet: Bouquet }) {
           href="/shop"
           className="text-b5 font-inter text-blush-500 hover:text-blush-600 transition-colors hover:underline underline-offset-4"
         >
-          View all →
+          View all
         </Link>
       </div>
 

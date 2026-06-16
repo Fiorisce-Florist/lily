@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Search } from "lucide-react";
+import { Cross, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -75,9 +75,10 @@ export function ShopHero({ query, onQueryChange }: ShopHeroProps) {
             {query && (
               <button
                 onClick={() => onQueryChange("")}
-                className="text-b6 font-inter rounded-full px-3 py-1.5 border border-blush-300 text-blush-600 hover:bg-blush-50 transition-all dark:border-blush-700 dark:text-blush-400 dark:hover:bg-blush-900/20"
+                className="flex items-center gap-1 text-b4 font-inter rounded-full px-3 py-1.5 border border-blush-300 text-blush-600 hover:bg-blush-50 transition-all dark:border-blush-700 dark:text-blush-400 dark:hover:bg-blush-900/20"
               >
-                Clear ✕
+                Clear
+                <X className="w-4 h-4"/>
               </button>
             )}
           </div>

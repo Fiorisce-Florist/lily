@@ -30,6 +30,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/elements/Navbar";
 import { Footer } from "@/components/elements/Footer";
 import { ThemeProvider } from "@/context/theme-provider";
+import { SessionProvider } from "@/context/session-provider";
 
 export default function RootLayout({
   children,
@@ -53,12 +54,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <TooltipProvider>
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </TooltipProvider>
-          <Toaster />
+          <SessionProvider>
+            <TooltipProvider>
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </TooltipProvider>
+            <Toaster />
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

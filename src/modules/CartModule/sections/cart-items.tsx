@@ -206,9 +206,9 @@ export function CartItems({
       <div className="pt-1">
         <Link
           href="/shop"
-          className="inline-flex items-center gap-1.5 text-b5 font-inter text-neutral-500 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
+          className="inline-flex group items-center gap-1.5 text-b5 font-inter text-neutral-500 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
         >
-          <ChevronRight className="h-3.5 w-3.5 rotate-180" />
+          <ChevronRight className="h-3.5 w-3.5 rotate-180 group-hover:-translate-x-1 transform transition-all" />
           Continue shopping
         </Link>
       </div>

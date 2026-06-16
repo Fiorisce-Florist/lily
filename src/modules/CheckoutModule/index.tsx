@@ -46,9 +46,9 @@ export function CheckoutModule() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link
             href="/cart"
-            className="flex items-center gap-2 text-b4 font-inter text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-cornsilk-100 transition-colors"
+            className="flex items-center gap-2 group text-b4 font-inter text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-cornsilk-100 transition-colors"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transform transition-all" />
             Back to Cart
           </Link>
           <Link href="/">

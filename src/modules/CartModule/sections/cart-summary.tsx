@@ -131,12 +131,12 @@ export function CartSummary({
               window.location.href = "/checkout";
             }
           }}
-          className="w-full py-5 text-b4 font-inter font-semibold rounded-2xl shadow-md shadow-blush-200/50 dark:shadow-black/30 transition-all duration-200 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
+          className="w-full group py-5 text-b4 font-inter font-semibold rounded-2xl shadow-md shadow-blush-200/50 dark:shadow-black/30 transition-all duration-200 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
         >
           {selectedCount === 0
             ? "Select items to checkout"
             : `Checkout ${selectedCount} ${selectedCount === 1 ? "item" : "items"}`}
-          {selectedCount > 0 && <ChevronRight className="h-4 w-4 ml-1" />}
+          {selectedCount > 0 && <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transform transition-all" />}
         </Button>
 
         {/* Trust badges */}

@@ -121,9 +121,9 @@ export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
       <div>
         <Link
           href="/orders"
-          className="inline-flex items-center gap-2 text-b4 font-inter text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-cornsilk-100 mb-6 transition-colors"
+          className="inline-flex group items-center gap-2 text-b4 font-inter text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-cornsilk-100 mb-6 transition-colors"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transform transition-all" />
           Back to Orders
         </Link>
         <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4">

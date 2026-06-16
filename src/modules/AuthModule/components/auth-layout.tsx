@@ -31,9 +31,9 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
       <div className="flex w-full flex-col lg:w-1/2 relative bg-cornsilk-50/30 dark:bg-neutral-900/50">
         <Link
           href="/"
-          className="absolute left-6 top-6 sm:left-8 sm:top-8 flex items-center gap-2 text-b5 font-inter text-neutral-500 dark:text-neutral-400 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
+          className="absolute group left-6 top-6 sm:left-8 sm:top-8 flex items-center gap-2 text-b5 font-inter text-neutral-500 dark:text-neutral-400 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transform transition-all" />
           Back to home
         </Link>
         <div className="flex flex-1 flex-col justify-center px-6 sm:px-16 md:px-24 xl:px-32 py-12">
