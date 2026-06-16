@@ -30,16 +30,16 @@ const SIZE_MULTIPLIER: Record<string, number> = {
 
 export function CartModule() {
   const [items, setItems] = React.useState<CartItemType[]>(MOCK_ITEMS);
-  const [wishlisted, setWishlisted] = React.useState<Set<number>>(new Set());
+  const [wishlisted, setWishlisted] = React.useState<Set<string | number>>(new Set());
   // All items selected by default
-  const [selectedIds, setSelectedIds] = React.useState<Set<number>>(
+  const [selectedIds, setSelectedIds] = React.useState<Set<string | number>>(
     new Set(MOCK_ITEMS.map((i) => i.bouquet.id))
   );
 
   const allSelected = items.length > 0 && items.every((i) => selectedIds.has(i.bouquet.id));
   const someSelected = items.some((i) => selectedIds.has(i.bouquet.id));
 
-  const toggleSelected = (id: number) => {
+  const toggleSelected = (id: string | number) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
@@ -55,7 +55,7 @@ export function CartModule() {
     }
   };
 
-  const updateQuantity = (id: number, delta: number) => {
+  const updateQuantity = (id: string | number, delta: number) => {
     setItems((prev) =>
       prev.map((item) =>
         item.bouquet.id === id
@@ -65,7 +65,7 @@ export function CartModule() {
     );
   };
 
-  const removeItem = (id: number) => {
+  const removeItem = (id: string | number) => {
     setItems((prev) => prev.filter((item) => item.bouquet.id !== id));
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -79,7 +79,7 @@ export function CartModule() {
     setSelectedIds(new Set());
   };
 
-  const toggleWishlist = (id: number) => {
+  const toggleWishlist = (id: string | number) => {
     setWishlisted((prev) => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);

@@ -2,11 +2,197 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log("Starting database seed...");
+const IMAGES = {
+  blush: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  wildflower: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  white: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  sunflower: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  burgundy: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  lavender: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  peach: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  tropical: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  garden: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  classic: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  dusty: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+  coral: "https://media.istockphoto.com/id/2164207000/photo/summer-bouquet-beautiful-multi-colored-fresh-flower-arrangement-birthday-bouquet-made-of.jpg?s=612x612&w=0&k=20&c=7lLUdkx91ZDl-Lw801VIbE6IywD6ULH4B09ZiwoulfQ=",
+};
 
-  // Clean up existing catalog data
-  console.log("Cleaning existing catalog data...");
+const ALL_BOUQUETS = [
+  {
+    name: "Blush Reverie",
+    slug: "blush-reverie",
+    price: 385000,
+    occasion: "Anniversary",
+    colors: ["Pink", "White"],
+    flowers: ["Rose"],
+    tags: ["romantic", "soft"],
+    inStock: true,
+    isNew: false,
+    isBestseller: true,
+    image: IMAGES.blush,
+    description: "Soft blush roses arranged in a cloud-like dome, wrapped in handmade rice paper.",
+  },
+  {
+    name: "Meadow Wild",
+    slug: "meadow-wild",
+    price: 275000,
+    occasion: "Birthday",
+    colors: ["Purple", "Yellow", "White"],
+    flowers: ["Wildflower", "Daisy"],
+    tags: ["casual", "colorful"],
+    inStock: true,
+    isNew: true,
+    isBestseller: false,
+    image: IMAGES.wildflower,
+    description: "A hand-tied gathering of seasonal wildflowers, as if picked straight from a field.",
+  },
+  {
+    name: "Lily & Dew",
+    slug: "lily-and-dew",
+    price: 420000,
+    occasion: "Wedding",
+    colors: ["White", "Green"],
+    flowers: ["Lily", "Eucalyptus"],
+    tags: ["elegant"],
+    inStock: true,
+    isNew: false,
+    isBestseller: true,
+    image: IMAGES.white,
+    description: "White oriental lilies with cascading eucalyptus for a timeless, minimalist elegance.",
+  },
+  {
+    name: "Golden Hour",
+    slug: "golden-hour",
+    price: 310000,
+    occasion: "Birthday",
+    colors: ["Yellow", "Orange"],
+    flowers: ["Sunflower", "Daisy"],
+    tags: ["bright", "cheerful"],
+    inStock: true,
+    isNew: false,
+    isBestseller: true,
+    image: IMAGES.sunflower,
+    description: "A burst of sunflowers and daisies to brighten any room and any occasion.",
+  },
+  {
+    name: "Velvet Dusk",
+    slug: "velvet-dusk",
+    price: 510000,
+    occasion: "Anniversary",
+    colors: ["Burgundy", "Red"],
+    flowers: ["Peony", "Rose"],
+    tags: ["dramatic", "luxury"],
+    inStock: true,
+    isNew: false,
+    isBestseller: false,
+    image: IMAGES.burgundy,
+    description: "Deep burgundy peonies and garden roses — richly layered, deeply romantic.",
+  },
+  {
+    name: "Provence Dream",
+    slug: "provence-dream",
+    price: 290000,
+    occasion: "Just Because",
+    colors: ["Purple", "White"],
+    flowers: ["Lavender", "Baby's Breath"],
+    tags: ["airy"],
+    inStock: false,
+    isNew: false,
+    isBestseller: false,
+    image: IMAGES.lavender,
+    description: "Fragrant lavender bundles and clouds of baby's breath. Countryside in a wrap.",
+  },
+  {
+    name: "Peach Blossom",
+    slug: "peach-blossom",
+    price: 345000,
+    occasion: "Sympathy",
+    colors: ["Peach", "Pink"],
+    flowers: ["Rose", "Ranunculus"],
+    tags: ["soft", "gentle", "comforting"],
+    inStock: true,
+    isNew: true,
+    isBestseller: false,
+    image: IMAGES.peach,
+    description: "Gentle peach spray roses and ranunculus, wrapped in soft linen ribbon.",
+  },
+  {
+    name: "Tropicana",
+    slug: "tropicana",
+    price: 460000,
+    occasion: "Birthday",
+    colors: ["Orange", "Pink", "Yellow"],
+    flowers: ["Bird of Paradise", "Protea"],
+    tags: ["tropical", "bold", "statement"],
+    inStock: true,
+    isNew: true,
+    isBestseller: false,
+    image: IMAGES.tropical,
+    description: "Bird of paradise, protea and heliconia — a bold tropical statement piece.",
+  },
+  {
+    name: "Garden Gathering",
+    slug: "garden-gathering",
+    price: 325000,
+    occasion: "Just Because",
+    colors: ["Pink", "Purple", "White"],
+    flowers: ["Sweet Pea", "Cosmos", "Foxglove"],
+    tags: ["garden", "mixed", "lush"],
+    inStock: true,
+    isNew: false,
+    isBestseller: false,
+    image: IMAGES.garden,
+    description: "A lush garden-style arrangement with sweet peas, cosmos, and foxgloves.",
+  },
+  {
+    name: "Classic Red",
+    slug: "classic-red",
+    price: 395000,
+    occasion: "Anniversary",
+    colors: ["Red"],
+    flowers: ["Rose"],
+    tags: ["classic", "romantic"],
+    inStock: true,
+    isNew: false,
+    isBestseller: true,
+    image: IMAGES.classic,
+    description: "Long-stemmed red roses, the eternal symbol of love. Dozen or half-dozen.",
+  },
+  {
+    name: "Dusty Miller",
+    slug: "dusty-miller",
+    price: 265000,
+    occasion: "Just Because",
+    colors: ["White", "Green", "Purple"],
+    flowers: ["Scabiosa", "Dried Grass"],
+    tags: ["boho", "textured", "unique"],
+    inStock: true,
+    isNew: true,
+    isBestseller: false,
+    image: IMAGES.dusty,
+    description: "Dusty miller, scabiosa and dried grasses — textured and bohemian.",
+  },
+  {
+    name: "Coral Sunset",
+    slug: "coral-sunset",
+    price: 375000,
+    occasion: "Wedding",
+    colors: ["Orange", "Peach", "Pink"],
+    flowers: ["Peony", "Rose", "Ranunculus"],
+    tags: ["warm", "romantic"],
+    inStock: false,
+    isNew: false,
+    isBestseller: false,
+    image: IMAGES.coral,
+    description: "Coral charm peonies, garden roses and orange ranunculus in a sunset gradient.",
+  },
+];
+
+async function main() {
+  console.log("Starting database seed with categorized tags...");
+
+  // Clean up existing data
+  console.log("Cleaning existing data...");
   await prisma.productImage.deleteMany();
   await prisma.productVariant.deleteMany();
   await prisma.productTag.deleteMany();
@@ -14,251 +200,102 @@ async function main() {
   await prisma.category.deleteMany();
   await prisma.tag.deleteMany();
 
-  // Create Categories
+  // Create Categories (we only have Bouquets basically, but let's make a few)
   console.log("Creating categories...");
   const catBouquets = await prisma.category.create({
-    data: {
-      name: "Fresh Bouquets",
-      slug: "fresh-bouquets",
-      description: "Beautifully arranged fresh flowers for any occasion.",
-    },
+    data: { name: "Bouquets", slug: "bouquets" },
   });
 
-  const catIndoorPlants = await prisma.category.create({
-    data: {
-      name: "Indoor Plants",
-      slug: "indoor-plants",
-      description: "Green your space with our curated selection of indoor plants.",
-    },
-  });
+  // Collect unique colors, flowers, occasions, and general tags
+  const colors = [...new Set(ALL_BOUQUETS.flatMap(b => b.colors))];
+  const flowers = [...new Set(ALL_BOUQUETS.flatMap(b => b.flowers))];
+  const occasions = [...new Set(ALL_BOUQUETS.map(b => b.occasion))];
+  const generalTags = [...new Set(ALL_BOUQUETS.flatMap(b => b.tags))];
 
-  const catVases = await prisma.category.create({
-    data: {
-      name: "Vases & Accessories",
-      slug: "vases-and-accessories",
-      description: "Elegant vases and accessories to complement your blooms.",
-    },
-  });
+  generalTags.push("New Arrival");
+  generalTags.push("Best Seller");
 
-  // Create Tags
   console.log("Creating tags...");
-  const tagBestSeller = await prisma.tag.create({
-    data: {
-      name: "Best Seller",
-      slug: "best-seller",
-      description: "Our most popular items.",
-    },
-  });
+  // Maps to store created tags by their name so we can link them later
+  const tagMap = new Map<string, string>(); // name -> id
 
-  const tagNewArrival = await prisma.tag.create({
-    data: {
-      name: "New Arrival",
-      slug: "new-arrival",
-      description: "Freshly added to our catalog.",
-    },
-  });
+  // Colors
+  for (const c of colors) {
+    const t = await prisma.tag.create({
+      data: { name: c, slug: `color-${c.toLowerCase().replace(/\s+/g, '-')}`, type: "COLOR" },
+    });
+    tagMap.set(c, t.id);
+  }
 
-  const tagSale = await prisma.tag.create({
-    data: {
-      name: "Sale",
-      slug: "sale",
-      description: "Items currently on discount.",
-    },
-  });
+  // Flowers
+  for (const f of flowers) {
+    const t = await prisma.tag.create({
+      data: { name: f, slug: `flower-${f.toLowerCase().replace(/\s+/g, '-')}`, type: "FLOWER" },
+    });
+    tagMap.set(f, t.id);
+  }
 
-  // Create Products
-  console.log("Creating products...");
+  // Occasions
+  for (const o of occasions) {
+    const t = await prisma.tag.create({
+      data: { name: o, slug: `occasion-${o.toLowerCase().replace(/\s+/g, '-')}`, type: "OCCASION" },
+    });
+    tagMap.set(o, t.id);
+  }
 
-  // Product 1: Classic Red Roses Bouquet
-  await prisma.product.create({
-    data: {
-      categoryId: catBouquets.id,
-      name: "Classic Red Roses Bouquet",
-      slug: "classic-red-roses-bouquet",
-      description: "A timeless expression of love. Hand-tied bouquet of premium long-stemmed red roses.",
-      price: 65.0,
-      stock: 50,
-      status: "ACTIVE",
-      tags: {
-        create: [
-          { tagId: tagBestSeller.id },
-          { tagId: tagNewArrival.id },
-        ],
-      },
-      images: {
-        create: [
-          {
-            imageUrl: "https://images.unsplash.com/photo-1548094990-c16ca90f1f0c?q=80&w=800&auto=format&fit=crop",
-            isPrimary: true,
-          },
-        ],
-      },
-      variants: {
-        create: [
-          {
-            variantName: "Standard (12 Roses)",
-            additionalPrice: 0,
-            stock: 30,
-          },
-          {
-            variantName: "Premium (24 Roses)",
-            additionalPrice: 40.0,
-            stock: 20,
-          },
-        ],
-      },
-    },
-  });
+  // General Tags
+  for (const gt of generalTags) {
+    const t = await prisma.tag.create({
+      data: { name: gt, slug: gt.toLowerCase().replace(/\s+/g, '-'), type: "GENERAL" },
+    });
+    tagMap.set(gt, t.id);
+  }
 
-  // Product 2: Spring Pastel Mix
-  await prisma.product.create({
-    data: {
-      categoryId: catBouquets.id,
-      name: "Spring Pastel Mix",
-      slug: "spring-pastel-mix",
-      description: "A soft, cheerful arrangement of seasonal pastel blooms including tulips, ranunculus, and sweet peas.",
-      price: 55.0,
-      stock: 40,
-      status: "ACTIVE",
-      tags: {
-        create: [
-          { tagId: tagNewArrival.id },
-        ],
-      },
-      images: {
-        create: [
-          {
-            imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=800&auto=format&fit=crop",
-            isPrimary: true,
-          },
-        ],
-      },
-      variants: {
-        create: [
-          {
-            variantName: "Standard",
-            additionalPrice: 0,
-            stock: 25,
-          },
-          {
-            variantName: "Large",
-            additionalPrice: 20.0,
-            stock: 15,
-          },
-        ],
-      },
-    },
-  });
+  console.log("Creating products from ALL_BOUQUETS mock data...");
 
-  // Product 3: Monstera Deliciosa
-  await prisma.product.create({
-    data: {
-      categoryId: catIndoorPlants.id,
-      name: "Monstera Deliciosa",
-      slug: "monstera-deliciosa",
-      description: "The iconic Swiss Cheese plant. Perfect for adding a tropical vibe to any bright indoor space.",
-      price: 45.0,
-      stock: 20,
-      status: "ACTIVE",
-      tags: {
-        create: [
-          { tagId: tagBestSeller.id },
-        ],
-      },
-      images: {
-        create: [
-          {
-            imageUrl: "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=800&auto=format&fit=crop",
-            isPrimary: true,
-          },
-        ],
-      },
-      variants: {
-        create: [
-          {
-            variantName: 'Medium (6" Pot)',
-            additionalPrice: 0,
-            stock: 15,
-          },
-          {
-            variantName: 'Large (8" Pot)',
-            additionalPrice: 25.0,
-            stock: 5,
-          },
-        ],
-      },
-    },
-  });
+  for (const b of ALL_BOUQUETS) {
+    // Gather all tag IDs for this product
+    const productTagIds = new Set<string>();
 
-  // Product 4: Minimalist Ceramic Vase
-  await prisma.product.create({
-    data: {
-      categoryId: catVases.id,
-      name: "Minimalist Ceramic Vase",
-      slug: "minimalist-ceramic-vase",
-      description: "A sleek, matte white ceramic vase that lets your floral arrangements take center stage.",
-      price: 35.0,
-      stock: 100,
-      status: "ACTIVE",
-      images: {
-        create: [
-          {
-            imageUrl: "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?q=80&w=800&auto=format&fit=crop",
-            isPrimary: true,
-          },
-        ],
-      },
-      variants: {
-        create: [
-          {
-            variantName: "One Size",
-            additionalPrice: 0,
-            stock: 100,
-          },
-        ],
-      },
-    },
-  });
+    b.colors.forEach(c => productTagIds.add(tagMap.get(c)!));
+    b.flowers.forEach(f => productTagIds.add(tagMap.get(f)!));
+    productTagIds.add(tagMap.get(b.occasion)!);
+    b.tags.forEach(t => productTagIds.add(tagMap.get(t)!));
+    if (b.isNew) productTagIds.add(tagMap.get("New Arrival")!);
+    if (b.isBestseller) productTagIds.add(tagMap.get("Best Seller")!);
 
-  // Product 5: Sunflower Sunshine Bouquet
-  await prisma.product.create({
-    data: {
-      categoryId: catBouquets.id,
-      name: "Sunflower Sunshine Bouquet",
-      slug: "sunflower-sunshine-bouquet",
-      description: "Brighten someone's day with this vibrant arrangement of fresh sunflowers and complementary greens.",
-      price: 48.0,
-      stock: 35,
-      status: "ACTIVE",
-      tags: {
-        create: [
-          { tagId: tagSale.id },
-        ],
+    await prisma.product.create({
+      data: {
+        categoryId: catBouquets.id,
+        name: b.name,
+        slug: b.slug,
+        description: b.description,
+        price: b.price,
+        isAvailable: b.inStock,
+        status: "ACTIVE",
+        images: {
+          create: [
+            {
+              imageUrl: b.image,
+              isPrimary: true,
+            },
+          ],
+        },
+        variants: {
+          create: [
+            {
+              variantName: "Standard",
+              additionalPrice: 0,
+              isAvailable: b.inStock,
+            },
+          ],
+        },
+        tags: {
+          create: Array.from(productTagIds).map(id => ({ tagId: id })),
+        },
       },
-      images: {
-        create: [
-          {
-            imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=800&auto=format&fit=crop", // placeholder
-            isPrimary: true,
-          },
-        ],
-      },
-      variants: {
-        create: [
-          {
-            variantName: "Standard (5 Stems)",
-            additionalPrice: 0,
-            stock: 20,
-          },
-          {
-            variantName: "Large (10 Stems)",
-            additionalPrice: 15.0,
-            stock: 15,
-          },
-        ],
-      },
-    },
-  });
+    });
+  }
 
   console.log("Seed complete! 🌱");
 }

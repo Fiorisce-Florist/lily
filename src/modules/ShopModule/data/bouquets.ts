@@ -1,5 +1,5 @@
 export interface Bouquet {
-  id: number;
+  id: string | number;
   name: string;
   slug: string;
   price: number;

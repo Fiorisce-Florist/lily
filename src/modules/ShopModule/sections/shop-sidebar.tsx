@@ -6,12 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { OCCASIONS, COLORS, FLOWERS, MAX_PRICE } from "../data/bouquets";
-import type { FilterState } from "../index";
+import type { FilterState, FilterOptions } from "../index";
 
 interface ShopSidebarProps {
   filters: FilterState;
   onFiltersChange: (f: FilterState) => void;
+  options: FilterOptions;
 }
 
 // ── Flower badge config ──────────────────────────────────────────────────────
@@ -73,7 +73,7 @@ function FilterSection({ title, children }: { title: string; children: React.Rea
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function ShopSidebar({ filters, onFiltersChange }: ShopSidebarProps) {
+export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarProps) {
   function toggleOccasion(occ: string) {
     const next = filters.occasions.includes(occ)
       ? filters.occasions.filter((o) => o !== occ)
@@ -100,9 +100,9 @@ export function ShopSidebar({ filters, onFiltersChange }: ShopSidebarProps) {
       {/* ── Flower Type ───────────────────────────────────────────────── */}
       <FilterSection title="Flower Type">
         <div className="flex flex-wrap gap-2">
-          {FLOWERS.map((flower) => {
+          {options.flowers.map((flower) => {
             const active = filters.flowers.includes(flower);
-            const meta = FLOWER_META[flower];
+            const meta = FLOWER_META[flower] || { label: flower };
             return (
               <button
                 key={flower}
@@ -136,7 +136,7 @@ export function ShopSidebar({ filters, onFiltersChange }: ShopSidebarProps) {
       {/* ── Occasion ──────────────────────────────────────────────────── */}
       <FilterSection title="Occasion">
         <ul className="space-y-2.5">
-          {OCCASIONS.map((occ) => (
+          {options.occasions.map((occ) => (
             <li key={occ} className="flex items-center gap-2.5">
               <Checkbox
                 id={`occasion-${occ}`}
@@ -161,7 +161,7 @@ export function ShopSidebar({ filters, onFiltersChange }: ShopSidebarProps) {
         <Slider
           id="price-range-slider"
           min={0}
-          max={MAX_PRICE}
+          max={options.maxPrice}
           step={25000}
           value={[filters.priceRange[0], filters.priceRange[1]]}
           onValueChange={([min, max]) => onFiltersChange({ ...filters, priceRange: [min, max] })}
@@ -182,7 +182,7 @@ export function ShopSidebar({ filters, onFiltersChange }: ShopSidebarProps) {
       {/* ── Color ─────────────────────────────────────────────────────── */}
       <FilterSection title="Color">
         <div className="flex flex-wrap gap-2">
-          {COLORS.map((color) => {
+          {options.colors.map((color) => {
             const active = filters.colors.includes(color);
             return (
               <button

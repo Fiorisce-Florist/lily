@@ -26,7 +26,6 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
-import { ALL_BOUQUETS } from "@/modules/ShopModule/data/bouquets";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -751,8 +750,8 @@ function DeliveryTab() {
 
 // ─── Related Products ─────────────────────────────────────────────────────────
 
-function RelatedProducts({ bouquet }: { bouquet: Bouquet }) {
-  const related = ALL_BOUQUETS.filter(
+function RelatedProducts({ bouquet, allBouquets }: { bouquet: Bouquet, allBouquets: Bouquet[] }) {
+  const related = allBouquets.filter(
     (b) =>
       b.id !== bouquet.id &&
       (b.occasion === bouquet.occasion || b.flowers.some((f) => bouquet.flowers.includes(f)))
@@ -841,9 +840,9 @@ function RelatedCard({ bouquet }: { bouquet: Bouquet }) {
   );
 }
 
-// ─── Main Export ──────────────────────────────────────────────────────────────
+// ─── Main Module ──────────────────────────────────────────────────────────────
 
-export function ProductDetailModule({ bouquet }: { bouquet: Bouquet }) {
+export function ProductDetailModule({ bouquet, relatedBouquets = [] }: { bouquet: Bouquet, relatedBouquets?: Bouquet[] }) {
   return (
     <TooltipProvider>
       <main className="min-h-screen bg-white dark:bg-neutral-950">
@@ -897,7 +896,7 @@ export function ProductDetailModule({ bouquet }: { bouquet: Bouquet }) {
           </section>
 
           {/* Related products */}
-          <RelatedProducts bouquet={bouquet} />
+          <RelatedProducts bouquet={bouquet} allBouquets={relatedBouquets} />
         </div>
       </main>
     </TooltipProvider>

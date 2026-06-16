@@ -5,7 +5,7 @@ import { ShopHero } from "./sections/shop-hero";
 import { ShopToolbar } from "./sections/shop-toolbar";
 import { ShopSidebar } from "./sections/shop-sidebar";
 import { ShopGrid } from "./sections/shop-grid";
-import { ALL_BOUQUETS } from "./data/bouquets";
+import type { Bouquet } from "./data/bouquets";
 
 export type SortKey = "featured" | "price-asc" | "price-desc" | "newest" | "bestseller";
 
@@ -17,6 +17,13 @@ export interface FilterState {
   availability: "all" | "in-stock";
 }
 
+export interface FilterOptions {
+  occasions: string[];
+  colors: string[];
+  flowers: string[];
+  maxPrice: number;
+}
+
 const DEFAULT_FILTERS: FilterState = {
   occasions: [],
   colors: [],
@@ -25,14 +32,23 @@ const DEFAULT_FILTERS: FilterState = {
   availability: "all",
 };
 
-export default function ShopModule() {
+export default function ShopModule({ bouquets = [] }: { bouquets: Bouquet[] }) {
+  const options = React.useMemo<FilterOptions>(() => {
+    return {
+      occasions: [...new Set(bouquets.map((b) => b.occasion))],
+      colors: [...new Set(bouquets.flatMap((b) => b.colors))].sort(),
+      flowers: [...new Set(bouquets.flatMap((b) => b.flowers))].sort(),
+      maxPrice: Math.max(0, ...bouquets.map((b) => Number(b.price) || 0)),
+    };
+  }, [bouquets]);
+
   const [query, setQuery] = React.useState("");
   const [sort, setSort] = React.useState<SortKey>("featured");
   const [filters, setFilters] = React.useState<FilterState>(DEFAULT_FILTERS);
   const [viewMode, setViewMode] = React.useState<"grid" | "list">("grid");
 
   const filtered = React.useMemo(() => {
-    let result = [...ALL_BOUQUETS];
+    let result = [...bouquets];
 
     // Search — name and occasion only (flower type uses sidebar)
     if (query.trim()) {
@@ -79,7 +95,7 @@ export default function ShopModule() {
         result.sort((a, b) => b.price - a.price);
         break;
       case "newest":
-        result.sort((a, b) => b.id - a.id);
+        result.sort((a, b) => String(b.id).localeCompare(String(a.id)));
         break;
       case "bestseller":
         result.sort((a, b) => b.soldCount - a.soldCount);
@@ -89,7 +105,7 @@ export default function ShopModule() {
     }
 
     return result;
-  }, [query, sort, filters]);
+  }, [query, sort, filters, bouquets]);
 
   const activeFilterCount =
     filters.occasions.length +
@@ -112,12 +128,13 @@ export default function ShopModule() {
           activeFilterCount={activeFilterCount}
           filters={filters}
           onFiltersChange={setFilters}
+          options={options}
         />
 
         <div className="mt-6 flex gap-8">
           {/* Sidebar — desktop only */}
           <aside className="hidden w-64 shrink-0 lg:block">
-            <ShopSidebar filters={filters} onFiltersChange={setFilters} />
+            <ShopSidebar filters={filters} onFiltersChange={setFilters} options={options} />
           </aside>
 
           {/* Product grid */}

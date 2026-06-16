@@ -21,12 +21,12 @@ function formatPrice(v: number) {
 
 interface CartItemsProps {
   items: CartItemType[];
-  updateQuantity: (id: number, delta: number) => void;
-  removeItem: (id: number) => void;
-  toggleWishlist: (id: number) => void;
-  wishlisted: Set<number>;
-  selectedIds: Set<number>;
-  toggleSelected: (id: number) => void;
+  updateQuantity: (id: string | number, delta: number) => void;
+  removeItem: (id: string | number) => void;
+  toggleWishlist: (id: string | number) => void;
+  wishlisted: Set<string | number>;
+  selectedIds: Set<string | number>;
+  toggleSelected: (id: string | number) => void;
   allSelected: boolean;
   someSelected: boolean;
   toggleSelectAll: () => void;

@@ -24,6 +24,7 @@ interface ShopToolbarProps {
   activeFilterCount: number;
   filters: FilterState;
   onFiltersChange: (f: FilterState) => void;
+  options: any; // Using any or importing FilterOptions from index
 }
 
 export function ShopToolbar({
@@ -35,6 +36,7 @@ export function ShopToolbar({
   activeFilterCount,
   filters,
   onFiltersChange,
+  options,
 }: ShopToolbarProps) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-cornsilk-300 pb-4 dark:border-neutral-800">
@@ -70,7 +72,7 @@ export function ShopToolbar({
               </SheetTitle>
             </SheetHeader>
             <div className="mt-6">
-              <ShopSidebar filters={filters} onFiltersChange={onFiltersChange} />
+              <ShopSidebar filters={filters} onFiltersChange={onFiltersChange} options={options} />
             </div>
           </SheetContent>
         </Sheet>

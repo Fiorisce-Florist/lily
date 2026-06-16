@@ -1,13 +1,14 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma, TagType } from "@prisma/client";
 
 export interface GetProductsParams {
   categorySlug?: string;
-  tagSlug?: string;
+  tagSlugs?: string[];
   search?: string;
   sortBy?: "price-asc" | "price-desc" | "newest";
+  inStockOnly?: boolean;
 }
 
 export async function getProducts(params?: GetProductsParams) {
@@ -16,20 +17,25 @@ export async function getProducts(params?: GetProductsParams) {
       status: "ACTIVE",
     };
 
+    if (params?.inStockOnly) {
+      where.isAvailable = true;
+    }
+
     if (params?.categorySlug) {
       where.category = {
         slug: params.categorySlug,
       };
     }
 
-    if (params?.tagSlug) {
-      where.tags = {
-        some: {
-          tag: {
-            slug: params.tagSlug,
+    if (params?.tagSlugs && params.tagSlugs.length > 0) {
+      // Must have ALL specified tags (AND condition)
+      where.AND = params.tagSlugs.map((slug) => ({
+        tags: {
+          some: {
+            tag: { slug },
           },
         },
-      };
+      }));
     }
 
     if (params?.search) {
@@ -62,7 +68,7 @@ export async function getProducts(params?: GetProductsParams) {
         },
         tags: {
           include: {
-            tag: { select: { name: true, slug: true } },
+            tag: { select: { name: true, slug: true, type: true } },
           },
         },
       },
@@ -121,9 +127,10 @@ export async function getCategories() {
   }
 }
 
-export async function getTags() {
+export async function getTags(type?: TagType) {
   try {
     const tags = await prisma.tag.findMany({
+      where: type ? { type } : undefined,
       orderBy: { name: "asc" },
       include: {
         _count: {
