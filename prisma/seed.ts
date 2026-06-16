@@ -264,6 +264,18 @@ async function main() {
     if (b.isNew) productTagIds.add(tagMap.get("New Arrival")!);
     if (b.isBestseller) productTagIds.add(tagMap.get("Best Seller")!);
 
+    const SIZES = [
+      { name: "xs", factor: -0.3 },
+      { name: "s", factor: -0.15 },
+      { name: "m", factor: 0 },
+      { name: "l", factor: 0.2 },
+      { name: "xl", factor: 0.4 },
+      { name: "human size", factor: 1.0 },
+    ];
+    
+    // Pick a random subset of sizes for this bouquet, always ensuring 'm' is present
+    const availableSizes = SIZES.filter(s => s.name === "m" || Math.random() > 0.4);
+
     await prisma.product.create({
       data: {
         categoryId: catBouquets.id,
@@ -282,13 +294,11 @@ async function main() {
           ],
         },
         variants: {
-          create: [
-            {
-              variantName: "Standard",
-              additionalPrice: 0,
-              isAvailable: b.inStock,
-            },
-          ],
+          create: availableSizes.map(s => ({
+            variantName: s.name,
+            additionalPrice: Math.round(b.price * s.factor),
+            isAvailable: b.inStock,
+          })),
         },
         tags: {
           create: Array.from(productTagIds).map(id => ({ tagId: id })),

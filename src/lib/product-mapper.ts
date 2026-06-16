@@ -24,5 +24,11 @@ export function mapProductToBouquet(p: any): Bouquet {
     isBestseller: generalTags.includes("Best Seller"),
     image: p.images?.[0]?.imageUrl || "",
     description: p.description || "",
+    variants: p.variants?.map((v: any) => ({
+      id: v.id,
+      name: v.variantName,
+      price: (Number(p.price) || 0) + (Number(v.additionalPrice) || 0),
+      isAvailable: v.isAvailable,
+    })) || [],
   };
 }

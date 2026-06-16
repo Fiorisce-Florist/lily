@@ -38,12 +38,7 @@ function formatPrice(v: number) {
   }).format(v);
 }
 
-type Size = "small" | "standard" | "grand";
-const SIZE_OPTIONS: { key: Size; label: string; multiplier: number }[] = [
-  { key: "small", label: "Small", multiplier: 0.8 },
-  { key: "standard", label: "Standard", multiplier: 1.0 },
-  { key: "grand", label: "Grand", multiplier: 1.4 },
-];
+
 
 // Alternative Unsplash angles for the gallery
 function buildGalleryImages(baseUrl: string): string[] {
@@ -184,15 +179,21 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
 // ─── Product Info ─────────────────────────────────────────────────────────────
 
 function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
-  const [selectedSize, setSelectedSize] = React.useState<Size>("standard");
+  const variants = bouquet.variants || [];
+  const defaultVariant = variants.length > 0 ? variants[0] : null;
+
+  const [selectedVariantId, setSelectedVariantId] = React.useState<string>(
+    defaultVariant ? defaultVariant.id : ""
+  );
   const [quantity, setQuantity] = React.useState(1);
   const [wishlisted, setWishlisted] = React.useState(false);
   const [addedToCart, setAddedToCart] = React.useState(false);
 
-  const sizeMultiplier = SIZE_OPTIONS.find((s) => s.key === selectedSize)?.multiplier ?? 1;
-  const displayPrice = Math.round(bouquet.price * sizeMultiplier);
+  const selectedVariant = variants.find((v) => v.id === selectedVariantId) || defaultVariant;
+  const displayPrice = selectedVariant ? selectedVariant.price : bouquet.price;
+
   const displayOriginal = bouquet.originalPrice
-    ? Math.round(bouquet.originalPrice * sizeMultiplier)
+    ? Math.round(bouquet.originalPrice * (selectedVariant ? (selectedVariant.price / bouquet.price) : 1))
     : undefined;
 
   const discountPct = displayOriginal ? Math.round((1 - displayPrice / displayOriginal) * 100) : 0;
@@ -315,45 +316,47 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
       <Separator />
 
       {/* Size selector */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <p className="text-b6 font-inter font-semibold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-            Bouquet size
-          </p>
-          <span className="text-b6 font-inter text-neutral-400">
-            Selected:{" "}
-            <strong className="text-neutral-700 dark:text-neutral-200">
-              {SIZE_OPTIONS.find((s) => s.key === selectedSize)?.label}
-            </strong>
-          </span>
-        </div>
-        <div className="flex gap-3" role="group" aria-label="Select bouquet size">
-          {SIZE_OPTIONS.map((opt) => (
-            <button
-              key={opt.key}
-              id={`size-${opt.key}`}
-              onClick={() => setSelectedSize(opt.key)}
-              aria-pressed={selectedSize === opt.key}
-              className={`flex-1 flex flex-col items-center gap-1 rounded-xl border-2 py-3 px-2 transition-all duration-200 ${
-                selectedSize === opt.key
-                  ? "border-blush-500 bg-blush-50 dark:bg-blush-950/30"
-                  : "border-cornsilk-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:border-blush-300"
-              }`}
-            >
-              <span
-                className={`text-b5 font-inter font-semibold ${selectedSize === opt.key ? "text-blush-600 dark:text-blush-400" : "text-neutral-700 dark:text-neutral-200"}`}
+      {variants.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-b6 font-inter font-semibold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+              Bouquet size
+            </p>
+            <span className="text-b6 font-inter text-neutral-400">
+              Selected:{" "}
+              <strong className="text-neutral-700 dark:text-neutral-200 capitalize">
+                {selectedVariant?.name || "Standard"}
+              </strong>
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-3" role="group" aria-label="Select bouquet size">
+            {variants.map((opt) => (
+              <button
+                key={opt.id}
+                id={`size-${opt.name.replace(/\s+/g, "-")}`}
+                onClick={() => setSelectedVariantId(opt.id)}
+                aria-pressed={selectedVariantId === opt.id}
+                className={`flex-1 min-w-[80px] flex flex-col items-center gap-1 rounded-xl border-2 py-3 px-2 transition-all duration-200 ${
+                  selectedVariantId === opt.id
+                    ? "border-blush-500 bg-blush-50 dark:bg-blush-950/30"
+                    : "border-cornsilk-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:border-blush-300"
+                }`}
               >
-                {opt.label}
-              </span>
-              <span
-                className={`text-[11px] font-jetbrains ${selectedSize === opt.key ? "text-blush-500" : "text-neutral-400"}`}
-              >
-                {formatPrice(Math.round(bouquet.price * opt.multiplier))}
-              </span>
-            </button>
-          ))}
+                <span
+                  className={`text-b5 font-inter font-semibold uppercase ${selectedVariantId === opt.id ? "text-blush-600 dark:text-blush-400" : "text-neutral-700 dark:text-neutral-200"}`}
+                >
+                  {opt.name}
+                </span>
+                <span
+                  className={`text-[11px] font-jetbrains ${selectedVariantId === opt.id ? "text-blush-500" : "text-neutral-400"}`}
+                >
+                  {formatPrice(opt.price)}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Quantity selector */}
       <div>

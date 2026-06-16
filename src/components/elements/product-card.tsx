@@ -222,7 +222,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
             {product.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="rounded-full bg-cornsilk-200 px-2 py-0.5 text-[10px] font-inter text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
+                className="rounded-full capitalize bg-cornsilk-200 px-2 py-0.5 text-[10px] font-inter text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
               >
                 {tag}
               </span>

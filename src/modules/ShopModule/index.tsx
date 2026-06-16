@@ -13,6 +13,7 @@ export interface FilterState {
   occasions: string[];
   colors: string[];
   flowers: string[];
+  sizes: string[];
   priceRange: [number, number];
   availability: "all" | "in-stock";
 }
@@ -21,6 +22,7 @@ export interface FilterOptions {
   occasions: string[];
   colors: string[];
   flowers: string[];
+  sizes: string[];
   maxPrice: number;
 }
 
@@ -28,6 +30,7 @@ const DEFAULT_FILTERS: FilterState = {
   occasions: [],
   colors: [],
   flowers: [],
+  sizes: [],
   priceRange: [0, 1000000],
   availability: "all",
 };
@@ -38,6 +41,7 @@ export default function ShopModule({ bouquets = [] }: { bouquets: Bouquet[] }) {
       occasions: [...new Set(bouquets.map((b) => b.occasion))],
       colors: [...new Set(bouquets.flatMap((b) => b.colors))].sort(),
       flowers: [...new Set(bouquets.flatMap((b) => b.flowers))].sort(),
+      sizes: [...new Set(bouquets.flatMap((b) => (b.variants || []).map(v => v.name)))],
       maxPrice: Math.max(0, ...bouquets.map((b) => Number(b.price) || 0)),
     };
   }, [bouquets]);
@@ -76,6 +80,11 @@ export default function ShopModule({ bouquets = [] }: { bouquets: Bouquet[] }) {
       result = result.filter((b) => b.colors.some((c) => filters.colors.includes(c)));
     }
 
+    // Size filter
+    if (filters.sizes.length > 0) {
+      result = result.filter((b) => b.variants?.some((v) => filters.sizes.includes(v.name)));
+    }
+
     // Price range
     result = result.filter(
       (b) => b.price >= filters.priceRange[0] && b.price <= filters.priceRange[1]
@@ -111,6 +120,7 @@ export default function ShopModule({ bouquets = [] }: { bouquets: Bouquet[] }) {
     filters.occasions.length +
     filters.flowers.length +
     filters.colors.length +
+    filters.sizes.length +
     (filters.availability !== "all" ? 1 : 0) +
     (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000000 ? 1 : 0);
 

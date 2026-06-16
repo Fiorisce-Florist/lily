@@ -95,6 +95,13 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
     onFiltersChange({ ...filters, colors: next });
   }
 
+  function toggleSize(size: string) {
+    const next = filters.sizes.includes(size)
+      ? filters.sizes.filter((s) => s !== size)
+      : [...filters.sizes, size];
+    onFiltersChange({ ...filters, sizes: next });
+  }
+
   return (
     <div className="space-y-5 rounded-2xl border border-cornsilk-300 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900">
       {/* ── Flower Type ───────────────────────────────────────────────── */}
@@ -152,6 +159,33 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
             </li>
           ))}
         </ul>
+      </FilterSection>
+
+      <Separator className="bg-cornsilk-200 dark:bg-neutral-800" />
+
+      {/* ── Size ──────────────────────────────────────────────────────── */}
+      <FilterSection title="Size">
+        <div className="flex flex-wrap gap-2">
+          {options.sizes.map((size) => {
+            const active = filters.sizes.includes(size);
+            return (
+              <button
+                key={size}
+                id={`size-${size.toLowerCase().replace(/\s+/g, "-")}`}
+                onClick={() => toggleSize(size)}
+                aria-pressed={active}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-b6 font-inter transition-all uppercase duration-150 select-none",
+                  active
+                    ? "border-blush-500 bg-blush-500 text-white shadow-sm shadow-blush-200 dark:shadow-blush-900/40"
+                    : "border-cornsilk-300 bg-cornsilk-100 text-neutral-600 hover:border-blush-300 hover:bg-blush-50 hover:text-blush-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-blush-700 dark:hover:bg-blush-900/20 dark:hover:text-blush-300"
+                )}
+              >
+                {size}
+              </button>
+            );
+          })}
+        </div>
       </FilterSection>
 
       <Separator className="bg-cornsilk-200 dark:bg-neutral-800" />

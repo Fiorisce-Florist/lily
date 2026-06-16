@@ -87,6 +87,7 @@ export function ShopToolbar({
                   occasions: [],
                   colors: [],
                   flowers: [],
+                  sizes: [],
                   priceRange: [0, 1000000],
                   availability: "all",
                 })

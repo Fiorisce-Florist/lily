@@ -16,6 +16,12 @@ export interface Bouquet {
   isBestseller: boolean;
   image: string;
   description: string;
+  variants?: {
+    id: string;
+    name: string;
+    price: number;
+    isAvailable: boolean;
+  }[];
 }
 
 // Placeholder gradient images per bouquet color theme

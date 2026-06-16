@@ -66,6 +66,7 @@ export async function getProducts(params?: GetProductsParams) {
           where: { isPrimary: true },
           take: 1,
         },
+        variants: true,
         tags: {
           include: {
             tag: { select: { name: true, slug: true, type: true } },
