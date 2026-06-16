@@ -51,7 +51,7 @@ export function AccountSidebar() {
 
         <div className="hidden md:block w-full h-px bg-neutral-200 dark:bg-neutral-800 my-4" />
 
-        <button className="flex items-center gap-3 px-4 py-3 rounded-xl font-inter text-b3 font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left">
+        <button className="flex items-center gap-3 px-4 py-3 rounded-xl font-inter text-b4 font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left">
           <LogOut className="h-5 w-5" />
           Log Out
         </button>
