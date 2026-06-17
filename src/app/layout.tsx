@@ -31,6 +31,7 @@ import { Navbar } from "@/components/elements/Navbar";
 import { Footer } from "@/components/elements/Footer";
 import { ThemeProvider } from "@/context/theme-provider";
 import { SessionProvider } from "@/context/session-provider";
+import { CartProvider } from "@/context/cart-context";
 
 export default function RootLayout({
   children,
@@ -55,12 +56,14 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider>
-            <TooltipProvider>
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </TooltipProvider>
-            <Toaster />
+            <CartProvider>
+              <TooltipProvider>
+                <Navbar />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </TooltipProvider>
+              <Toaster />
+            </CartProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>

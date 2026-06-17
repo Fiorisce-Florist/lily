@@ -18,6 +18,7 @@ import {
   Clock,
   MapPin,
   ZoomIn,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +28,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
+import { useCart } from "@/context/cart-context";
+
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -187,7 +190,9 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
   );
   const [quantity, setQuantity] = React.useState(1);
   const [wishlisted, setWishlisted] = React.useState(false);
+  const { addItem } = useCart();
   const [addedToCart, setAddedToCart] = React.useState(false);
+  const [isAddingToCart, setIsAddingToCart] = React.useState(false);
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId) || defaultVariant;
   const displayPrice = selectedVariant ? selectedVariant.price : bouquet.price;
@@ -198,7 +203,11 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
 
   const discountPct = displayOriginal ? Math.round((1 - displayPrice / displayOriginal) * 100) : 0;
 
-  function handleAddToCart() {
+  async function handleAddToCart() {
+    if (isAddingToCart) return;
+    setIsAddingToCart(true);
+    await addItem(bouquet.id as string, quantity);
+    setIsAddingToCart(false);
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
   }
@@ -405,12 +414,16 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
           id="add-to-cart-detail"
           variant={bouquet.inStock ? "primary" : "outline"}
           size="lg"
-          disabled={!bouquet.inStock}
+          disabled={!bouquet.inStock || isAddingToCart}
           onClick={handleAddToCart}
           className={`flex-1 transition-all duration-300 ${addedToCart ? "bg-olive-500 hover:bg-olive-600" : ""}`}
         >
-          <ShoppingBag className="h-5 w-5" />
-          {!bouquet.inStock ? "Sold Out" : addedToCart ? "Added to Cart ✓" : "Add to Cart"}
+          {isAddingToCart ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <ShoppingBag className="h-5 w-5" />
+          )}
+          {!bouquet.inStock ? "Sold Out" : addedToCart ? "Added to Cart ✓" : isAddingToCart ? "Adding..." : "Add to Cart"}
         </Button>
         <TooltipProvider>
           <Tooltip>

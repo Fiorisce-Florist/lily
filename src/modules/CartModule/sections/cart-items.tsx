@@ -9,7 +9,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import type { CartItemType } from "../index";
+import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
+
+export interface CartItemType {
+  bouquet: Bouquet;
+  quantity: number;
+  size: string;
+}
 
 function formatPrice(v: number) {
   return new Intl.NumberFormat("id-ID", {
@@ -144,7 +150,7 @@ export function CartItems({
 
                   {/* Flower chips */}
                   <div className="mt-2 flex flex-wrap gap-1">
-                    {item.bouquet.flowers.slice(0, 3).map((f) => (
+                    {item.bouquet.flowers.slice(0, 3).map((f: string) => (
                       <Badge key={f} variant={"outline"} className="text-m3">
                         {f}
                       </Badge>

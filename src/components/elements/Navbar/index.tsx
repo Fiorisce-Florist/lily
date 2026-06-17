@@ -19,10 +19,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "../theme-toggle";
 import { NAV_MENU } from "./const";
+import { useCart } from "@/context/cart-context";
 
 export function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const { itemCount } = useCart();
 
   return (
     <header className="border-cornsilk-300 bg-cornsilk-100/80 sticky top-0 z-50 w-full border-b backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/80">
@@ -147,9 +149,11 @@ export function Navbar() {
           <Button variant="ghost" size="icon" aria-label="Cart" className="relative" asChild>
             <Link href={"/cart"}>
               <ShoppingBag className="h-5 w-5" />
-              <span className="bg-blush-500 text-cornsilk-100 absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold">
-                3
-              </span>
+              {itemCount > 0 && (
+                <span className="bg-blush-500 text-cornsilk-100 absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold">
+                  {itemCount > 9 ? "9+" : itemCount}
+                </span>
+              )}
             </Link>
           </Button>
         </div>
