@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { User, Package, LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -20,6 +22,13 @@ const NAV_ITEMS = [
 
 export function AccountSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogOut = async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+    router.refresh();
+  };
 
   return (
     <div className="flex flex-col space-y-1 md:sticky md:top-24">
@@ -51,7 +60,10 @@ export function AccountSidebar() {
 
         <div className="hidden md:block w-full h-px bg-neutral-200 dark:bg-neutral-800 my-4" />
 
-        <button className="flex items-center gap-3 px-4 py-3 rounded-xl font-inter text-b4 font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left">
+        <button
+          onClick={handleLogOut}
+          className="flex items-center gap-3 px-4 py-3 rounded-xl font-inter text-b4 font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left"
+        >
           <LogOut className="h-5 w-5" />
           Log Out
         </button>
