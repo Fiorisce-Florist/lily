@@ -4,7 +4,16 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { CreditCard, ChevronLeft, ShieldCheck, Loader2, Package } from "lucide-react";
+import {
+  CreditCard,
+  ChevronLeft,
+  ShieldCheck,
+  Loader2,
+  Package,
+  MapPin,
+  PlusCircle,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +24,7 @@ import { useCart } from "@/context/cart-context";
 import { useSession } from "next-auth/react";
 import { createOrder } from "@/app/actions/orders";
 import type { CreateOrderFormData } from "@/app/actions/orders";
+import type { ProfileData, AddressData } from "@/app/actions/profile";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -220,43 +230,180 @@ function Field({
   );
 }
 
+// ─── Saved Address Picker ─────────────────────────────────────────────────────
+
+function SavedAddressPicker({
+  addresses,
+  selectedId,
+  onSelect,
+  onUseNew,
+}: {
+  addresses: AddressData[];
+  selectedId: string | null;
+  onSelect: (addr: AddressData) => void;
+  onUseNew: () => void;
+}) {
+  if (addresses.length === 0) return null;
+
+  return (
+    <div className="space-y-3">
+      <p className="text-b6 font-inter font-semibold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+        Saved addresses
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {addresses.map((addr) => {
+          const isSelected = selectedId === addr.id;
+          return (
+            <button
+              key={addr.id}
+              type="button"
+              onClick={() => onSelect(addr)}
+              className={`w-full text-left rounded-2xl border-2 p-4 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 ${
+                isSelected
+                  ? "border-blush-400 bg-blush-50/60 dark:bg-blush-900/10 dark:border-blush-700"
+                  : "border-neutral-200 dark:border-neutral-700 hover:border-blush-300 dark:hover:border-blush-800 bg-white dark:bg-neutral-900"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <MapPin
+                  className={`h-4 w-4 mt-0.5 shrink-0 ${
+                    isSelected
+                      ? "text-blush-500"
+                      : "text-neutral-400 dark:text-neutral-500"
+                  }`}
+                />
+                {isSelected && (
+                  <CheckCircle2 className="h-4 w-4 text-blush-500 shrink-0" />
+                )}
+              </div>
+              <address className="not-italic mt-2 text-b5 font-inter leading-relaxed">
+                <p className="font-semibold text-neutral-900 dark:text-cornsilk-100">
+                  {addr.recipientName}
+                </p>
+                <p className="text-neutral-600 dark:text-neutral-400">{addr.address}</p>
+                <p className="text-neutral-600 dark:text-neutral-400">
+                  {addr.city}, {addr.postalCode}
+                </p>
+                <p className="text-neutral-400 dark:text-neutral-500 text-b6">{addr.phone}</p>
+              </address>
+            </button>
+          );
+        })}
+
+        {/* "Enter a new address" option */}
+        <button
+          type="button"
+          onClick={onUseNew}
+          className={`w-full text-left rounded-2xl border-2 border-dashed p-4 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 flex flex-col items-center justify-center gap-2 min-h-[120px] ${
+            selectedId === null
+              ? "border-blush-400 bg-blush-50/60 dark:bg-blush-900/10 dark:border-blush-700"
+              : "border-neutral-200 dark:border-neutral-700 hover:border-blush-300 dark:hover:border-blush-800"
+          }`}
+        >
+          <PlusCircle
+            className={`h-5 w-5 ${
+              selectedId === null ? "text-blush-500" : "text-neutral-400"
+            }`}
+          />
+          <span className="text-b5 font-inter font-medium text-neutral-600 dark:text-neutral-400">
+            Enter a new address
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Module ──────────────────────────────────────────────────────────────
 
-export function CheckoutModule() {
+interface CheckoutModuleProps {
+  profile: ProfileData | null;
+  addresses: AddressData[];
+}
+
+export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { items, subtotal, isLoading: cartLoading, refetch } = useCart();
   const [isProcessing, setIsProcessing] = React.useState(false);
 
-  // Form state
+  // ── Derive initial contact from profile ──────────────────────────────────
+  const nameParts = (profile?.name ?? session?.user?.name ?? "").split(" ");
+  const initialFirst = nameParts[0] ?? "";
+  const initialLast = nameParts.slice(1).join(" ");
+  const initialEmail = profile?.email ?? session?.user?.email ?? "";
+  const initialPhone = profile?.phone ?? "";
+
+  // ── Form state ─────────────────────────────────────────────────────────
   const [form, setForm] = React.useState<CreateOrderFormData>({
-    firstName: "",
-    lastName: "",
-    email: session?.user?.email ?? "",
-    phone: "",
+    firstName: initialFirst,
+    lastName: initialLast,
+    email: initialEmail,
+    phone: initialPhone,
     address: "",
     apartment: "",
     city: "",
     postalCode: "",
   });
 
-  // Sync email from session
+  // Track which saved address is selected (null = enter new)
+  // Start with null; if there are saved addresses, the user chooses.
+  const [selectedAddressId, setSelectedAddressId] = React.useState<string | null>(
+    addresses.length > 0 ? addresses[0].id : null
+  );
+
+  // Pre-fill address form when a saved address is picked
   React.useEffect(() => {
-    if (session?.user?.email) {
-      setForm((prev) => ({ ...prev, email: session.user!.email! }));
-    }
-    if (session?.user?.name) {
-      const [first, ...rest] = session.user.name.split(" ");
+    if (selectedAddressId === null) {
+      // User chose "new address" — clear address fields only
       setForm((prev) => ({
         ...prev,
-        firstName: prev.firstName || first,
-        lastName: prev.lastName || rest.join(" "),
+        phone: prev.phone || initialPhone,
+        address: "",
+        apartment: "",
+        city: "",
+        postalCode: "",
+      }));
+      return;
+    }
+    const addr = addresses.find((a) => a.id === selectedAddressId);
+    if (!addr) return;
+    setForm((prev) => ({
+      ...prev,
+      phone: prev.phone || addr.phone,
+      address: addr.address,
+      apartment: "",
+      city: addr.city,
+      postalCode: addr.postalCode,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAddressId]);
+
+  // Pre-fill first saved address on mount (only once)
+  React.useEffect(() => {
+    if (addresses.length > 0) {
+      const addr = addresses[0];
+      setForm((prev) => ({
+        ...prev,
+        phone: prev.phone || addr.phone,
+        address: addr.address,
+        city: addr.city,
+        postalCode: addr.postalCode,
       }));
     }
-  }, [session]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const set = (key: keyof CreateOrderFormData) => (v: string) =>
     setForm((prev) => ({ ...prev, [key]: v }));
+
+  const handleSelectAddress = (addr: AddressData) => {
+    setSelectedAddressId(addr.id);
+  };
+
+  const handleUseNew = () => {
+    setSelectedAddressId(null);
+  };
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -275,7 +422,6 @@ export function CheckoutModule() {
         return;
       }
 
-      // Load Midtrans Snap and open popup
       if (result.snapToken) {
         await loadSnapScript();
 
@@ -302,7 +448,6 @@ export function CheckoutModule() {
           },
         });
       } else {
-        // Snap token unavailable (e.g., Midtrans error) — still redirect to order
         toast.success("Order placed! Complete payment from My Orders.");
         refetch();
         router.push(`/orders/${result.orderNumber}`);
@@ -314,7 +459,7 @@ export function CheckoutModule() {
     }
   };
 
-  // ── Auth guard ──────────────────────────────────────────────────────────────
+  // ── Auth guard ──────────────────────────────────────────────────────────
   if (status === "unauthenticated") {
     return (
       <div className="min-h-screen bg-cornsilk-50 dark:bg-neutral-950 flex items-center justify-center">
@@ -333,7 +478,7 @@ export function CheckoutModule() {
     );
   }
 
-  // ── Empty cart guard ────────────────────────────────────────────────────────
+  // ── Empty cart guard ────────────────────────────────────────────────────
   if (!cartLoading && items.length === 0) {
     return (
       <div className="min-h-screen bg-cornsilk-50 dark:bg-neutral-950 flex items-center justify-center">
@@ -351,6 +496,8 @@ export function CheckoutModule() {
       </div>
     );
   }
+
+  const isAddressFormVisible = selectedAddressId === null || addresses.length === 0;
 
   return (
     <div className="min-h-screen bg-cornsilk-50 dark:bg-neutral-950 pb-20">
@@ -383,35 +530,136 @@ export function CheckoutModule() {
         >
           {/* Left Column: Forms */}
           <div className="lg:col-span-7 xl:col-span-8 space-y-8">
-            {/* Contact Info */}
+
+            {/* 1. Contact Information — pre-filled from profile */}
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
-              <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-6">
-                1. Contact Information
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+                  1. Contact Information
+                </h2>
+                {profile && (
+                  <Link
+                    href="/profile"
+                    className="text-b6 font-inter text-blush-500 hover:text-blush-600 hover:underline underline-offset-4 transition-colors"
+                  >
+                    Edit in Profile →
+                  </Link>
+                )}
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field id="firstName" label="First Name" required value={form.firstName} onChange={set("firstName")} placeholder="Jane" />
-                <Field id="lastName" label="Last Name" required value={form.lastName} onChange={set("lastName")} placeholder="Doe" />
-                <Field id="email" label="Email Address" required type="email" value={form.email} onChange={set("email")} placeholder="jane@example.com" className="sm:col-span-2" />
-                <Field id="phone" label="Phone Number" required type="tel" value={form.phone} onChange={set("phone")} placeholder="+62 812 3456 7890" className="sm:col-span-2" />
+                <Field
+                  id="firstName"
+                  label="First Name"
+                  required
+                  value={form.firstName}
+                  onChange={set("firstName")}
+                  placeholder="Jane"
+                />
+                <Field
+                  id="lastName"
+                  label="Last Name"
+                  required
+                  value={form.lastName}
+                  onChange={set("lastName")}
+                  placeholder="Doe"
+                />
+                <Field
+                  id="email"
+                  label="Email Address"
+                  required
+                  type="email"
+                  value={form.email}
+                  onChange={set("email")}
+                  placeholder="jane@example.com"
+                  className="sm:col-span-2"
+                />
+                <Field
+                  id="phone"
+                  label="Phone Number"
+                  required
+                  type="tel"
+                  value={form.phone}
+                  onChange={set("phone")}
+                  placeholder="+62 812 3456 7890"
+                  className="sm:col-span-2"
+                />
               </div>
             </section>
 
-            {/* Shipping Address */}
+            {/* 2. Shipping Address */}
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
               <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-6">
                 2. Shipping Address
               </h2>
-              <div className="space-y-4">
-                <Field id="address" label="Street Address" required value={form.address} onChange={set("address")} placeholder="Jl. Sudirman No. 1" />
-                <Field id="apartment" label="Apartment, suite, etc. (optional)" value={form.apartment ?? ""} onChange={set("apartment")} placeholder="Tower A, Unit 12" />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Field id="city" label="City" required value={form.city} onChange={set("city")} placeholder="Jakarta Selatan" />
-                  <Field id="postalCode" label="Postal Code" required value={form.postalCode} onChange={set("postalCode")} placeholder="12190" />
+
+              {/* Saved address picker */}
+              <SavedAddressPicker
+                addresses={addresses}
+                selectedId={selectedAddressId}
+                onSelect={handleSelectAddress}
+                onUseNew={handleUseNew}
+              />
+
+              {/* Manual address form — shown when "new address" or no saved addresses */}
+              {isAddressFormVisible && (
+                <div className={`space-y-4 ${addresses.length > 0 ? "mt-6 pt-6 border-t border-neutral-100 dark:border-neutral-800" : ""}`}>
+                  {addresses.length > 0 && (
+                    <p className="text-b6 font-inter font-semibold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                      New address details
+                    </p>
+                  )}
+                  <Field
+                    id="address"
+                    label="Street Address"
+                    required
+                    value={form.address}
+                    onChange={set("address")}
+                    placeholder="Jl. Sudirman No. 1"
+                  />
+                  <Field
+                    id="apartment"
+                    label="Apartment, suite, etc. (optional)"
+                    value={form.apartment ?? ""}
+                    onChange={set("apartment")}
+                    placeholder="Tower A, Unit 12"
+                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Field
+                      id="city"
+                      label="City"
+                      required
+                      value={form.city}
+                      onChange={set("city")}
+                      placeholder="Jakarta Selatan"
+                    />
+                    <Field
+                      id="postalCode"
+                      label="Postal Code"
+                      required
+                      value={form.postalCode}
+                      onChange={set("postalCode")}
+                      placeholder="12190"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* When saved address is selected — show read-only preview with edit hint */}
+              {!isAddressFormVisible && selectedAddressId && (
+                <div className="mt-6 pt-6 border-t border-neutral-100 dark:border-neutral-800 space-y-4">
+                  {/* Still allow editing address + apartment for this order */}
+                  <Field
+                    id="apartment"
+                    label="Apartment, suite, etc. (optional)"
+                    value={form.apartment ?? ""}
+                    onChange={set("apartment")}
+                    placeholder="Tower A, Unit 12"
+                  />
+                </div>
+              )}
             </section>
 
-            {/* Payment note */}
+            {/* 3. Payment note */}
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
               <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-4">
                 3. Payment
@@ -419,7 +667,7 @@ export function CheckoutModule() {
               <div className="flex items-center gap-3 p-4 rounded-2xl bg-cornsilk-50 dark:bg-neutral-800 border border-cornsilk-200 dark:border-neutral-700">
                 <CreditCard className="h-5 w-5 text-camel-600 dark:text-camel-400 shrink-0" />
                 <p className="text-b5 font-inter text-neutral-700 dark:text-neutral-300">
-                  Clicking <strong>"Place Order"</strong> will open the Midtrans payment window. You can pay via credit card, bank transfer, e-wallet, or QRIS.
+                  Clicking <strong>&quot;Place Order&quot;</strong> will open the Midtrans payment window. You can pay via credit card, bank transfer, e-wallet, or QRIS.
                 </p>
               </div>
             </section>

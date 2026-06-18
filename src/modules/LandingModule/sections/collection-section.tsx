@@ -3,19 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-interface Product {
-  id: string;
-  name: string;
-  price: string;
-  image: string;
-  slug: string;
-}
+import { Package } from "lucide-react";
+import type { LandingProduct } from "@/app/actions/landing";
 
 interface CollectionSectionProps {
   title: string;
   href: string;
-  products: Product[];
+  products: LandingProduct[];
   variant?: "light" | "warm" | "muted";
   imageFit?: "cover" | "contain";
 }
@@ -33,6 +27,8 @@ export function CollectionSection({
   variant = "light",
   imageFit = "cover",
 }: CollectionSectionProps) {
+  if (products.length === 0) return null;
+
   return (
     <section className={cn("py-20", bgVariants[variant])}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -49,26 +45,33 @@ export function CollectionSection({
           {products.map((product) => (
             <Link
               key={product.id}
-              href={`/shop/products/${product.slug}`}
+              href={`/shop/${product.slug}`}
               className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
             >
               <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className={cn(
-                    "transition-transform duration-700 group-hover:scale-105",
-                    imageFit === "contain" ? "object-contain p-4" : "object-cover"
-                  )}
-                />
+                {product.image ? (
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    sizes="(max-width: 640px) 50vw, 25vw"
+                    className={cn(
+                      "transition-transform duration-700 group-hover:scale-105",
+                      imageFit === "contain" ? "object-contain p-4" : "object-cover"
+                    )}
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <Package className="h-10 w-10 text-neutral-400" />
+                  </div>
+                )}
               </div>
               <div className="space-y-1 text-left">
-                <h3 className="font-fraunces text-b5 sm:text-b4 text-neutral-900 dark:text-cornsilk-100 group-hover:text-blush-600 font-semibold uppercase tracking-wider transition-colors">
+                <h3 className="font-fraunces text-b5 sm:text-b4 text-neutral-900 dark:text-cornsilk-100 group-hover:text-blush-600 font-semibold uppercase tracking-wider transition-colors line-clamp-2">
                   {product.name}
                 </h3>
                 <p className="font-inter text-b5 text-neutral-500 dark:text-neutral-400">
-                  {product.price}
+                  {product.formattedPrice}
                 </p>
               </div>
             </Link>

@@ -10,64 +10,17 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Button } from "@/components/ui/button";
+import { Package } from "lucide-react";
+import type { LandingProduct } from "@/app/actions/landing";
 
-const products = [
-  // 3 Fresh Flowers
-  {
-    id: "ff1",
-    name: "Joyful Affection (L)",
-    price: "RP 495.000",
-    image: "/images/landing/ff_joyful_affection.png",
-    slug: "joyful-affection-l",
-  },
-  {
-    id: "ff2",
-    name: "Sweet Promise (M)",
-    price: "RP 265.000",
-    image: "/images/landing/ff_sweet_promises.png",
-    slug: "sweet-promise-m",
-  },
-  {
-    id: "ff3",
-    name: "Pure Love (L)",
-    price: "RP 365.000",
-    image: "/images/landing/ff_pure_love.png",
-    slug: "pure-love-l",
-  },
-  // 2 Artificial Flowers
-  {
-    id: "af1",
-    name: "Cotton Pearl (XL)",
-    price: "RP 515.000",
-    image: "/images/landing/af_cotton_pearl.png",
-    slug: "cotton-pearl-xl",
-  },
-  {
-    id: "af2",
-    name: "Enchanted (L)",
-    price: "RP 405.000",
-    image: "/images/landing/af_enchanted.png",
-    slug: "enchanted-l",
-  },
-  // 2 Papan Bunga
-  {
-    id: "pb1",
-    name: "Bunga 2 Titik",
-    price: "RP 1.500.000",
-    image: "/images/landing/pb_bunga-2-titik.png",
-    slug: "bunga-2-titik",
-  },
-  {
-    id: "pb2",
-    name: "Bunga 2 Titik, 2 Kuping",
-    price: "RP 2.000.000",
-    image: "/images/landing/pb_2-titik-2-kuping.png",
-    slug: "bunga-2-titik-2-kuping",
-  },
-];
+interface FeaturedSectionProps {
+  products: LandingProduct[];
+}
 
-export function FeaturedSection() {
+export function FeaturedSection({ products }: FeaturedSectionProps) {
+  // Don't render section if there are no products
+  if (products.length === 0) return null;
+
   return (
     <section className="bg-camel-100 dark:bg-neutral-900 py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -91,7 +44,7 @@ export function FeaturedSection() {
         <Carousel
           opts={{
             align: "start",
-            loop: true,
+            loop: products.length > 4,
           }}
           className="w-full"
         >
@@ -99,29 +52,37 @@ export function FeaturedSection() {
             {products.map((product) => (
               <CarouselItem key={product.id} className="pl-4 basis-1/2 lg:basis-1/4">
                 <Link
-                  href={`/shop/products/${product.slug}`}
+                  href={`/shop/${product.slug}`}
                   className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
                 >
                   <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+                    {product.image ? (
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="(max-width: 640px) 50vw, 25vw"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <Package className="h-10 w-10 text-neutral-400" />
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-1 text-left">
                     <h3 className="font-fraunces text-b5 sm:text-b4 text-neutral-900 dark:text-cornsilk-100 group-hover:text-blush-600 font-semibold uppercase tracking-wider transition-colors line-clamp-1">
                       {product.name}
                     </h3>
                     <p className="font-inter text-b5 text-neutral-500 dark:text-neutral-400">
-                      {product.price}
+                      {product.formattedPrice}
                     </p>
                   </div>
                 </Link>
               </CarouselItem>
             ))}
           </CarouselContent>
+
           <div className="mt-8 flex justify-end gap-2 md:hidden">
             <CarouselPrevious className="static translate-y-0" />
             <CarouselNext className="static translate-y-0" />
