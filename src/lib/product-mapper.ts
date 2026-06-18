@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 
 export function mapProductToBouquet(p: any): Bouquet {
@@ -26,11 +27,12 @@ export function mapProductToBouquet(p: any): Bouquet {
     isBestseller: generalTags.includes("Best Seller"),
     image: p.images?.[0]?.imageUrl || "",
     description: p.description || "",
-    variants: p.variants?.map((v: any) => ({
-      id: v.id,
-      name: v.variantName,
-      price: (Number(p.price) || 0) + (Number(v.additionalPrice) || 0),
-      isAvailable: v.isAvailable,
-    })) || [],
+    variants:
+      p.variants?.map((v: any) => ({
+        id: v.id,
+        name: v.variantName,
+        price: (Number(p.price) || 0) + (Number(v.additionalPrice) || 0),
+        isAvailable: v.isAvailable,
+      })) || [],
   };
 }

@@ -1,9 +1,7 @@
-import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Package, ChevronRight } from "lucide-react";
+import { Package } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import type { OrderData } from "@/app/actions/orders";
 

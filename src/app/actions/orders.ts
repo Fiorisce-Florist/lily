@@ -74,7 +74,11 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
 }> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { orderNumber: null, snapToken: null, error: "You must be logged in to place an order." };
+    return {
+      orderNumber: null,
+      snapToken: null,
+      error: "You must be logged in to place an order.",
+    };
   }
 
   const userId = session.user.id;
@@ -116,10 +120,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   }
 
   // 3. Calculate totals
-  const subtotal = cart.items.reduce(
-    (sum, item) => sum + Number(item.price) * item.quantity,
-    0
-  );
+  const subtotal = cart.items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
   const shippingCost = calcShipping(subtotal);
   const totalAmount = subtotal + shippingCost;
   const orderNumber = generateOrderNumber();
@@ -204,7 +205,11 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
     return { orderNumber, snapToken, error: null };
   } catch (error) {
     console.error("Error creating order:", error);
-    return { orderNumber: null, snapToken: null, error: "Failed to place order. Please try again." };
+    return {
+      orderNumber: null,
+      snapToken: null,
+      error: "Failed to place order. Please try again.",
+    };
   }
 }
 
@@ -438,4 +443,3 @@ export async function getSnapToken(orderNumber: string): Promise<{
     return { snapToken: null, error: "Failed to initiate payment. Please try again." };
   }
 }
-

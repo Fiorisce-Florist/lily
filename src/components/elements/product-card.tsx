@@ -56,6 +56,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
           {product.image ? (
             <>
               {!imgLoaded && <Skeleton className="absolute inset-0" />}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={product.image}
                 alt={product.name}
@@ -161,6 +162,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
         {product.image ? (
           <>
             {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={product.image}
               alt={product.name}

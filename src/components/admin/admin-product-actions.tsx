@@ -37,7 +37,8 @@ export function AdminProductActions({ productId, status }: AdminProductActionsPr
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this product? This will mark it as inactive.")) return;
+    if (!confirm("Are you sure you want to delete this product? This will mark it as inactive."))
+      return;
     setIsLoading(true);
     const result = await adminDeleteProduct(productId);
     setIsLoading(false);
@@ -68,7 +69,10 @@ export function AdminProductActions({ productId, status }: AdminProductActionsPr
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">
         <DropdownMenuItem asChild>
-          <Link href={`/admin/products/${productId}/edit`} className="flex items-center gap-2 cursor-pointer">
+          <Link
+            href={`/admin/products/${productId}/edit`}
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <Edit className="h-3.5 w-3.5" />
             Edit
           </Link>

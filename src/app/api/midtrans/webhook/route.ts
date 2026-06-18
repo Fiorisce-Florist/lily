@@ -72,6 +72,7 @@ export async function POST(req: NextRequest) {
     if (newOrderStatus) {
       await prisma.order.update({
         where: { id: order.id },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         data: { status: newOrderStatus as any },
       });
     }

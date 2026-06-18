@@ -177,10 +177,7 @@ export function AdminProductForm({
             <Label htmlFor="category">
               Category <span className="text-blush-500">*</span>
             </Label>
-            <Select
-              value={form.categoryId}
-              onValueChange={(value) => set("categoryId")(value)}
-            >
+            <Select value={form.categoryId} onValueChange={(value) => set("categoryId")(value)}>
               <SelectTrigger id="category" className="w-full">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
@@ -274,12 +271,7 @@ export function AdminProductForm({
 
       {/* Actions */}
       <div className="flex items-center gap-4">
-        <Button
-          type="submit"
-          variant="primary"
-          disabled={isSubmitting}
-          className="min-w-[140px]"
-        >
+        <Button type="submit" variant="primary" disabled={isSubmitting} className="min-w-35">
           {isSubmitting ? (
             <span className="flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />

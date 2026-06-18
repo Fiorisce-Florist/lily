@@ -24,11 +24,7 @@ export default function NotFound() {
 
       <div className="relative z-10 flex w-full max-w-xl flex-col items-center gap-8">
         {/* Botanical SVG */}
-        <svg
-          viewBox="0 0 100 155"
-          aria-hidden="true"
-          className="flower-wilt h-44 w-auto sm:h-52"
-        >
+        <svg viewBox="0 0 100 155" aria-hidden="true" className="flower-wilt h-44 w-auto sm:h-52">
           <ellipse
             cx="12"
             cy="151"
@@ -141,19 +137,9 @@ export default function NotFound() {
             className="fill-blush-300 dark:fill-blush-600"
           />
 
-          <circle
-            cx="28"
-            cy="19"
-            r="5"
-            className="fill-camel-200 dark:fill-camel-700"
-          />
+          <circle cx="28" cy="19" r="5" className="fill-camel-200 dark:fill-camel-700" />
 
-          <circle
-            cx="28"
-            cy="19"
-            r="2.5"
-            className="fill-camel-400 dark:fill-camel-500"
-          />
+          <circle cx="28" cy="19" r="2.5" className="fill-camel-400 dark:fill-camel-500" />
         </svg>
 
         {/* Error Label */}
@@ -170,18 +156,15 @@ export default function NotFound() {
           </h1>
 
           <p className="mx-auto max-w-md font-inter text-base leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-lg">
-            The page you're looking for has been moved, removed,
-            or simply never existed in our garden.
+            The page you&apos;re looking for has been moved, removed, or simply never existed in our
+            garden.
           </p>
         </div>
 
         {/* Divider */}
         <div className="flex w-full max-w-55 items-center gap-4 opacity-40">
           <div className="h-px flex-1 bg-neutral-500" />
-          <span
-            aria-hidden="true"
-            className="text-sm leading-none text-neutral-500"
-          >
+          <span aria-hidden="true" className="text-sm leading-none text-neutral-500">
             ✿
           </span>
           <div className="h-px flex-1 bg-neutral-500" />

@@ -3,7 +3,17 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronLeft, Package, CheckCircle2, Clock, Truck, Download, MapPin, AlertCircle, CreditCard } from "lucide-react";
+import {
+  ChevronLeft,
+  Package,
+  CheckCircle2,
+  Clock,
+  Truck,
+  Download,
+  MapPin,
+  AlertCircle,
+  CreditCard,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -141,7 +151,10 @@ export function OrderDetailModule({ order, orderNumber, error }: OrderDetailModu
                     </p>
                   </div>
                 </div>
-                <PayNowButton orderNumber={order.orderNumber} className="w-full sm:w-auto shrink-0" />
+                <PayNowButton
+                  orderNumber={order.orderNumber}
+                  className="w-full sm:w-auto shrink-0"
+                />
               </div>
             </section>
           )}

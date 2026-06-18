@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Package,
-  ShoppingCart,
-  Users,
-  TrendingUp,
-  ArrowUpRight,
-  ArrowRight,
-} from "lucide-react";
+import { Package, ShoppingCart, Users, TrendingUp, ArrowUpRight, ArrowRight } from "lucide-react";
 import { adminGetDashboardStats } from "@/app/actions/admin";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -96,7 +89,9 @@ export default async function AdminDashboardPage() {
               href={card.href}
               className="group flex items-center gap-4 bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all"
             >
-              <div className={`h-12 w-12 shrink-0 flex items-center justify-center rounded-xl ${card.color}`}>
+              <div
+                className={`h-12 w-12 shrink-0 flex items-center justify-center rounded-xl ${card.color}`}
+              >
                 <Icon className="h-6 w-6" />
               </div>
               <div className="min-w-0">
@@ -148,7 +143,10 @@ export default async function AdminDashboardPage() {
             <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
               {stats.recentOrders.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-b5 font-inter text-neutral-400">
+                  <td
+                    colSpan={6}
+                    className="px-6 py-8 text-center text-b5 font-inter text-neutral-400"
+                  >
                     No orders yet.
                   </td>
                 </tr>
@@ -173,7 +171,11 @@ export default async function AdminDashboardPage() {
                       {order.itemCount}
                     </td>
                     <td className="px-6 py-4 font-jetbrains font-medium text-neutral-900 dark:text-cornsilk-100">
-                      {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(order.totalAmount)}
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(order.totalAmount)}
                     </td>
                     <td className="px-6 py-4 font-inter text-neutral-500 dark:text-neutral-400 whitespace-nowrap">
                       {formatDate(order.createdAt)}

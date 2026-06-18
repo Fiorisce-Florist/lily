@@ -5,7 +5,9 @@ export function AboutSection() {
     <section className="bg-cornsilk-200 dark:bg-olive-900 py-24 text-olive-900 dark:text-cornsilk-100 transition-colors duration-300">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="font-fraunces text-h2 font-bold text-olive-900 dark:text-cornsilk-100">About Fiorisce</h2>
+          <h2 className="font-fraunces text-h2 font-bold text-olive-900 dark:text-cornsilk-100">
+            About Fiorisce
+          </h2>
           <p className="font-fraunces text-h4 text-olive-700 dark:text-camel-300 mb-10 italic tracking-wide">
             &ldquo;Where Every Bloom Tells A Story&rdquo;
           </p>

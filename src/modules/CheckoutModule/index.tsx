@@ -287,7 +287,7 @@ function SavedAddressPicker({
         <button
           type="button"
           onClick={onUseNew}
-          className={`w-full text-left rounded-2xl border-2 border-dashed p-4 transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-400 flex flex-col items-center justify-center gap-2 min-h-[120px] ${
+          className={`w-full text-left rounded-2xl border-2 border-dashed p-4 transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-400 flex flex-col items-center justify-center gap-2 min-h-30 ${
             selectedId === null
               ? "border-blush-400 bg-blush-50/60 dark:bg-blush-900/10 dark:border-blush-700"
               : "border-neutral-200 dark:border-neutral-700 hover:border-blush-300 dark:hover:border-blush-800"
@@ -347,6 +347,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   React.useEffect(() => {
     if (selectedAddressId === null) {
       // User chose "new address" — clear address fields only
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm((prev) => ({
         ...prev,
         phone: prev.phone || initialPhone,
@@ -374,6 +375,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   React.useEffect(() => {
     if (addresses.length > 0) {
       const addr = addresses[0];
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm((prev) => ({
         ...prev,
         phone: prev.phone || addr.phone,
@@ -416,6 +418,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
       if (result.snapToken) {
         await loadSnapScript();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (window as any).snap.pay(result.snapToken, {
           onSuccess: () => {
             toast.success("Payment successful! Redirecting…");

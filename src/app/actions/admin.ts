@@ -20,31 +20,25 @@ async function requireAdmin() {
 export async function adminGetDashboardStats() {
   await requireAdmin();
 
-  const [
-    totalProducts,
-    activeProducts,
-    totalOrders,
-    totalUsers,
-    revenueResult,
-    recentOrders,
-  ] = await Promise.all([
-    prisma.product.count(),
-    prisma.product.count({ where: { status: "ACTIVE" } }),
-    prisma.order.count(),
-    prisma.user.count(),
-    prisma.order.aggregate({
-      _sum: { totalAmount: true },
-      where: { status: { in: ["PAID", "PROCESSING", "SHIPPED", "COMPLETED"] } },
-    }),
-    prisma.order.findMany({
-      take: 5,
-      orderBy: { createdAt: "desc" },
-      include: {
-        user: { select: { name: true, email: true } },
-        _count: { select: { items: true } },
-      },
-    }),
-  ]);
+  const [totalProducts, activeProducts, totalOrders, totalUsers, revenueResult, recentOrders] =
+    await Promise.all([
+      prisma.product.count(),
+      prisma.product.count({ where: { status: "ACTIVE" } }),
+      prisma.order.count(),
+      prisma.user.count(),
+      prisma.order.aggregate({
+        _sum: { totalAmount: true },
+        where: { status: { in: ["PAID", "PROCESSING", "SHIPPED", "COMPLETED"] } },
+      }),
+      prisma.order.findMany({
+        take: 5,
+        orderBy: { createdAt: "desc" },
+        include: {
+          user: { select: { name: true, email: true } },
+          _count: { select: { items: true } },
+        },
+      }),
+    ]);
 
   return {
     totalProducts,
@@ -131,6 +125,7 @@ export async function adminCreateProduct(data: AdminProductFormData) {
     revalidatePath("/admin/products");
     revalidatePath("/shop");
     return { product, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error?.code === "P2002") {
       return { product: null, error: "A product with that slug already exists." };
@@ -165,7 +160,8 @@ export async function adminGetProduct(id: string) {
       status: product.status,
       isAvailable: product.isAvailable,
       categoryId: product.categoryId,
-      imageUrl: product.images.find((i) => i.isPrimary)?.imageUrl ?? product.images[0]?.imageUrl ?? "",
+      imageUrl:
+        product.images.find((i) => i.isPrimary)?.imageUrl ?? product.images[0]?.imageUrl ?? "",
     },
     error: null,
   };
@@ -218,6 +214,7 @@ export async function adminUpdateProduct(id: string, data: Partial<AdminProductF
     revalidatePath("/admin/products");
     revalidatePath(`/shop`);
     return { error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error?.code === "P2002") {
       return { error: "A product with that slug already exists." };
@@ -291,10 +288,7 @@ export async function adminGetAllOrders() {
   }));
 }
 
-export async function adminUpdateOrderStatus(
-  orderId: string,
-  newStatus: string
-) {
+export async function adminUpdateOrderStatus(orderId: string, newStatus: string) {
   const session = await requireAdmin();
 
   const order = await prisma.order.findUnique({ where: { id: orderId }, select: { status: true } });
@@ -303,6 +297,7 @@ export async function adminUpdateOrderStatus(
   await prisma.$transaction([
     prisma.order.update({
       where: { id: orderId },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: { status: newStatus as any },
     }),
     prisma.orderStatusHistory.create({
@@ -379,4 +374,3 @@ export async function adminToggleUserRole(userId: string) {
   revalidatePath("/admin/users");
   return { error: null, newRole };
 }
-

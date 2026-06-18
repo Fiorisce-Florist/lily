@@ -67,7 +67,7 @@ export default function ShopModule({
       ],
       colors: [...new Set(bouquets.flatMap((b) => b.colors))].sort(),
       flowers: [...new Set(bouquets.flatMap((b) => b.flowers))].sort(),
-      sizes: [...new Set(bouquets.flatMap((b) => (b.variants || []).map(v => v.name)))],
+      sizes: [...new Set(bouquets.flatMap((b) => (b.variants || []).map((v) => v.name)))],
       maxPrice: Math.max(0, ...bouquets.map((b) => Number(b.price) || 0)),
     };
   }, [bouquets]);
@@ -75,7 +75,7 @@ export default function ShopModule({
   const [query, setQuery] = React.useState("");
   const [sort, setSort] = React.useState<SortKey>("featured");
   const [filters, setFilters] = React.useState<FilterState>(() => {
-    let initFilters = { ...DEFAULT_FILTERS };
+    const initFilters = { ...DEFAULT_FILTERS };
     let hasInit = false;
 
     if (initialOccasion) {
@@ -90,7 +90,9 @@ export default function ShopModule({
     if (initialCategory) {
       const catStr = initialCategory.toLowerCase();
       // Match by slug or name
-      const matchedCat = bouquets.find((b) => b.categorySlug?.toLowerCase() === catStr || b.category?.toLowerCase() === catStr)?.category;
+      const matchedCat = bouquets.find(
+        (b) => b.categorySlug?.toLowerCase() === catStr || b.category?.toLowerCase() === catStr
+      )?.category;
       if (matchedCat) {
         initFilters.categories = [matchedCat];
         hasInit = true;

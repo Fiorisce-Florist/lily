@@ -93,7 +93,11 @@ export function OrderModule({ orders, error }: OrderModuleProps) {
               Looks like you haven&apos;t placed any orders yet. Discover our collection of
               beautifully curated blooms.
             </p>
-            <Button variant="primary" className="h-12 px-8 font-inter flex items-center gap-2" asChild>
+            <Button
+              variant="primary"
+              className="h-12 px-8 font-inter flex items-center gap-2"
+              asChild
+            >
               <Link href="/shop">
                 Start Shopping
                 <ArrowRight className="h-4 w-4" />

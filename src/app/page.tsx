@@ -1,8 +1,5 @@
 import LandingModule from "@/modules/LandingModule";
-import {
-  getFeaturedProducts,
-  getProductsByCategory,
-} from "@/app/actions/landing";
+import { getFeaturedProducts, getProductsByCategory } from "@/app/actions/landing";
 
 export const metadata = {
   title: "Fiorisce — Handcrafted Floral Arrangements",
@@ -11,13 +8,12 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const [featured, freshFlowers, artificialFlowers, papanBunga] =
-    await Promise.all([
-      getFeaturedProducts(8),
-      getProductsByCategory("fresh-flowers", 4),
-      getProductsByCategory("artificial-flowers", 4),
-      getProductsByCategory("papan-bunga", 4),
-    ]);
+  const [featured, freshFlowers, artificialFlowers, papanBunga] = await Promise.all([
+    getFeaturedProducts(8),
+    getProductsByCategory("fresh-flowers", 4),
+    getProductsByCategory("artificial-flowers", 4),
+    getProductsByCategory("papan-bunga", 4),
+  ]);
 
   return (
     <LandingModule

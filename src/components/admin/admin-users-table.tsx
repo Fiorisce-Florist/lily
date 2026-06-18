@@ -89,6 +89,7 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
     });
   }, [users, search, roleFilter]);
 
+  const newLocal = "px-6 py-4 font-inter text-neutral-600 dark:text-neutral-400 max-w-[200px] truncate";
   return (
     <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden">
       {/* Filters */}
@@ -100,10 +101,7 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1"
         />
-        <Select
-          value={roleFilter}
-          onValueChange={setRoleFilter}
-        >
+        <Select value={roleFilter} onValueChange={setRoleFilter}>
           <SelectTrigger className="w-fit">
             <SelectValue placeholder="All Roles" />
           </SelectTrigger>
@@ -165,12 +163,12 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
                           </span>
                         )}
                       </div>
-                      <p className="font-inter font-medium text-neutral-900 dark:text-cornsilk-100 max-w-[140px] truncate">
+                      <p className="font-inter font-medium text-neutral-900 dark:text-cornsilk-100 max-w-35 truncate">
                         {user.name ?? <span className="text-neutral-400 italic">No name</span>}
                       </p>
                     </div>
                   </td>
-                  <td className="px-6 py-4 font-inter text-neutral-600 dark:text-neutral-400 max-w-[200px] truncate">
+                  <td className={newLocal}>
                     {user.email ?? "—"}
                   </td>
                   <td className="px-6 py-4 font-inter text-neutral-500 dark:text-neutral-500">

@@ -21,11 +21,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  updateProfile,
-  updatePassword,
-  deleteAddress,
-} from "@/app/actions/profile";
+import { updateProfile, updatePassword, deleteAddress } from "@/app/actions/profile";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
 
 // ─── Personal Info Section ────────────────────────────────────────────────────
@@ -128,9 +124,7 @@ function PersonalInfoSection({ profile }: { profile: ProfileData }) {
             disabled
             className="bg-neutral-50 dark:bg-neutral-950 text-neutral-500 dark:text-neutral-400"
           />
-          <p className="text-b6 font-inter text-neutral-400">
-            Email cannot be changed here.
-          </p>
+          <p className="text-b6 font-inter text-neutral-400">Email cannot be changed here.</p>
         </div>
 
         <div className="space-y-2">
@@ -302,13 +296,22 @@ function PasswordSection({ hasPassword }: { hasPassword: boolean }) {
               disabled={isSaving}
               className="flex items-center gap-2"
             >
-              {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
+              {isSaving ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ShieldCheck className="h-4 w-4" />
+              )}
               {isSaving ? "Saving…" : hasPassword ? "Update Password" : "Set Password"}
             </Button>
             <Button
               type="button"
               variant="outline"
-              onClick={() => { setIsOpen(false); setCurrent(""); setNext(""); setConfirm(""); }}
+              onClick={() => {
+                setIsOpen(false);
+                setCurrent("");
+                setNext("");
+                setConfirm("");
+              }}
               disabled={isSaving}
             >
               Cancel

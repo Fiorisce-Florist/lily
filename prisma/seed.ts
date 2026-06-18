@@ -59,7 +59,8 @@ const ALL_BOUQUETS = [
     isNew: true,
     isBestseller: false,
     image: IMAGES.wildflower,
-    description: "A hand-tied gathering of seasonal wildflowers, as if picked straight from a field.",
+    description:
+      "A hand-tied gathering of seasonal wildflowers, as if picked straight from a field.",
   },
   {
     name: "Lily & Dew",
@@ -74,7 +75,8 @@ const ALL_BOUQUETS = [
     isNew: false,
     isBestseller: true,
     image: IMAGES.white,
-    description: "White oriental lilies with cascading eucalyptus for a timeless, minimalist elegance.",
+    description:
+      "White oriental lilies with cascading eucalyptus for a timeless, minimalist elegance.",
   },
   {
     name: "Golden Hour",
@@ -121,7 +123,8 @@ const ALL_BOUQUETS = [
     isNew: false,
     isBestseller: false,
     image: IMAGES.burgundy,
-    description: "Deep burgundy artificial peonies and garden roses — richly layered, deeply romantic.",
+    description:
+      "Deep burgundy artificial peonies and garden roses — richly layered, deeply romantic.",
   },
   {
     name: "Provence Dream",
@@ -166,7 +169,8 @@ const ALL_BOUQUETS = [
     isNew: true,
     isBestseller: false,
     image: IMAGES.tropical,
-    description: "Artificial bird of paradise, protea and heliconia — a bold tropical statement piece.",
+    description:
+      "Artificial bird of paradise, protea and heliconia — a bold tropical statement piece.",
   },
   {
     name: "Coral Sunset",
@@ -181,7 +185,8 @@ const ALL_BOUQUETS = [
     isNew: false,
     isBestseller: false,
     image: IMAGES.coral,
-    description: "Faux coral charm peonies, garden roses and orange ranunculus in a sunset gradient.",
+    description:
+      "Faux coral charm peonies, garden roses and orange ranunculus in a sunset gradient.",
   },
 
   // PAPAN BUNGA
@@ -262,25 +267,44 @@ async function main() {
   const catBouquets = await prisma.category.upsert({
     where: { slug: "bouquets" },
     update: { name: "Bouquets", description: "Beautiful bouquets for all occasions" },
-    create: { name: "Bouquets", slug: "bouquets", description: "Beautiful bouquets for all occasions" },
+    create: {
+      name: "Bouquets",
+      slug: "bouquets",
+      description: "Beautiful bouquets for all occasions",
+    },
   });
 
   const catFreshFlowers = await prisma.category.upsert({
     where: { slug: "fresh-flowers" },
     update: { name: "Fresh Flowers", description: "Fresh cut flowers and arrangements" },
-    create: { name: "Fresh Flowers", slug: "fresh-flowers", description: "Fresh cut flowers and arrangements" },
+    create: {
+      name: "Fresh Flowers",
+      slug: "fresh-flowers",
+      description: "Fresh cut flowers and arrangements",
+    },
   });
 
   const catArtificialFlowers = await prisma.category.upsert({
     where: { slug: "artificial-flowers" },
-    update: { name: "Artificial Flowers", description: "Long-lasting artificial flowers and plants" },
-    create: { name: "Artificial Flowers", slug: "artificial-flowers", description: "Long-lasting artificial flowers and plants" },
+    update: {
+      name: "Artificial Flowers",
+      description: "Long-lasting artificial flowers and plants",
+    },
+    create: {
+      name: "Artificial Flowers",
+      slug: "artificial-flowers",
+      description: "Long-lasting artificial flowers and plants",
+    },
   });
 
   const catPapanBunga = await prisma.category.upsert({
     where: { slug: "papan-bunga" },
     update: { name: "Papan Bunga", description: "Floral wreaths and board arrangements" },
-    create: { name: "Papan Bunga", slug: "papan-bunga", description: "Floral wreaths and board arrangements" },
+    create: {
+      name: "Papan Bunga",
+      slug: "papan-bunga",
+      description: "Floral wreaths and board arrangements",
+    },
   });
 
   // Map slugs to category IDs for easy lookup
@@ -305,10 +329,11 @@ async function main() {
 
   // Helper for upserting tags
   async function upsertTag(name: string, type: "COLOR" | "FLOWER" | "OCCASION" | "GENERAL") {
-    const slug = type === "GENERAL" 
-      ? name.toLowerCase().replace(/\s+/g, "-") 
-      : `${type.toLowerCase()}-${name.toLowerCase().replace(/\s+/g, "-")}`;
-      
+    const slug =
+      type === "GENERAL"
+        ? name.toLowerCase().replace(/\s+/g, "-")
+        : `${type.toLowerCase()}-${name.toLowerCase().replace(/\s+/g, "-")}`;
+
     const t = await prisma.tag.upsert({
       where: { slug },
       update: { name, type },
@@ -381,7 +406,7 @@ async function main() {
       update: productData,
       create: {
         slug: b.slug,
-        ...productData
+        ...productData,
       },
     });
   }

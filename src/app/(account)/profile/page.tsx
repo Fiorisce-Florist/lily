@@ -7,10 +7,7 @@ export const metadata = {
 };
 
 export default async function ProfilePage() {
-  const [{ profile, error }, { addresses }] = await Promise.all([
-    getProfile(),
-    getUserAddresses(),
-  ]);
+  const [{ profile, error }, { addresses }] = await Promise.all([getProfile(), getUserAddresses()]);
 
   return <ProfileModule profile={profile} addresses={addresses} error={error} />;
 }

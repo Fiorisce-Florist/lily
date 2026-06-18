@@ -34,7 +34,7 @@ function EmptyCart() {
           Your cart is empty
         </h2>
         <p className="mt-2 text-b5 font-inter text-neutral-500 dark:text-neutral-400">
-          Looks like you haven't added any bouquets yet.
+          Looks like you haven&apos;t added any bouquets yet.
         </p>
       </div>
       <Button variant="primary" size="lg" asChild>
@@ -152,13 +152,7 @@ function CartItemRow({ item }: { item: CartItemData }) {
 
 // ─── Cart Summary ──────────────────────────────────────────────────────────────
 
-function CartSummaryPanel({
-  subtotal,
-  onClear,
-}: {
-  subtotal: number;
-  onClear: () => void;
-}) {
+function CartSummaryPanel({ subtotal, onClear }: { subtotal: number; onClear: () => void }) {
   const shipping = subtotal >= 500000 ? 0 : subtotal > 0 ? 50000 : 0;
   const total = subtotal + shipping;
 
@@ -218,7 +212,10 @@ function CartSkeleton() {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
       <div className="lg:col-span-7 xl:col-span-8 space-y-5">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="flex gap-4 py-5 border-b border-cornsilk-200 dark:border-neutral-800">
+          <div
+            key={i}
+            className="flex gap-4 py-5 border-b border-cornsilk-200 dark:border-neutral-800"
+          >
             <Skeleton className="h-28 w-28 rounded-xl shrink-0" />
             <div className="flex-1 space-y-2">
               <Skeleton className="h-5 w-3/4 rounded" />

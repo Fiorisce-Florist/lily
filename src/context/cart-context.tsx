@@ -61,6 +61,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [status]);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCart();
   }, [fetchCart, session]);
 
@@ -107,9 +108,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateItem = React.useCallback(
     async (itemId: string, quantity: number) => {
       // Optimistic update
-      setItems((prev) =>
-        prev.map((i) => (i.id === itemId ? { ...i, quantity } : i))
-      );
+      setItems((prev) => prev.map((i) => (i.id === itemId ? { ...i, quantity } : i)));
 
       try {
         const res = await fetch(`/api/cart/items/${itemId}`, {

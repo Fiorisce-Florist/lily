@@ -21,10 +21,7 @@ function loadSnapScript(): Promise<void> {
       process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === "true"
         ? "https://app.midtrans.com/snap/snap.js"
         : "https://app.sandbox.midtrans.com/snap/snap.js";
-    script.setAttribute(
-      "data-client-key",
-      process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? ""
-    );
+    script.setAttribute("data-client-key", process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? "");
     script.onload = () => resolve();
     document.head.appendChild(script);
   });
@@ -55,6 +52,7 @@ export function PayNowButton({ orderNumber, className }: PayNowButtonProps) {
 
       await loadSnapScript();
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).snap.pay(snapToken, {
         onSuccess: () => {
           toast.success("Payment successful!");

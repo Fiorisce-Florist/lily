@@ -24,6 +24,7 @@ interface ShopToolbarProps {
   activeFilterCount: number;
   filters: FilterState;
   onFiltersChange: (f: FilterState) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: any; // Using any or importing FilterOptions from index
 }
 

@@ -7,10 +7,7 @@ export const metadata = {
 };
 
 export default async function CheckoutPage() {
-  const [{ profile }, { addresses }] = await Promise.all([
-    getProfile(),
-    getUserAddresses(),
-  ]);
+  const [{ profile }, { addresses }] = await Promise.all([getProfile(), getUserAddresses()]);
 
   return <CheckoutModule profile={profile} addresses={addresses} />;
 }

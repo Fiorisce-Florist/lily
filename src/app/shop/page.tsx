@@ -23,5 +23,7 @@ export default async function ShopPage({
   const { products } = await getProducts();
   const bouquets: Bouquet[] = (products || []).map(mapProductToBouquet);
 
-  return <ShopModule bouquets={bouquets} initialOccasion={occasion} initialCategory={categorySlug} />;
+  return (
+    <ShopModule bouquets={bouquets} initialOccasion={occasion} initialCategory={categorySlug} />
+  );
 }

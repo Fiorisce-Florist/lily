@@ -79,12 +79,8 @@ function StatusUpdater({ orderId, currentStatus }: { orderId: string; currentSta
   return (
     <div className="flex items-center gap-2">
       {isUpdating && <Loader2 className="h-3 w-3 animate-spin text-neutral-400 shrink-0" />}
-      <Select
-        value={currentStatus}
-        onValueChange={handleValueChange}
-        disabled={isUpdating}
-      >
-        <SelectTrigger className="h-8 text-xs font-inter w-[130px]">
+      <Select value={currentStatus} onValueChange={handleValueChange} disabled={isUpdating}>
+        <SelectTrigger className="h-8 text-xs font-inter w-32.5">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
@@ -126,10 +122,7 @@ export function AdminOrdersTable({ orders }: { orders: Order[] }) {
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1"
         />
-        <Select
-          value={statusFilter}
-          onValueChange={setStatusFilter}
-        >
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-fit">
             <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
@@ -182,7 +175,7 @@ export function AdminOrdersTable({ orders }: { orders: Order[] }) {
                       {order.orderNumber}
                     </span>
                   </td>
-                  <td className="px-6 py-4 max-w-[160px]">
+                  <td className="px-6 py-4 max-w-40">
                     <p className="font-inter font-medium text-neutral-800 dark:text-neutral-200 truncate">
                       {order.customerName}
                     </p>

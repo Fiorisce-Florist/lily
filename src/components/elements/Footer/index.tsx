@@ -11,9 +11,9 @@ import { FOOTER_MENU } from "./const";
 
 export function Footer() {
   const pathname = usePathname();
-  
+
   const hiddenRoutes = ["/admin", "/login", "/register"];
-  if (pathname && hiddenRoutes.some(route => pathname.startsWith(route))) return null;
+  if (pathname && hiddenRoutes.some((route) => pathname.startsWith(route))) return null;
 
   return (
     <footer className="text-cornsilk-100 bg-olive-900">

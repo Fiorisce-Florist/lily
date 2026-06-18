@@ -49,6 +49,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
           price: product.price,
           description: product.description,
           isAvailable: product.isAvailable,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           status: product.status as any,
           imageUrl: product.imageUrl,
         }}

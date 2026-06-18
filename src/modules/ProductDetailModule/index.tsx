@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -29,7 +28,7 @@ import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/comp
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { useCart } from "@/context/cart-context";
-
+import { useState } from "react";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -40,8 +39,6 @@ function formatPrice(v: number) {
     maximumFractionDigits: 0,
   }).format(v);
 }
-
-
 
 // Alternative Unsplash angles for the gallery
 function buildGalleryImages(baseUrl: string): string[] {
@@ -79,9 +76,9 @@ function StarRating({ rating, size = 16 }: { rating: number; size?: number }) {
 
 function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
   const images = buildGalleryImages(bouquet.image);
-  const [activeIdx, setActiveIdx] = React.useState(0);
-  const [imgLoaded, setImgLoaded] = React.useState(false);
-  const [zoomed, setZoomed] = React.useState(false);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
 
   const prev = () => setActiveIdx((i) => (i - 1 + images.length) % images.length);
   const next = () => setActiveIdx((i) => (i + 1) % images.length);
@@ -185,20 +182,22 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
   const variants = bouquet.variants || [];
   const defaultVariant = variants.length > 0 ? variants[0] : null;
 
-  const [selectedVariantId, setSelectedVariantId] = React.useState<string>(
+  const [selectedVariantId, setSelectedVariantId] = useState<string>(
     defaultVariant ? defaultVariant.id : ""
   );
-  const [quantity, setQuantity] = React.useState(1);
-  const [wishlisted, setWishlisted] = React.useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [wishlisted, setWishlisted] = useState(false);
   const { addItem } = useCart();
-  const [addedToCart, setAddedToCart] = React.useState(false);
-  const [isAddingToCart, setIsAddingToCart] = React.useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId) || defaultVariant;
   const displayPrice = selectedVariant ? selectedVariant.price : bouquet.price;
 
   const displayOriginal = bouquet.originalPrice
-    ? Math.round(bouquet.originalPrice * (selectedVariant ? (selectedVariant.price / bouquet.price) : 1))
+    ? Math.round(
+        bouquet.originalPrice * (selectedVariant ? selectedVariant.price / bouquet.price : 1)
+      )
     : undefined;
 
   const discountPct = displayOriginal ? Math.round((1 - displayPrice / displayOriginal) * 100) : 0;
@@ -345,7 +344,7 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
                 id={`size-${opt.name.replace(/\s+/g, "-")}`}
                 onClick={() => setSelectedVariantId(opt.id)}
                 aria-pressed={selectedVariantId === opt.id}
-                className={`flex-1 min-w-[80px] flex flex-col items-center gap-1 rounded-xl border-2 py-3 px-2 transition-all duration-200 ${
+                className={`flex-1 min-w-20 flex flex-col items-center gap-1 rounded-xl border-2 py-3 px-2 transition-all duration-200 ${
                   selectedVariantId === opt.id
                     ? "border-blush-500 bg-blush-50 dark:bg-blush-950/30"
                     : "border-cornsilk-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:border-blush-300"
@@ -423,7 +422,13 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
           ) : (
             <ShoppingBag className="h-5 w-5" />
           )}
-          {!bouquet.inStock ? "Sold Out" : addedToCart ? "Added to Cart ✓" : isAddingToCart ? "Adding..." : "Add to Cart"}
+          {!bouquet.inStock
+            ? "Sold Out"
+            : addedToCart
+              ? "Added to Cart ✓"
+              : isAddingToCart
+                ? "Adding..."
+                : "Add to Cart"}
         </Button>
         <TooltipProvider>
           <Tooltip>
@@ -766,12 +771,14 @@ function DeliveryTab() {
 
 // ─── Related Products ─────────────────────────────────────────────────────────
 
-function RelatedProducts({ bouquet, allBouquets }: { bouquet: Bouquet, allBouquets: Bouquet[] }) {
-  const related = allBouquets.filter(
-    (b) =>
-      b.id !== bouquet.id &&
-      (b.occasion === bouquet.occasion || b.flowers.some((f) => bouquet.flowers.includes(f)))
-  ).slice(0, 4);
+function RelatedProducts({ bouquet, allBouquets }: { bouquet: Bouquet; allBouquets: Bouquet[] }) {
+  const related = allBouquets
+    .filter(
+      (b) =>
+        b.id !== bouquet.id &&
+        (b.occasion === bouquet.occasion || b.flowers.some((f) => bouquet.flowers.includes(f)))
+    )
+    .slice(0, 4);
 
   if (related.length === 0) return null;
 
@@ -799,7 +806,7 @@ function RelatedProducts({ bouquet, allBouquets }: { bouquet: Bouquet, allBouque
 }
 
 function RelatedCard({ bouquet }: { bouquet: Bouquet }) {
-  const [imgLoaded, setImgLoaded] = React.useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   return (
     <article
@@ -858,7 +865,13 @@ function RelatedCard({ bouquet }: { bouquet: Bouquet }) {
 
 // ─── Main Module ──────────────────────────────────────────────────────────────
 
-export function ProductDetailModule({ bouquet, relatedBouquets = [] }: { bouquet: Bouquet, relatedBouquets?: Bouquet[] }) {
+export function ProductDetailModule({
+  bouquet,
+  relatedBouquets = [],
+}: {
+  bouquet: Bouquet;
+  relatedBouquets?: Bouquet[];
+}) {
   return (
     <TooltipProvider>
       <main className="min-h-screen bg-white dark:bg-neutral-950">

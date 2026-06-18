@@ -1,11 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { Tag, Truck, ShieldCheck, ChevronRight, Check } from "lucide-react";
+import { Tag, ShieldCheck, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface CartSummaryProps {
   subtotal: number;
@@ -32,9 +31,9 @@ export function CartSummary({
   itemCount,
   selectedCount,
 }: CartSummaryProps) {
-  const [promoCode, setPromoCode] = React.useState("");
-  const [promoApplied, setPromoApplied] = React.useState(false);
-  const [promoError, setPromoError] = React.useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoApplied, setPromoApplied] = useState(false);
+  const [promoError, setPromoError] = useState(false);
   const freeShippingProgress = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
   const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
 
@@ -136,7 +135,9 @@ export function CartSummary({
           {selectedCount === 0
             ? "Select items to checkout"
             : `Checkout ${selectedCount} ${selectedCount === 1 ? "item" : "items"}`}
-          {selectedCount > 0 && <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transform transition-all" />}
+          {selectedCount > 0 && (
+            <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transform transition-all" />
+          )}
         </Button>
 
         {/* Trust badges */}

@@ -21,7 +21,7 @@ export function CategorySection() {
             Curated For You
           </p>
           <h2 className="font-fraunces text-h2 md:text-h1 text-neutral-900 dark:text-cornsilk-100 mb-6 font-bold tracking-tight">
-            Explore Our Collections 
+            Explore Our Collections
           </h2>
           <div className="h-px w-24 bg-camel-300 dark:bg-camel-800 mb-6" />
           <p className="font-inter text-b3 max-md:text-b5 text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
@@ -45,10 +45,10 @@ export function CategorySection() {
                 className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
-              
+
               {/* Gradient Overlay for Text Readability */}
               <div className="absolute inset-0 z-10 bg-linear-to-t from-black/80 via-black/20 to-black/5 opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
-              
+
               {/* Inner delicate frame */}
               <div className="absolute inset-4 z-20 pointer-events-none rounded-xl border border-white/20 transition-all duration-500 group-hover:inset-3 group-hover:border-white/40" />
 
@@ -58,10 +58,13 @@ export function CategorySection() {
                   <h3 className="font-fraunces text-3xl sm:text-4xl text-white font-semibold tracking-wide drop-shadow-md">
                     {category.name}
                   </h3>
-                  
+
                   <div className="mt-4 overflow-hidden h-6 flex justify-center">
                     <span className="font-inter inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-camel-300 opacity-0 transform translate-y-full transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                      View Collection <span aria-hidden="true" className="text-sm">&rarr;</span>
+                      View Collection{" "}
+                      <span aria-hidden="true" className="text-sm">
+                        &rarr;
+                      </span>
                     </span>
                   </div>
                 </div>
