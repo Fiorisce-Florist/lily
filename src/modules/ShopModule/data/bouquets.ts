@@ -4,6 +4,8 @@ export interface Bouquet {
   slug: string;
   price: number;
   originalPrice?: number;
+  category?: string;
+  categorySlug?: string;
   occasion: string;
   colors: string[];
   flowers: string[];

@@ -53,16 +53,24 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
           href={`/shop/${product.slug}`}
           className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl block"
         >
-          {!imgLoaded && <Skeleton className="absolute inset-0" />}
-          <img
-            src={product.image}
-            alt={product.name}
-            onLoad={() => setImgLoaded(true)}
-            className={cn(
-              "h-full w-full object-cover transition-all duration-500 group-hover:scale-105",
-              imgLoaded ? "opacity-100" : "opacity-0"
-            )}
-          />
+          {product.image ? (
+            <>
+              {!imgLoaded && <Skeleton className="absolute inset-0" />}
+              <img
+                src={product.image}
+                alt={product.name}
+                onLoad={() => setImgLoaded(true)}
+                className={cn(
+                  "h-full w-full object-cover transition-all duration-500 group-hover:scale-105",
+                  imgLoaded ? "opacity-100" : "opacity-0"
+                )}
+              />
+            </>
+          ) : (
+            <div className="h-full w-full flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
+              <ShoppingBag className="h-8 w-8 text-neutral-400" />
+            </div>
+          )}
           {!inStock && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-neutral-900/60 backdrop-blur-sm">
               <span className="text-b6 font-inter font-medium text-neutral-600 dark:text-neutral-400">
@@ -150,16 +158,24 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
         href={`/shop/${product.slug}`}
         className="relative block aspect-4/5 sm:aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800"
       >
-        {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
-        <img
-          src={product.image}
-          alt={product.name}
-          onLoad={() => setImgLoaded(true)}
-          className={cn(
-            "h-full w-full object-cover transition-all duration-500 group-hover:scale-105",
-            imgLoaded ? "opacity-100" : "opacity-0"
-          )}
-        />
+        {product.image ? (
+          <>
+            {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
+            <img
+              src={product.image}
+              alt={product.name}
+              onLoad={() => setImgLoaded(true)}
+              className={cn(
+                "h-full w-full object-cover transition-all duration-500 group-hover:scale-105",
+                imgLoaded ? "opacity-100" : "opacity-0"
+              )}
+            />
+          </>
+        ) : (
+          <div className="h-full w-full flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
+            <ShoppingBag className="h-10 w-10 text-neutral-400" />
+          </div>
+        )}
 
         {/* Overlay actions on hover */}
         <div className="absolute inset-0 flex items-end justify-center gap-2 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-linear-to-t from-black/20 to-transparent"></div>

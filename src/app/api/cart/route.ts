@@ -48,7 +48,35 @@ export async function GET() {
     include: cartInclude(),
   });
 
-  return NextResponse.json({ cart });
+  if (!cart) {
+    return NextResponse.json({ cart: null });
+  }
+
+  // Ensure Decimals are mapped to standard JS Numbers to match frontend types perfectly
+  const mappedCart = {
+    id: cart.id,
+    items: cart.items.map((item) => ({
+      id: item.id,
+      productId: item.productId,
+      quantity: item.quantity,
+      price: Number(item.price),
+      product: {
+        id: item.product.id,
+        name: item.product.name,
+        slug: item.product.slug,
+        price: Number(item.product.price),
+        isAvailable: item.product.isAvailable,
+        images: item.product.images,
+        variants: item.product.variants.map((v) => ({
+          ...v,
+          additionalPrice: Number(v.additionalPrice),
+        })),
+        category: item.product.category,
+      },
+    })),
+  };
+
+  return NextResponse.json({ cart: mappedCart });
 }
 
 /** POST /api/cart — add an item to the cart */

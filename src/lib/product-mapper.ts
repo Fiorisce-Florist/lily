@@ -11,6 +11,8 @@ export function mapProductToBouquet(p: any): Bouquet {
     id: p.id,
     name: p.name,
     slug: p.slug,
+    category: p.category?.name || "",
+    categorySlug: p.category?.slug || "",
     price: Number(p.price) || 0,
     occasion: occasions[0] || "",
     colors,

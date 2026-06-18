@@ -74,6 +74,13 @@ function FilterSection({ title, children }: { title: string; children: React.Rea
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarProps) {
+  function toggleCategory(cat: string) {
+    const next = filters.categories.includes(cat)
+      ? filters.categories.filter((c) => c !== cat)
+      : [...filters.categories, cat];
+    onFiltersChange({ ...filters, categories: next });
+  }
+
   function toggleOccasion(occ: string) {
     const next = filters.occasions.includes(occ)
       ? filters.occasions.filter((o) => o !== occ)
@@ -139,6 +146,40 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
       </FilterSection>
 
       <Separator className="bg-cornsilk-200 dark:bg-neutral-800" />
+
+      {/* ── Product Type (Category) ──────────────────────────────────────────────────── */}
+      {options.categories.length > 0 && (
+        <>
+          <FilterSection title="Product Type">
+            <ul className="space-y-2.5">
+              {options.categories.map((cat) => (
+                <li key={cat} className="flex items-center gap-2.5">
+                  <Checkbox
+                    id={`category-${cat}`}
+                    checked={filters.categories.includes(cat)}
+                    onCheckedChange={() => toggleCategory(cat)}
+                  />
+                  <Label
+                    htmlFor={`category-${cat}`}
+                    className="text-b5 font-inter text-neutral-700 dark:text-neutral-300 cursor-pointer leading-none"
+                  >
+                    {cat}
+                  </Label>
+                </li>
+              ))}
+            </ul>
+            {filters.categories.length > 0 && (
+              <button
+                onClick={() => onFiltersChange({ ...filters, categories: [] })}
+                className="mt-2 text-b6 font-inter text-blush-500 hover:text-blush-700 dark:text-blush-400 transition-colors"
+              >
+                Clear product type filter
+              </button>
+            )}
+          </FilterSection>
+          <Separator className="bg-cornsilk-200 dark:bg-neutral-800" />
+        </>
+      )}
 
       {/* ── Occasion ──────────────────────────────────────────────────── */}
       <FilterSection title="Occasion">

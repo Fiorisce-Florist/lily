@@ -14,7 +14,7 @@ function EmptyState() {
     <div className="flex flex-col items-center justify-center py-24 text-center">
       <div className="text-5xl mb-4">🌸</div>
       <h3 className="text-h4 font-fraunces font-semibold text-neutral-700 dark:text-cornsilk-200">
-        No bouquets found
+        No products found
       </h3>
       <p className="text-b5 mt-2 text-neutral-500 dark:text-neutral-400 max-w-xs">
         Try adjusting your search or filters to discover more arrangements.

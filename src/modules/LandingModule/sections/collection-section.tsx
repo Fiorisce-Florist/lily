@@ -79,12 +79,7 @@ export function CollectionSection({
         </div>
 
         <div className="text-center">
-          <Button
-            variant="outline"
-            size="lg"
-            className="border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-cornsilk-100 dark:border-cornsilk-100 dark:text-cornsilk-100 dark:hover:bg-cornsilk-100 dark:hover:text-neutral-900 transition-colors uppercase tracking-widest px-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
-            asChild
-          >
+          <Button variant="outline" size="lg" className="uppercase tracking-widest px-8  " asChild>
             <Link href={href}>View All Product</Link>
           </Button>
         </div>

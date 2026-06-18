@@ -41,7 +41,7 @@ export default function LandingModule({
           title="Artificial Flower"
           href="/shop?category=artificial-flowers"
           products={artificialFlowers}
-          variant="muted"
+          variant="light"
         />
       )}
 

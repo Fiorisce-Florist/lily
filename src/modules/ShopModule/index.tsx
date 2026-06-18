@@ -10,6 +10,7 @@ import type { Bouquet } from "./data/bouquets";
 export type SortKey = "featured" | "price-asc" | "price-desc" | "newest" | "bestseller";
 
 export interface FilterState {
+  categories: string[];
   occasions: string[];
   colors: string[];
   flowers: string[];
@@ -19,6 +20,7 @@ export interface FilterState {
 }
 
 export interface FilterOptions {
+  categories: string[];
   occasions: string[];
   colors: string[];
   flowers: string[];
@@ -27,6 +29,7 @@ export interface FilterOptions {
 }
 
 const DEFAULT_FILTERS: FilterState = {
+  categories: [],
   occasions: [],
   colors: [],
   flowers: [],
@@ -35,10 +38,33 @@ const DEFAULT_FILTERS: FilterState = {
   availability: "all",
 };
 
-export default function ShopModule({ bouquets = [] }: { bouquets: Bouquet[] }) {
+const LANDING_OCCASIONS = [
+  "Birthday",
+  "Anniversary",
+  "Wedding",
+  "Sympathy",
+  "Congratulations",
+  "Grand Opening",
+];
+
+export default function ShopModule({
+  bouquets = [],
+  initialOccasion,
+  initialCategory,
+}: {
+  bouquets: Bouquet[];
+  initialOccasion?: string;
+  initialCategory?: string;
+}) {
   const options = React.useMemo<FilterOptions>(() => {
     return {
-      occasions: [...new Set(bouquets.map((b) => b.occasion))],
+      categories: [...new Set(bouquets.map((b) => b.category).filter(Boolean) as string[])].sort(),
+      occasions: [
+        ...LANDING_OCCASIONS,
+        ...[...new Set(bouquets.map((b) => b.occasion).filter(Boolean))]
+          .filter((o) => !LANDING_OCCASIONS.includes(o))
+          .sort(),
+      ],
       colors: [...new Set(bouquets.flatMap((b) => b.colors))].sort(),
       flowers: [...new Set(bouquets.flatMap((b) => b.flowers))].sort(),
       sizes: [...new Set(bouquets.flatMap((b) => (b.variants || []).map(v => v.name)))],
@@ -48,7 +74,31 @@ export default function ShopModule({ bouquets = [] }: { bouquets: Bouquet[] }) {
 
   const [query, setQuery] = React.useState("");
   const [sort, setSort] = React.useState<SortKey>("featured");
-  const [filters, setFilters] = React.useState<FilterState>(DEFAULT_FILTERS);
+  const [filters, setFilters] = React.useState<FilterState>(() => {
+    let initFilters = { ...DEFAULT_FILTERS };
+    let hasInit = false;
+
+    if (initialOccasion) {
+      const occasionStr = initialOccasion.toLowerCase();
+      const matched = options.occasions.find((o) => o.toLowerCase() === occasionStr);
+      if (matched) {
+        initFilters.occasions = [matched];
+        hasInit = true;
+      }
+    }
+
+    if (initialCategory) {
+      const catStr = initialCategory.toLowerCase();
+      // Match by slug or name
+      const matchedCat = bouquets.find((b) => b.categorySlug?.toLowerCase() === catStr || b.category?.toLowerCase() === catStr)?.category;
+      if (matchedCat) {
+        initFilters.categories = [matchedCat];
+        hasInit = true;
+      }
+    }
+
+    return hasInit ? initFilters : DEFAULT_FILTERS;
+  });
   const [viewMode, setViewMode] = React.useState<"grid" | "list">("grid");
 
   const filtered = React.useMemo(() => {
@@ -63,6 +113,11 @@ export default function ShopModule({ bouquets = [] }: { bouquets: Bouquet[] }) {
           b.occasion.toLowerCase().includes(q) ||
           b.tags.some((t) => t.toLowerCase().includes(q))
       );
+    }
+
+    // Category filter
+    if (filters.categories.length > 0) {
+      result = result.filter((b) => b.category && filters.categories.includes(b.category));
     }
 
     // Occasion filter

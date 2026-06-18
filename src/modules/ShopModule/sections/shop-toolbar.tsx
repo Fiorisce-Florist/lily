@@ -84,6 +84,7 @@ export function ShopToolbar({
             <button
               onClick={() =>
                 onFiltersChange({
+                  categories: [],
                   occasions: [],
                   colors: [],
                   flowers: [],

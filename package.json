@@ -12,6 +12,7 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
+    "db:seed": "prisma db seed",
     "backend:dev": "cd backend && medusa develop",
     "backend:build": "cd backend && medusa build",
     "backend:migrate": "cd backend && medusa db:migrate"
@@ -77,6 +78,6 @@
     "typescript": "^5"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\\\"module\\\":\\\"CommonJS\\\"} prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   }
 }

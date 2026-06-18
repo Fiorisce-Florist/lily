@@ -502,28 +502,16 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   return (
     <div className="min-h-screen bg-cornsilk-50 dark:bg-neutral-950 pb-20">
       {/* Minimal Header */}
-      <header className="border-b border-cornsilk-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 sticky top-0 z-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link
+      
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl pt-8 sm:pt-12">
+        <Link
             href="/cart"
-            className="flex items-center gap-2 group text-b4 font-inter text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-cornsilk-100 transition-colors"
+            className="flex mb-4 items-center gap-2 group text-b4 font-inter text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-cornsilk-100 transition-colors"
           >
             <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transform transition-all" />
             Back to Cart
           </Link>
-          <Link href="/">
-            <span className="font-fraunces text-h4 text-blush-800 dark:text-blush-400 font-bold tracking-tight">
-              Fiorisce
-            </span>
-          </Link>
-          <div className="flex items-center gap-2 text-b6 font-inter text-neutral-400">
-            <ShieldCheck className="h-4 w-4" />
-            <span className="hidden sm:inline">Secure Checkout</span>
-          </div>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl pt-8 sm:pt-12">
         <form
           onSubmit={handlePlaceOrder}
           className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12"

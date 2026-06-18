@@ -10,9 +10,18 @@ export const metadata: Metadata = {
     "Discover handcrafted bouquets for every occasion. Filter by occasion, color, and price. Fresh daily arrangements delivered.",
 };
 
-export default async function ShopPage() {
+export default async function ShopPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const categorySlug = resolvedSearchParams.category as string | undefined;
+  const occasion = resolvedSearchParams.occasion as string | undefined;
+
+  // Fetch ALL products so the user can freely use the sidebar filters
   const { products } = await getProducts();
   const bouquets: Bouquet[] = (products || []).map(mapProductToBouquet);
 
-  return <ShopModule bouquets={bouquets} />;
+  return <ShopModule bouquets={bouquets} initialOccasion={occasion} initialCategory={categorySlug} />;
 }
