@@ -3,59 +3,34 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronLeft, Package, CheckCircle2, Clock, Truck, Download, MapPin } from "lucide-react";
+import { ChevronLeft, Package, CheckCircle2, Clock, Truck, Download, MapPin, AlertCircle, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { MOCK_ORDERS } from "@/modules/OrderModule/data/mock-orders";
+import { PayNowButton } from "@/components/pay-now-button";
+import type { OrderData } from "@/app/actions/orders";
 
 interface OrderDetailModuleProps {
+  order: OrderData | null;
   orderNumber: string;
+  error: string | null;
 }
 
-export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
-  // If we simulate a newly created order from Checkout
-  const isNewOrder = orderNumber === "ORD-89234";
-
-  // Find order or create a mock new one
-  const order = isNewOrder
-    ? {
-        id: "ord_new",
-        orderNumber: "ORD-89234",
-        subtotal: 1550000,
-        shippingCost: 0,
-        totalAmount: 1550000,
-        status: "PAID" as const,
-        createdAt: new Date().toISOString(),
-        items: [
-          {
-            id: "item_new_1",
-            productId: "p_1",
-            productName: "Blush Reverie",
-            quantity: 1,
-            unitPrice: 850000,
-            image: "https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=600&q=80",
-          },
-          {
-            id: "item_new_2",
-            productId: "p_5",
-            productName: "Lily and Dew",
-            quantity: 1,
-            unitPrice: 700000,
-            image: "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=600&q=80",
-          },
-        ],
-      }
-    : MOCK_ORDERS.find((o) => o.orderNumber === orderNumber);
-
-  if (!order) {
+export function OrderDetailModule({ order, orderNumber, error }: OrderDetailModuleProps) {
+  if (error || !order) {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-        <Package className="h-12 w-12 text-neutral-300 mb-4" />
+        {error ? (
+          <AlertCircle className="h-12 w-12 text-blush-400 mb-4" />
+        ) : (
+          <Package className="h-12 w-12 text-neutral-300 mb-4" />
+        )}
         <h2 className="text-h4 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-          Order Not Found
+          {error ? "Something went wrong" : "Order Not Found"}
         </h2>
-        <p className="text-neutral-500 mt-2 mb-6">We couldn&apos;t find order {orderNumber}.</p>
+        <p className="text-neutral-500 dark:text-neutral-400 mt-2 mb-6 max-w-sm">
+          {error ?? `We couldn't find order ${orderNumber}.`}
+        </p>
         <Button variant="primary" asChild>
           <Link href="/orders">Back to Orders</Link>
         </Button>
@@ -98,7 +73,7 @@ export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
     }
   };
 
-  // Timeline mock steps based on status
+  // Timeline steps based on status
   const steps = [
     { label: "Order Placed", active: true, icon: CheckCircle2 },
     {
@@ -114,6 +89,8 @@ export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
     { label: "Shipped", active: ["SHIPPED", "COMPLETED"].includes(order.status), icon: Truck },
     { label: "Delivered", active: order.status === "COMPLETED", icon: MapPin },
   ];
+
+  const activeSteps = steps.filter((s) => s.active).length;
 
   return (
     <div className="space-y-8">
@@ -149,18 +126,39 @@ export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
+          {/* Payment pending banner */}
+          {order.status === "PENDING" && (
+            <section className="bg-camel-50 dark:bg-camel-900/20 border border-camel-200 dark:border-camel-800/50 rounded-3xl p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex items-center gap-3 flex-1">
+                  <CreditCard className="h-5 w-5 text-camel-600 dark:text-camel-400 shrink-0" />
+                  <div>
+                    <p className="text-b4 font-inter font-semibold text-camel-800 dark:text-camel-300">
+                      Payment pending
+                    </p>
+                    <p className="text-b5 font-inter text-camel-700 dark:text-camel-400 mt-0.5">
+                      Complete your payment to confirm this order.
+                    </p>
+                  </div>
+                </div>
+                <PayNowButton orderNumber={order.orderNumber} className="w-full sm:w-auto shrink-0" />
+              </div>
+            </section>
+          )}
+
           {/* Tracking Timeline */}
-          {order.status !== "CANCELLED" && (
+          {order.status !== "CANCELLED" && order.status !== "PENDING" && (
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
               <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-6">
                 Tracking Status
               </h2>
               <div className="relative flex justify-between items-start mt-8 mb-4">
-                {/* Connecting line */}
+                {/* Connecting line background */}
                 <div className="absolute top-4 left-0 w-full h-1 bg-cornsilk-100 dark:bg-neutral-800 rounded-full -z-10" />
+                {/* Active portion */}
                 <div
                   className="absolute top-4 left-0 h-1 bg-blush-400 dark:bg-blush-600 rounded-full -z-10 transition-all"
-                  style={{ width: `${(steps.filter((s) => s.active).length - 1) * 25}%` }}
+                  style={{ width: `${(activeSteps - 1) * 25}%` }}
                 />
 
                 {steps.map((step, idx) => {
@@ -171,12 +169,20 @@ export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
                       className="flex flex-col items-center gap-3 bg-white dark:bg-neutral-900 px-2 text-center w-20"
                     >
                       <div
-                        className={`h-8 w-8 rounded-full flex items-center justify-center ${step.active ? "bg-blush-100 text-blush-600 dark:bg-blush-900/50 dark:text-blush-400 border-2 border-blush-300 dark:border-blush-700" : "bg-cornsilk-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500"}`}
+                        className={`h-8 w-8 rounded-full flex items-center justify-center ${
+                          step.active
+                            ? "bg-blush-100 text-blush-600 dark:bg-blush-900/50 dark:text-blush-400 border-2 border-blush-300 dark:border-blush-700"
+                            : "bg-cornsilk-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500"
+                        }`}
                       >
                         <Icon className="h-4 w-4" />
                       </div>
                       <span
-                        className={`text-xs font-inter font-medium leading-tight ${step.active ? "text-neutral-900 dark:text-cornsilk-100" : "text-neutral-400 dark:text-neutral-500"}`}
+                        className={`text-xs font-inter font-medium leading-tight ${
+                          step.active
+                            ? "text-neutral-900 dark:text-cornsilk-100"
+                            : "text-neutral-400 dark:text-neutral-500"
+                        }`}
                       >
                         {step.label}
                       </span>
@@ -226,6 +232,9 @@ export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
                     <p className="text-b4 font-jetbrains font-semibold text-neutral-900 dark:text-cornsilk-100">
                       {formatPrice(item.unitPrice * item.quantity)}
                     </p>
+                    <p className="text-b6 font-inter text-neutral-400 dark:text-neutral-500 mt-0.5">
+                      {formatPrice(item.unitPrice)} each
+                    </p>
                   </div>
                 </li>
               ))}
@@ -234,7 +243,7 @@ export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-8">
+        <div className="space-y-6">
           {/* Order Summary */}
           <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
             <h2 className="text-h6 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-6">
@@ -250,9 +259,27 @@ export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
               <div className="flex justify-between items-center text-b5 font-inter text-neutral-600 dark:text-neutral-400">
                 <span>Shipping</span>
                 <span className="font-jetbrains font-medium text-neutral-800 dark:text-cornsilk-100">
-                  {order.shippingCost === 0 ? "Free" : formatPrice(order.shippingCost)}
+                  {order.shippingCost === 0 ? (
+                    <span className="text-olive-600 dark:text-olive-400">Free</span>
+                  ) : (
+                    formatPrice(order.shippingCost)
+                  )}
                 </span>
               </div>
+              {order.payment && (
+                <div className="flex justify-between items-center text-b5 font-inter text-neutral-600 dark:text-neutral-400">
+                  <span>Payment</span>
+                  <Badge
+                    className={`text-xs ${
+                      order.payment.status === "PAID"
+                        ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                        : "bg-camel-100 text-camel-700 dark:bg-camel-900/30 dark:text-camel-400"
+                    }`}
+                  >
+                    {order.payment.status}
+                  </Badge>
+                </div>
+              )}
               <Separator className="my-4 border-cornsilk-200 dark:border-neutral-700" />
               <div className="flex justify-between items-center">
                 <span className="text-b4 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100">
@@ -265,37 +292,34 @@ export function OrderDetailModule({ orderNumber }: OrderDetailModuleProps) {
             </div>
           </section>
 
-          {/* Customer Details */}
-          <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
-            <h2 className="text-h6 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-6">
-              Customer Details
-            </h2>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-b5 font-inter font-medium text-neutral-900 dark:text-cornsilk-100 mb-2">
-                  Shipping Address
-                </h3>
-                <p className="text-b5 font-inter text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                  Jane Doe
-                  <br />
-                  Jl. Sudirman No. 1<br />
-                  Tower A, Unit 12
-                  <br />
-                  Jakarta Selatan, 12190
+          {/* Shipping Address */}
+          {order.address && (
+            <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
+              <h2 className="text-h6 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-4">
+                Shipping Address
+              </h2>
+              <address className="not-italic text-b5 font-inter text-neutral-600 dark:text-neutral-400 leading-relaxed space-y-1">
+                <p className="font-medium text-neutral-900 dark:text-cornsilk-100">
+                  {order.address.recipientName}
                 </p>
-              </div>
-              <div>
-                <h3 className="text-b5 font-inter font-medium text-neutral-900 dark:text-cornsilk-100 mb-2">
-                  Contact Information
-                </h3>
-                <p className="text-b5 font-inter text-neutral-600 dark:text-neutral-400">
-                  jane.doe@example.com
-                  <br />
-                  +62 812 3456 7890
+                <p>{order.address.address}</p>
+                <p>
+                  {order.address.city}, {order.address.postalCode}
                 </p>
-              </div>
+                <p className="text-b6 mt-2">{order.address.phone}</p>
+              </address>
+            </section>
+          )}
+
+          {/* Payment pending CTA — sidebar */}
+          {order.status === "PENDING" && (
+            <div className="rounded-2xl bg-camel-50 dark:bg-camel-900/20 border border-camel-200 dark:border-camel-800/50 p-4 text-center space-y-3">
+              <p className="text-b5 font-inter text-camel-800 dark:text-camel-300">
+                Payment is pending for this order.
+              </p>
+              <PayNowButton orderNumber={order.orderNumber} className="w-full" />
             </div>
-          </section>
+          )}
         </div>
       </div>
     </div>

@@ -5,10 +5,12 @@ import { Package, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { OrderType, OrderStatus } from "../data/mock-orders";
+import type { OrderData } from "@/app/actions/orders";
+
+type OrderStatus = string;
 
 interface OrderCardProps {
-  order: OrderType;
+  order: OrderData;
 }
 
 export function OrderCard({ order }: OrderCardProps) {

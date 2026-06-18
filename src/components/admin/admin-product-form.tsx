@@ -1,0 +1,288 @@
+"use client";
+
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import {
+  adminCreateProduct,
+  adminUpdateProduct,
+  type AdminProductFormData,
+} from "@/app/actions/admin";
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface AdminProductFormProps {
+  mode: "create" | "edit";
+  productId?: string;
+  categories: Category[];
+  defaultValues?: Partial<AdminProductFormData>;
+}
+
+export function AdminProductForm({
+  mode,
+  productId,
+  categories,
+  defaultValues,
+}: AdminProductFormProps) {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const [form, setForm] = React.useState<AdminProductFormData>({
+    name: defaultValues?.name ?? "",
+    slug: defaultValues?.slug ?? "",
+    categoryId: defaultValues?.categoryId ?? categories[0]?.id ?? "",
+    price: defaultValues?.price ?? 0,
+    description: defaultValues?.description ?? "",
+    isAvailable: defaultValues?.isAvailable ?? true,
+    status: defaultValues?.status ?? "ACTIVE",
+    imageUrl: defaultValues?.imageUrl ?? "",
+  });
+
+  const set = (key: keyof AdminProductFormData) => (v: string | number | boolean) =>
+    setForm((prev) => ({ ...prev, [key]: v }));
+
+  // Auto-generate slug from name
+  const handleNameChange = (name: string) => {
+    set("name")(name);
+    if (mode === "create") {
+      const slug = name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .trim();
+      set("slug")(slug);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      let result: { error: string | null };
+
+      if (mode === "create") {
+        const r = await adminCreateProduct(form);
+        result = r;
+      } else {
+        result = await adminUpdateProduct(productId!, form);
+      }
+
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success(mode === "create" ? "Product created!" : "Product updated!");
+        router.push("/admin/products");
+        router.refresh();
+      }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
+      {/* Basic Info */}
+      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
+        <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+          Basic Information
+        </h2>
+
+        <div className="space-y-2">
+          <Label htmlFor="name">
+            Product Name <span className="text-blush-500">*</span>
+          </Label>
+          <Input
+            id="name"
+            required
+            placeholder="e.g., Blush Reverie Bouquet"
+            value={form.name}
+            onChange={(e) => handleNameChange(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="slug">
+            URL Slug <span className="text-blush-500">*</span>
+          </Label>
+          <Input
+            id="slug"
+            required
+            placeholder="e.g., blush-reverie-bouquet"
+            value={form.slug}
+            onChange={(e) => set("slug")(e.target.value)}
+          />
+          <p className="text-b6 font-inter text-neutral-400">
+            Used in URL: /shop/{form.slug || "your-slug"}
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
+            rows={4}
+            placeholder="Describe this bouquet…"
+            value={form.description ?? ""}
+            onChange={(e) => set("description")(e.target.value)}
+            className="resize-none"
+          />
+        </div>
+      </section>
+
+      {/* Pricing & Category */}
+      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
+        <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+          Pricing &amp; Category
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="price">
+              Price (IDR) <span className="text-blush-500">*</span>
+            </Label>
+            <Input
+              id="price"
+              type="number"
+              required
+              min={0}
+              step={1000}
+              placeholder="e.g., 750000"
+              value={form.price || ""}
+              onChange={(e) => set("price")(Number(e.target.value))}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="category">
+              Category <span className="text-blush-500">*</span>
+            </Label>
+            <select
+              id="category"
+              required
+              value={form.categoryId}
+              onChange={(e) => set("categoryId")(e.target.value)}
+              className="flex h-10 w-full rounded-xl border border-cornsilk-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm font-inter text-neutral-900 dark:text-cornsilk-100 focus:outline-none focus:ring-2 focus:ring-blush-400 dark:focus:ring-blush-600"
+            >
+              {categories.length === 0 ? (
+                <option value="">No categories found</option>
+              ) : (
+                categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
+        </div>
+      </section>
+
+      {/* Image */}
+      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
+        <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+          Primary Image
+        </h2>
+        <div className="space-y-2">
+          <Label htmlFor="imageUrl">Image URL</Label>
+          <Input
+            id="imageUrl"
+            type="url"
+            placeholder="https://example.com/image.jpg"
+            value={form.imageUrl ?? ""}
+            onChange={(e) => set("imageUrl")(e.target.value)}
+          />
+          <p className="text-b6 font-inter text-neutral-400">
+            Paste a direct image URL. Image upload coming soon.
+          </p>
+        </div>
+        {form.imageUrl && (
+          <div className="relative h-32 w-32 overflow-hidden rounded-xl bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={form.imageUrl}
+              alt="Preview"
+              className="h-full w-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+          </div>
+        )}
+      </section>
+
+      {/* Status */}
+      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
+        <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+          Availability
+        </h2>
+        <div className="flex items-center gap-6">
+          {(["ACTIVE", "INACTIVE"] as const).map((s) => (
+            <label key={s} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="status"
+                value={s}
+                checked={form.status === s}
+                onChange={() => set("status")(s)}
+                className="accent-blush-600"
+              />
+              <span className="font-inter text-b5 text-neutral-700 dark:text-neutral-300">{s}</span>
+            </label>
+          ))}
+        </div>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.isAvailable ?? true}
+            onChange={(e) => set("isAvailable")(e.target.checked)}
+            className="accent-blush-600 h-4 w-4"
+          />
+          <span className="font-inter text-b5 text-neutral-700 dark:text-neutral-300">
+            In Stock (available to purchase)
+          </span>
+        </label>
+      </section>
+
+      {/* Actions */}
+      <div className="flex items-center gap-4">
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={isSubmitting}
+          className="min-w-[140px]"
+        >
+          {isSubmitting ? (
+            <span className="flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Saving…
+            </span>
+          ) : mode === "create" ? (
+            "Create Product"
+          ) : (
+            "Save Changes"
+          )}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.back()}
+          disabled={isSubmitting}
+        >
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
+}

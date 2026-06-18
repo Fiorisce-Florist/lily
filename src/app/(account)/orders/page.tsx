@@ -1,10 +1,12 @@
 import { OrderModule } from "@/modules/OrderModule";
+import { getUserOrders } from "@/app/actions/orders";
 
 export const metadata = {
   title: "My Orders — Fiorisce",
   description: "View your past orders, track current shipments, and manage your purchase history.",
 };
 
-export default function OrdersPage() {
-  return <OrderModule />;
+export default async function OrdersPage() {
+  const { orders, error } = await getUserOrders();
+  return <OrderModule orders={orders} error={error} />;
 }

@@ -1,4 +1,5 @@
 import { OrderDetailModule } from "@/modules/OrderDetailModule";
+import { getOrderByNumber } from "@/app/actions/orders";
 
 export const metadata = {
   title: "Order Details — Fiorisce",
@@ -6,11 +7,11 @@ export const metadata = {
 };
 
 interface OrderDetailsPageProps {
-  params: {
-    orderNumber: string;
-  };
+  params: Promise<{ orderNumber: string }>;
 }
 
 export default async function OrderDetailsPage({ params }: OrderDetailsPageProps) {
-  return <OrderDetailModule orderNumber={params.orderNumber} />;
+  const { orderNumber } = await params;
+  const { order, error } = await getOrderByNumber(orderNumber);
+  return <OrderDetailModule order={order} orderNumber={orderNumber} error={error} />;
 }
