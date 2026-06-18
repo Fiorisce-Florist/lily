@@ -12,14 +12,10 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:seed": "prisma db seed",
-    "backend:dev": "cd backend && medusa develop",
-    "backend:build": "cd backend && medusa build",
-    "backend:migrate": "cd backend && medusa db:migrate"
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
-    "@medusajs/js-sdk": "^2.15.5",
     "@prisma/client": "^6.19.3",
     "@radix-ui/react-accordion": "^1.2.13",
     "@radix-ui/react-alert-dialog": "^1.1.16",
