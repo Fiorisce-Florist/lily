@@ -70,7 +70,7 @@ const DialogContent = React.forwardRef<
           "opacity-70 transition-opacity",
           "hover:opacity-100",
           "focus:outline-none",
-          "focus:ring-blush-500 focus:ring-2",
+          "focus:ring-blush-500 focus:ring-1",
           "focus:ring-offset-2",
           "disabled:pointer-events-none",
 

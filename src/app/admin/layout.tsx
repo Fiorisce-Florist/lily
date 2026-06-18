@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
+import { AdminBreadcrumb } from "@/components/admin/admin-breadcrumb";
 
 export const metadata: Metadata = {
   title: { default: "Admin — Fiorisce", template: "%s | Admin — Fiorisce" },
@@ -12,7 +13,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 flex">
       <AdminSidebar />
       <main className="flex-1 min-w-0 overflow-hidden">
-        <div className="container mx-auto px-6 py-8 max-w-7xl">{children}</div>
+        <div className="container mx-auto px-6 py-8 max-w-7xl">
+          <AdminBreadcrumb />
+          {children}
+        </div>
       </main>
     </div>
   );

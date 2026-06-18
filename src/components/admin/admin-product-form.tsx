@@ -7,6 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import {
   adminCreateProduct,
@@ -168,23 +177,27 @@ export function AdminProductForm({
             <Label htmlFor="category">
               Category <span className="text-blush-500">*</span>
             </Label>
-            <select
-              id="category"
-              required
+            <Select
               value={form.categoryId}
-              onChange={(e) => set("categoryId")(e.target.value)}
-              className="flex h-10 w-full rounded-xl border border-cornsilk-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm font-inter text-neutral-900 dark:text-cornsilk-100 focus:outline-none focus:ring-2 focus:ring-blush-400 dark:focus:ring-blush-600"
+              onValueChange={(value) => set("categoryId")(value)}
             >
-              {categories.length === 0 ? (
-                <option value="">No categories found</option>
-              ) : (
-                categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))
-              )}
-            </select>
+              <SelectTrigger id="category" className="w-full">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.length === 0 ? (
+                  <SelectItem value="" disabled>
+                    No categories found
+                  </SelectItem>
+                ) : (
+                  categories.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.name}
+                    </SelectItem>
+                  ))
+                )}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </section>
@@ -227,32 +240,36 @@ export function AdminProductForm({
         <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
           Availability
         </h2>
-        <div className="flex items-center gap-6">
+        <RadioGroup
+          value={form.status}
+          onValueChange={(val) => set("status")(val)}
+          className="flex items-center gap-6"
+        >
           {(["ACTIVE", "INACTIVE"] as const).map((s) => (
-            <label key={s} className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="status"
-                value={s}
-                checked={form.status === s}
-                onChange={() => set("status")(s)}
-                className="accent-blush-600"
-              />
-              <span className="font-inter text-b5 text-neutral-700 dark:text-neutral-300">{s}</span>
-            </label>
+            <div key={s} className="flex items-center space-x-2">
+              <RadioGroupItem value={s} id={`status-${s}`} />
+              <Label
+                htmlFor={`status-${s}`}
+                className="font-inter text-b5 text-neutral-700 dark:text-neutral-300 cursor-pointer"
+              >
+                {s}
+              </Label>
+            </div>
           ))}
-        </div>
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
+        </RadioGroup>
+        <div className="flex items-center gap-2 mt-4">
+          <Checkbox
+            id="isAvailable"
             checked={form.isAvailable ?? true}
-            onChange={(e) => set("isAvailable")(e.target.checked)}
-            className="accent-blush-600 h-4 w-4"
+            onCheckedChange={(checked) => set("isAvailable")(!!checked)}
           />
-          <span className="font-inter text-b5 text-neutral-700 dark:text-neutral-300">
+          <Label
+            htmlFor="isAvailable"
+            className="font-inter text-b5 text-neutral-700 dark:text-neutral-300 cursor-pointer"
+          >
             In Stock (available to purchase)
-          </span>
-        </label>
+          </Label>
+        </div>
       </section>
 
       {/* Actions */}

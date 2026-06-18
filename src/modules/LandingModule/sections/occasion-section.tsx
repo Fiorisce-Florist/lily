@@ -69,7 +69,7 @@ export function OccasionSection() {
               key={occasion.slug}
               href={`/shop?occasion=${occasion.slug}`}
               className={cn(
-                "group relative overflow-hidden rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2",
+                "group relative overflow-hidden rounded-2xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2",
                 occasion.colSpan,
                 occasion.rowSpan
               )}

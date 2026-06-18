@@ -35,7 +35,7 @@ export function FeaturedSection({ products }: FeaturedSectionProps) {
           </div>
           <Link
             href="/shop"
-            className="font-inter text-b4 text-blush-600 hover:text-blush-700 dark:text-blush-400 hidden font-medium transition-colors md:inline-flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 rounded-sm"
+            className="font-inter text-b4 text-blush-600 hover:text-blush-700 dark:text-blush-400 hidden font-medium transition-colors md:inline-flex focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 rounded-sm"
           >
             View All
           </Link>
@@ -53,7 +53,7 @@ export function FeaturedSection({ products }: FeaturedSectionProps) {
               <CarouselItem key={product.id} className="pl-4 basis-1/2 lg:basis-1/4">
                 <Link
                   href={`/shop/${product.slug}`}
-                  className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
+                  className="group block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
                 >
                   <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
                     {product.image ? (
@@ -96,7 +96,7 @@ export function FeaturedSection({ products }: FeaturedSectionProps) {
         <div className="mt-8 text-center md:hidden">
           <Link
             href="/shop"
-            className="font-inter text-b4 text-blush-600 hover:text-blush-700 inline-block font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 rounded-sm"
+            className="font-inter text-b4 text-blush-600 hover:text-blush-700 inline-block font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 rounded-sm"
           >
             View All Best Sellers
           </Link>

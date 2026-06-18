@@ -88,7 +88,7 @@ export function LocationSection() {
                         href="https://instagram.com/fiorisce_id"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-blush-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 rounded-sm"
+                        className="hover:text-blush-600 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 rounded-sm"
                       >
                         Instagram: @fiorisce_id
                       </a>
@@ -98,7 +98,7 @@ export function LocationSection() {
                         href="https://tiktok.com/@fiorisce_id"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-blush-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 rounded-sm"
+                        className="hover:text-blush-600 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 rounded-sm"
                       >
                         TikTok: @fiorisce_id
                       </a>
@@ -108,7 +108,7 @@ export function LocationSection() {
                         href="https://wa.me/6287726120040"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-blush-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 rounded-sm"
+                        className="hover:text-blush-600 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 rounded-sm"
                       >
                         WhatsApp: +62 877-2612-0040
                       </a>
@@ -121,7 +121,7 @@ export function LocationSection() {
             <div className="pt-2">
               <Button
                 size="lg"
-                className="bg-camel-500 text-cornsilk-100 hover:bg-camel-600 border-none w-full px-8 uppercase tracking-widest transition-colors sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
+                className="bg-camel-500 text-cornsilk-100 hover:bg-camel-600 border-none w-full px-8 uppercase tracking-widest transition-colors sm:w-auto focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
                 asChild
               >
                 <a

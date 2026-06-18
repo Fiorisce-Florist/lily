@@ -57,10 +57,7 @@ function loadSnapScript(): Promise<void> {
       process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === "true"
         ? "https://app.midtrans.com/snap/snap.js"
         : "https://app.sandbox.midtrans.com/snap/snap.js";
-    script.setAttribute(
-      "data-client-key",
-      process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? ""
-    );
+    script.setAttribute("data-client-key", process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? "");
     script.onload = () => resolve();
     document.head.appendChild(script);
   });
@@ -258,7 +255,7 @@ function SavedAddressPicker({
               key={addr.id}
               type="button"
               onClick={() => onSelect(addr)}
-              className={`w-full text-left rounded-2xl border-2 p-4 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 ${
+              className={`w-full text-left rounded-2xl border-2 p-4 transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-400 ${
                 isSelected
                   ? "border-blush-400 bg-blush-50/60 dark:bg-blush-900/10 dark:border-blush-700"
                   : "border-neutral-200 dark:border-neutral-700 hover:border-blush-300 dark:hover:border-blush-800 bg-white dark:bg-neutral-900"
@@ -267,14 +264,10 @@ function SavedAddressPicker({
               <div className="flex items-start justify-between gap-2">
                 <MapPin
                   className={`h-4 w-4 mt-0.5 shrink-0 ${
-                    isSelected
-                      ? "text-blush-500"
-                      : "text-neutral-400 dark:text-neutral-500"
+                    isSelected ? "text-blush-500" : "text-neutral-400 dark:text-neutral-500"
                   }`}
                 />
-                {isSelected && (
-                  <CheckCircle2 className="h-4 w-4 text-blush-500 shrink-0" />
-                )}
+                {isSelected && <CheckCircle2 className="h-4 w-4 text-blush-500 shrink-0" />}
               </div>
               <address className="not-italic mt-2 text-b5 font-inter leading-relaxed">
                 <p className="font-semibold text-neutral-900 dark:text-cornsilk-100">
@@ -294,16 +287,14 @@ function SavedAddressPicker({
         <button
           type="button"
           onClick={onUseNew}
-          className={`w-full text-left rounded-2xl border-2 border-dashed p-4 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 flex flex-col items-center justify-center gap-2 min-h-[120px] ${
+          className={`w-full text-left rounded-2xl border-2 border-dashed p-4 transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-400 flex flex-col items-center justify-center gap-2 min-h-[120px] ${
             selectedId === null
               ? "border-blush-400 bg-blush-50/60 dark:bg-blush-900/10 dark:border-blush-700"
               : "border-neutral-200 dark:border-neutral-700 hover:border-blush-300 dark:hover:border-blush-800"
           }`}
         >
           <PlusCircle
-            className={`h-5 w-5 ${
-              selectedId === null ? "text-blush-500" : "text-neutral-400"
-            }`}
+            className={`h-5 w-5 ${selectedId === null ? "text-blush-500" : "text-neutral-400"}`}
           />
           <span className="text-b5 font-inter font-medium text-neutral-600 dark:text-neutral-400">
             Enter a new address
@@ -502,23 +493,21 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   return (
     <div className="min-h-screen bg-cornsilk-50 dark:bg-neutral-950 pb-20">
       {/* Minimal Header */}
-      
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl pt-8 sm:pt-12">
         <Link
-            href="/cart"
-            className="flex mb-4 items-center gap-2 group text-b4 font-inter text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-cornsilk-100 transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transform transition-all" />
-            Back to Cart
-          </Link>
+          href="/cart"
+          className="flex mb-4 items-center gap-2 group text-b4 font-inter text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-cornsilk-100 transition-colors"
+        >
+          <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transform transition-all" />
+          Back to Cart
+        </Link>
         <form
           onSubmit={handlePlaceOrder}
           className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12"
         >
           {/* Left Column: Forms */}
           <div className="lg:col-span-7 xl:col-span-8 space-y-8">
-
             {/* 1. Contact Information — pre-filled from profile */}
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
               <div className="flex items-center justify-between mb-6">
@@ -590,7 +579,9 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
 
               {/* Manual address form — shown when "new address" or no saved addresses */}
               {isAddressFormVisible && (
-                <div className={`space-y-4 ${addresses.length > 0 ? "mt-6 pt-6 border-t border-neutral-100 dark:border-neutral-800" : ""}`}>
+                <div
+                  className={`space-y-4 ${addresses.length > 0 ? "mt-6 pt-6 border-t border-neutral-100 dark:border-neutral-800" : ""}`}
+                >
                   {addresses.length > 0 && (
                     <p className="text-b6 font-inter font-semibold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
                       New address details
@@ -655,14 +646,15 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               <div className="flex items-center gap-3 p-4 rounded-2xl bg-cornsilk-50 dark:bg-neutral-800 border border-cornsilk-200 dark:border-neutral-700">
                 <CreditCard className="h-5 w-5 text-camel-600 dark:text-camel-400 shrink-0" />
                 <p className="text-b5 font-inter text-neutral-700 dark:text-neutral-300">
-                  Clicking <strong>&quot;Place Order&quot;</strong> will open the Midtrans payment window. You can pay via credit card, bank transfer, e-wallet, or QRIS.
+                  Clicking <strong>&quot;Place Order&quot;</strong> will open the Midtrans payment
+                  window. You can pay via credit card, bank transfer, e-wallet, or QRIS.
                 </p>
               </div>
             </section>
           </div>
 
           {/* Right Column: Order Summary */}
-          <div className="lg:col-span-5 xl:col-span-4 space-y-4">
+          <div className="lg:col-span-5 xl:col-span-4 space-y-4 sticky top-24 self-start">
             <OrderSummaryPanel
               isLoading={cartLoading || status === "loading"}
               subtotal={subtotal}

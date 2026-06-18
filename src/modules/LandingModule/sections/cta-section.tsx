@@ -38,13 +38,13 @@ export function CtaSection() {
             <Input
               type="email"
               placeholder="Enter your email address"
-              className="bg-cornsilk-100 dark:bg-neutral-950 flex-1 focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:outline-none"
+              className="bg-cornsilk-100 dark:bg-neutral-950 flex-1 focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:outline-none"
               required
               aria-label="Email address"
             />
             <Button
               type="submit"
-              className="bg-blush-500 hover:bg-blush-600 text-cornsilk-100 w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="bg-blush-500 hover:bg-blush-600 text-cornsilk-100 w-full sm:w-auto focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               Subscribe
             </Button>

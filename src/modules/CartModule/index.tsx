@@ -194,7 +194,7 @@ function CartSummaryPanel({
         </div>
       </div>
 
-      <Button variant="primary" size="lg" className="w-full" asChild>
+      <Button variant="primary" size="md" className="w-full" asChild>
         <Link href="/checkout">Proceed to Checkout</Link>
       </Button>
 
@@ -306,7 +306,7 @@ export function CartModule() {
               </div>
 
               <div className="mt-4 flex items-center gap-4">
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="link" size="sm" asChild>
                   <Link href="/shop">← Continue Shopping</Link>
                 </Button>
               </div>

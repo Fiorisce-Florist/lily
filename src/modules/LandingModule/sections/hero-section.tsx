@@ -52,7 +52,7 @@ export function HeroSection() {
           <div className="flex flex-col justify-center gap-4 pt-4 sm:flex-row">
             <Button
               size="lg"
-              className="bg-blush-500 text-cornsilk-100 hover:bg-blush-600 border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
+              className="bg-blush-500 text-cornsilk-100 hover:bg-blush-600 border-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
               asChild
             >
               <Link href="/shop">Shop Now</Link>
@@ -60,7 +60,7 @@ export function HeroSection() {
             <Button
               size="lg"
               variant="outline"
-              className="border-cornsilk-300 text-cornsilk-100 hover:bg-cornsilk-100/10 hover:text-cornsilk-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
+              className="border-cornsilk-300 text-cornsilk-100 hover:bg-cornsilk-100/10 hover:text-cornsilk-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
               asChild
             >
               <Link href="#explore-collection">Explore Collections</Link>

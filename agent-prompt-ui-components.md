@@ -122,7 +122,7 @@ Always use `cva` for multi-variant components. Keep the base classes minimal; pu
 ```ts
 const buttonVariants = cva(
   // base — layout, focus ring, transition only
-  "inline-flex items-center justify-center rounded-lg font-inter font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-lg font-inter font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -160,7 +160,7 @@ export const Toggle = React.forwardRef<
       "text-b4 font-inter inline-flex items-center justify-center rounded-md transition-colors",
       "hover:bg-cornsilk-200 hover:text-neutral-900",
       "data-[state=on]:bg-blush-100 data-[state=on]:text-blush-800",
-      "focus-visible:ring-blush-500 focus-visible:ring-2 focus-visible:outline-none",
+      "focus-visible:ring-blush-500 focus-visible:ring-1 focus-visible:outline-none",
       className
     )}
     {...props}
@@ -171,7 +171,7 @@ Toggle.displayName = TogglePrimitive.Root.displayName;
 
 ### 4. Accessibility requirements (non-negotiable)
 
-- Every interactive element: keyboard navigable, visible focus ring using `focus-visible:ring-2 focus-visible:ring-blush-500`
+- Every interactive element: keyboard navigable, visible focus ring using `focus-visible:ring-1 focus-visible:ring-blush-500`
 - Icons that carry meaning: `aria-label` or adjacent visually-hidden text
 - Decorative icons: `aria-hidden="true"`
 - Color alone must never be the only indicator — always pair with text, icon, or shape
@@ -282,7 +282,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 ### Standard focus ring
 
 ```
-focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2
+focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2
 ```
 
 ### Standard disabled state

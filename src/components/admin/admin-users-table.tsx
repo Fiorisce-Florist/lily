@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { Users, Loader2, ShieldCheck, User } from "lucide-react";
 import { toast } from "sonner";
 import { adminToggleUserRole } from "@/app/actions/admin";
-
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 interface UserRow {
   id: string;
   name: string | null;
@@ -25,13 +32,7 @@ function formatDate(iso: string) {
   }).format(new Date(iso));
 }
 
-function RoleToggleButton({
-  userId,
-  currentRole,
-}: {
-  userId: string;
-  currentRole: string;
-}) {
+function RoleToggleButton({ userId, currentRole }: { userId: string; currentRole: string }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -92,22 +93,26 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
     <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden">
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 px-6 py-4 border-b border-neutral-200 dark:border-neutral-800">
-        <input
+        <Input
           type="text"
           placeholder="Search by name or email…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-3 py-2 text-sm font-inter text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-blush-400"
+          className="flex-1"
         />
-        <select
+        <Select
           value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value)}
-          className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-3 py-2 text-sm font-inter text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-blush-400"
+          onValueChange={setRoleFilter}
         >
-          <option value="ALL">All Roles</option>
-          <option value="CUSTOMER">Customer</option>
-          <option value="ADMIN">Admin</option>
-        </select>
+          <SelectTrigger className="w-fit">
+            <SelectValue placeholder="All Roles" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">All Roles</SelectItem>
+            <SelectItem value="CUSTOMER">Customer</SelectItem>
+            <SelectItem value="ADMIN">Admin</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {filtered.length === 0 ? (
@@ -156,7 +161,7 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
                           />
                         ) : (
                           <span className="text-sm font-fraunces font-bold text-blush-600 dark:text-blush-400">
-                            {((user.name ?? user.email ?? "?")[0]).toUpperCase()}
+                            {(user.name ?? user.email ?? "?")[0].toUpperCase()}
                           </span>
                         )}
                       </div>
@@ -169,7 +174,9 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
                     {user.email ?? "—"}
                   </td>
                   <td className="px-6 py-4 font-inter text-neutral-500 dark:text-neutral-500">
-                    {user.phone ?? <span className="text-neutral-300 dark:text-neutral-600">—</span>}
+                    {user.phone ?? (
+                      <span className="text-neutral-300 dark:text-neutral-600">—</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 font-jetbrains font-medium text-neutral-700 dark:text-neutral-300">
                     {user.orderCount}

@@ -46,7 +46,7 @@ export function CollectionSection({
             <Link
               key={product.id}
               href={`/shop/${product.slug}`}
-              className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
+              className="group block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
             >
               <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
                 {product.image ? (

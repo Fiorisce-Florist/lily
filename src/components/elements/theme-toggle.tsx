@@ -33,7 +33,7 @@ export function ThemeToggle() {
       aria-label="Toggle dark mode"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className={cn(
-        "group relative inline-flex h-8 w-15 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-950",
+        "group relative inline-flex h-8 w-15 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-950",
         isDark ? "bg-neutral-800 hover:bg-neutral-700" : "bg-cornsilk-300 hover:bg-cornsilk-400"
       )}
     >

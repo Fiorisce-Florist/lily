@@ -5,8 +5,22 @@ import { useRouter } from "next/navigation";
 import { ShoppingCart, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { adminUpdateOrderStatus } from "@/app/actions/admin";
-
-const ORDER_STATUSES = ["PENDING", "PAID", "PROCESSING", "SHIPPED", "COMPLETED", "CANCELLED"] as const;
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+const ORDER_STATUSES = [
+  "PENDING",
+  "PAID",
+  "PROCESSING",
+  "SHIPPED",
+  "COMPLETED",
+  "CANCELLED",
+] as const;
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "text-camel-700 bg-camel-100 dark:text-camel-300 dark:bg-camel-900/30",
@@ -50,9 +64,9 @@ function StatusUpdater({ orderId, currentStatus }: { orderId: string; currentSta
   const router = useRouter();
   const [isUpdating, setIsUpdating] = React.useState(false);
 
-  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleValueChange = async (value: string) => {
     setIsUpdating(true);
-    const result = await adminUpdateOrderStatus(orderId, e.target.value);
+    const result = await adminUpdateOrderStatus(orderId, value);
     setIsUpdating(false);
     if (result.error) {
       toast.error(result.error);
@@ -65,18 +79,22 @@ function StatusUpdater({ orderId, currentStatus }: { orderId: string; currentSta
   return (
     <div className="flex items-center gap-2">
       {isUpdating && <Loader2 className="h-3 w-3 animate-spin text-neutral-400 shrink-0" />}
-      <select
+      <Select
         value={currentStatus}
-        onChange={handleChange}
+        onValueChange={handleValueChange}
         disabled={isUpdating}
-        className="text-xs font-inter rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2 py-1 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-1 focus:ring-blush-400 disabled:opacity-50"
       >
-        {ORDER_STATUSES.map((s) => (
-          <option key={s} value={s}>
-            {s}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger className="h-8 text-xs font-inter w-[130px]">
+          <SelectValue placeholder="Status" />
+        </SelectTrigger>
+        <SelectContent>
+          {ORDER_STATUSES.map((s) => (
+            <SelectItem key={s} value={s}>
+              {s}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }
@@ -101,25 +119,29 @@ export function AdminOrdersTable({ orders }: { orders: Order[] }) {
     <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden">
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 px-6 py-4 border-b border-neutral-200 dark:border-neutral-800">
-        <input
+        <Input
           type="text"
           placeholder="Search by order # or customer…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-3 py-2 text-sm font-inter text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-blush-400"
+          className="flex-1"
         />
-        <select
+        <Select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-3 py-2 text-sm font-inter text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-blush-400"
+          onValueChange={setStatusFilter}
         >
-          <option value="ALL">All Statuses</option>
-          {ORDER_STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="w-fit">
+            <SelectValue placeholder="All Statuses" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">All Statuses</SelectItem>
+            {ORDER_STATUSES.map((s) => (
+              <SelectItem key={s} value={s}>
+                {s}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {filtered.length === 0 ? (

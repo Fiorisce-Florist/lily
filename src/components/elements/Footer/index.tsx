@@ -1,5 +1,8 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +10,11 @@ import { Separator } from "@/components/ui/separator";
 import { FOOTER_MENU } from "./const";
 
 export function Footer() {
+  const pathname = usePathname();
+  
+  const hiddenRoutes = ["/admin", "/login", "/register"];
+  if (pathname && hiddenRoutes.some(route => pathname.startsWith(route))) return null;
+
   return (
     <footer className="text-cornsilk-100 bg-olive-900">
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
@@ -30,7 +38,7 @@ export function Footer() {
                 <Input
                   type="email"
                   placeholder="Enter your email"
-                  className="text-cornsilk-100 focus-visible:ring-cornsilk-200 border-olive-700 bg-olive-800 placeholder:text-olive-400"
+                  className="text-cornsilk-100 focus-visible:ring-cornsilk-200 dark:border-olive-700 border-olive-700 bg-olive-800 dark:bg-olive-800 placeholder:text-olive-400"
                   required
                 />
                 <Button
@@ -94,7 +102,7 @@ export function Footer() {
           </div>
         </div>
 
-        <Separator className="mt-12 mb-8 bg-olive-700" />
+        <Separator className="mt-12 mb-8 bg-olive-700 dark:bg-olive-700" />
 
         {/* Bottom Section */}
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">

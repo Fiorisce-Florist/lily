@@ -74,7 +74,7 @@ const SheetContent = React.forwardRef<
         className={cn(
           "ring-offset-background absolute top-4 right-4 rounded-sm opacity-70",
           "transition-opacity hover:opacity-100",
-          "focus:ring-blush-500 dark:text-cornsilk-300 text-neutral-700 focus:ring-2 focus:ring-offset-2 focus:outline-none",
+          "focus:ring-blush-500 dark:text-cornsilk-300 text-neutral-700 focus:ring-1 focus:ring-offset-2 focus:outline-none",
           "disabled:pointer-events-none",
           "data-[state=open]:bg-cornsilk-200 dark:data-[state=open]:bg-neutral-800"
         )}

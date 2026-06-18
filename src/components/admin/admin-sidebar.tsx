@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Flower2,
+  ShieldCheck,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -40,11 +41,11 @@ export function AdminSidebar() {
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-neutral-800">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blush-600 shadow-lg shadow-blush-900/30">
-          <Flower2 className="h-5 w-5 text-white" />
+          <ShieldCheck className="h-5 w-5 text-white" />
         </div>
         {!collapsed && (
           <span className="font-fraunces text-lg font-bold text-cornsilk-100 tracking-tight">
-            Fiorisce
+            Admin Panel
           </span>
         )}
       </div>
