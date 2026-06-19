@@ -326,6 +326,30 @@ export async function adminGetCategories() {
   });
 }
 
+export async function adminCreateCategory(name: string) {
+  await requireAdmin();
+  
+  const slug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+
+  try {
+    const category = await prisma.category.create({
+      data: { name, slug },
+    });
+    return { category, error: null };
+  } catch (error: any) {
+    if (error?.code === "P2002") {
+      return { category: null, error: "A category with that name already exists." };
+    }
+    console.error("Error creating category:", error);
+    return { category: null, error: "Failed to create category." };
+  }
+}
+
 // ─── User Management ──────────────────────────────────────────────────────────
 
 export async function adminGetAllUsers() {

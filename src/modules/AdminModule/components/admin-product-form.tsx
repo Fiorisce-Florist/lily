@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import {
   adminCreateProduct,
   adminUpdateProduct,
+  adminCreateCategory,
   type AdminProductFormData,
 } from "@/app/actions/admin";
 
@@ -44,10 +45,15 @@ export function AdminProductForm({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+  const [localCategories, setLocalCategories] = React.useState(categories);
+  const [isCreatingCategory, setIsCreatingCategory] = React.useState(false);
+  const [newCategoryName, setNewCategoryName] = React.useState("");
+  const [isSubmittingCategory, setIsSubmittingCategory] = React.useState(false);
+
   const [form, setForm] = React.useState<AdminProductFormData>({
     name: defaultValues?.name ?? "",
     slug: defaultValues?.slug ?? "",
-    categoryId: defaultValues?.categoryId ?? categories[0]?.id ?? "",
+    categoryId: defaultValues?.categoryId ?? localCategories[0]?.id ?? "",
     price: defaultValues?.price ?? 0,
     description: defaultValues?.description ?? "",
     isAvailable: defaultValues?.isAvailable ?? true,
@@ -57,6 +63,27 @@ export function AdminProductForm({
 
   const set = (key: keyof AdminProductFormData) => (v: string | number | boolean) =>
     setForm((prev) => ({ ...prev, [key]: v }));
+
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) return;
+    setIsSubmittingCategory(true);
+    try {
+      const res = await adminCreateCategory(newCategoryName);
+      if (res.error) {
+        toast.error(res.error);
+      } else if (res.category) {
+        toast.success("Category created!");
+        setLocalCategories((prev) => [...prev, res.category].sort((a, b) => a.name.localeCompare(b.name)));
+        set("categoryId")(res.category.id);
+        setIsCreatingCategory(false);
+        setNewCategoryName("");
+      }
+    } catch {
+      toast.error("Failed to create category");
+    } finally {
+      setIsSubmittingCategory(false);
+    }
+  };
 
   // Auto-generate slug from name
   const handleNameChange = (name: string) => {
@@ -174,27 +201,77 @@ export function AdminProductForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category">
-              Category <span className="text-blush-500">*</span>
-            </Label>
-            <Select value={form.categoryId} onValueChange={(value) => set("categoryId")(value)}>
-              <SelectTrigger id="category" className="w-full">
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.length === 0 ? (
-                  <SelectItem value="" disabled>
-                    No categories found
-                  </SelectItem>
-                ) : (
-                  categories.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
+            <div className="flex items-center justify-between">
+              <Label htmlFor="category">
+                Category <span className="text-blush-500">*</span>
+              </Label>
+              {!isCreatingCategory && (
+                <button
+                  type="button"
+                  onClick={() => setIsCreatingCategory(true)}
+                  className="text-b6 font-inter text-blush-600 hover:text-blush-700 flex items-center gap-1"
+                >
+                  <Plus className="h-3 w-3" /> New
+                </button>
+              )}
+            </div>
+
+            {isCreatingCategory ? (
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="New category name"
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleCreateCategory();
+                    }
+                  }}
+                  autoFocus
+                />
+                <Button 
+                  type="button" 
+                  variant="primary" 
+                  size="sm" 
+                  onClick={handleCreateCategory}
+                  disabled={isSubmittingCategory || !newCategoryName.trim()}
+                >
+                  {isSubmittingCategory ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  size="sm" 
+                  className="px-2"
+                  onClick={() => {
+                    setIsCreatingCategory(false);
+                    setNewCategoryName("");
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Select value={form.categoryId} onValueChange={(value) => set("categoryId")(value)}>
+                <SelectTrigger id="category" className="w-full">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {localCategories.length === 0 ? (
+                    <SelectItem value="" disabled>
+                      No categories found
                     </SelectItem>
-                  ))
-                )}
-              </SelectContent>
-            </Select>
+                  ) : (
+                    localCategories.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </div>
       </section>
