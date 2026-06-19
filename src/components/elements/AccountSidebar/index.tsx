@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { User, Package, LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -25,7 +25,7 @@ export function AccountSidebar() {
   const router = useRouter();
 
   const handleLogOut = async () => {
-    await signOut({ redirect: false });
+    await signOut();
     router.push("/");
     router.refresh();
   };

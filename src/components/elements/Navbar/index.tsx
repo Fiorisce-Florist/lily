@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut } from "@/lib/auth-client";
 import {
   LucidePackage,
   LucideUserCircle,
@@ -74,11 +74,12 @@ function UserAvatar({
 
 export function Navbar() {
   const pathname = usePathname();
-  const { data: session, status } = useSession();
-  const { itemCount } = useCart();
-
+  const { data, isPending } = useSession();
+  const session = data;
+  const isLoggedIn = !isPending && !!session;
   const isAdmin = session?.user?.role === "ADMIN";
-  const isLoggedIn = status === "authenticated" && !!session;
+  const { items } = useCart();
+  const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <header className="border-cornsilk-300 bg-cornsilk-100/80 sticky top-0 z-50 w-full border-b backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/80">
@@ -142,7 +143,10 @@ export function Navbar() {
                       My Orders
                     </Link>
                     <button
-                      onClick={() => signOut({ callbackUrl: "/" })}
+                      onClick={async () => {
+                        await signOut();
+                        window.location.href = "/";
+                      }}
                       className="text-h5 font-fraunces text-red-500 text-left hover:text-red-600 transition-colors"
                     >
                       Log Out
@@ -249,7 +253,10 @@ export function Navbar() {
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() => signOut({ callbackUrl: "/" })}
+                    onClick={async () => {
+                      await signOut();
+                      window.location.href = "/";
+                    }}
                     className="cursor-pointer text-sm w-full text-red-500 dark:text-red-400 focus:text-red-600"
                   >
                     <LogOut />

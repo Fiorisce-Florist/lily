@@ -1,4 +1,5 @@
 "use server";
+import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -72,7 +73,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   snapToken: string | null;
   error: string | null;
 }> {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return {
       orderNumber: null,
@@ -219,7 +220,7 @@ export async function getUserOrders(): Promise<{
   orders: OrderData[];
   error: string | null;
 }> {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { orders: [], error: "Not authenticated." };
   }
@@ -291,7 +292,7 @@ export async function getOrderByNumber(orderNumber: string): Promise<{
   order: OrderData | null;
   error: string | null;
 }> {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { order: null, error: "Not authenticated." };
   }
@@ -372,7 +373,7 @@ export async function getSnapToken(orderNumber: string): Promise<{
   snapToken: string | null;
   error: string | null;
 }> {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { snapToken: null, error: "Not authenticated." };
   }

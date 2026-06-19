@@ -1,9 +1,10 @@
 "use server";
+import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import bcrypt from "bcryptjs";
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -37,7 +38,7 @@ export async function getProfile(): Promise<{
   profile: ProfileData | null;
   error: string | null;
 }> {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { profile: null, error: "Not authenticated." };
   }
@@ -81,7 +82,7 @@ export async function getProfile(): Promise<{
 export async function updateProfile(data: UpdateProfileData): Promise<{
   error: string | null;
 }> {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return { error: "Not authenticated." };
 
   if (!data.name?.trim()) return { error: "Name is required." };
@@ -103,61 +104,13 @@ export async function updateProfile(data: UpdateProfileData): Promise<{
   }
 }
 
-// ─── updatePassword ───────────────────────────────────────────────────────────
-
-export async function updatePassword(
-  currentPassword: string,
-  newPassword: string
-): Promise<{ error: string | null }> {
-  const session = await auth();
-  if (!session?.user?.id) return { error: "Not authenticated." };
-
-  if (newPassword.length < 8) {
-    return { error: "New password must be at least 8 characters." };
-  }
-
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { passwordHash: true },
-    });
-
-    if (!user) return { error: "User not found." };
-
-    // Users who signed up via OAuth may not have a password
-    if (!user.passwordHash) {
-      // Allow setting a password for the first time
-      const hashed = await bcrypt.hash(newPassword, 12);
-      await prisma.user.update({
-        where: { id: session.user.id },
-        data: { passwordHash: hashed },
-      });
-      return { error: null };
-    }
-
-    const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
-    if (!isValid) return { error: "Current password is incorrect." };
-
-    const hashed = await bcrypt.hash(newPassword, 12);
-    await prisma.user.update({
-      where: { id: session.user.id },
-      data: { passwordHash: hashed },
-    });
-
-    return { error: null };
-  } catch (error) {
-    console.error("Error updating password:", error);
-    return { error: "Failed to update password." };
-  }
-}
-
 // ─── getUserAddresses ─────────────────────────────────────────────────────────
 
 export async function getUserAddresses(): Promise<{
   addresses: AddressData[];
   error: string | null;
 }> {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return { addresses: [], error: "Not authenticated." };
 
   try {
@@ -188,7 +141,7 @@ export async function getUserAddresses(): Promise<{
 // ─── deleteAddress ────────────────────────────────────────────────────────────
 
 export async function deleteAddress(id: string): Promise<{ error: string | null }> {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return { error: "Not authenticated." };
 
   // Ensure it belongs to this user

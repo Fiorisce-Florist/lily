@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/context/cart-context";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import type { CartItemData } from "@/app/actions/cart";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -235,7 +235,8 @@ function CartSkeleton() {
 // ─── Main Module ───────────────────────────────────────────────────────────────
 
 export function CartModule() {
-  const { data: session, status } = useSession();
+  const { data: session, isPending } = useSession();
+  const status = isPending ? "loading" : session ? "authenticated" : "unauthenticated";
   const { items, subtotal, isLoading, clearCart } = useCart();
 
   if (status === "loading" || isLoading) {

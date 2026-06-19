@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -37,7 +38,7 @@ async function getOrCreateCart(userId: string): Promise<string> {
 
 /** GET /api/cart — return the current user's cart */
 export async function GET() {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return NextResponse.json({ cart: null }, { status: 200 });
   }
@@ -81,7 +82,7 @@ export async function GET() {
 
 /** POST /api/cart — add an item to the cart */
 export async function POST(request: Request) {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

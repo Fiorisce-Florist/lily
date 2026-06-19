@@ -3,11 +3,10 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signUp, signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { registerUser } from "@/app/actions/auth";
 
 interface FormErrors {
   name?: string;
@@ -75,21 +74,16 @@ export function RegisterModule() {
     setIsSubmitting(true);
 
     try {
-      const result = await registerUser(formData);
+      const { data, error: authError } = await signUp.email({
+        name: formData.get("name") as string,
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+        phone: formData.get("phone") as string,
+      });
 
-      if (result?.error) {
-        setServerError(result.error);
+      if (authError) {
+        setServerError(authError.message || "Registration failed.");
       } else {
-        // Sign in the user immediately after registration
-        const email = formData.get("email") as string;
-        const password = formData.get("password") as string;
-
-        await signIn("credentials", {
-          redirect: false,
-          email,
-          password,
-        });
-
         router.push("/");
         router.refresh();
       }
@@ -101,7 +95,7 @@ export function RegisterModule() {
   };
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/" });
+    signIn.social({ provider: "google", callbackURL: "/" });
   };
 
   return (

@@ -21,7 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useCart } from "@/context/cart-context";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { createOrder } from "@/app/actions/orders";
 import type { CreateOrderFormData } from "@/app/actions/orders";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
@@ -314,7 +314,8 @@ interface CheckoutModuleProps {
 
 export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, isPending } = useSession();
+  const status = isPending ? "loading" : session ? "authenticated" : "unauthenticated";
   const { items, subtotal, isLoading: cartLoading, refetch } = useCart();
   const [isProcessing, setIsProcessing] = React.useState(false);
 

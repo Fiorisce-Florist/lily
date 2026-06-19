@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,13 +23,12 @@ export function LoginModule() {
     const password = formData.get("password") as string;
 
     try {
-      const res = await signIn("credentials", {
-        redirect: false,
+      const { data, error: authError } = await signIn.email({
         email,
         password,
       });
 
-      if (res?.error) {
+      if (authError) {
         setError("Invalid email or password");
       } else {
         router.push("/");
@@ -43,7 +42,7 @@ export function LoginModule() {
   };
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/" });
+    signIn.social({ provider: "google", callbackURL: "/" });
   };
   return (
     <>

@@ -1,4 +1,5 @@
 "use server";
+import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -72,7 +73,7 @@ function cartInclude() {
 
 /** Fetch the current user's cart. Returns null if not authenticated. */
 export async function getCart(): Promise<CartData | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return null;
 
   const cart = await prisma.cart.findFirst({
@@ -114,7 +115,7 @@ export async function getCart(): Promise<CartData | null> {
 
 /** Add a product to the cart. Creates cart if it doesn't exist. */
 export async function addToCart(productId: string, quantity: number = 1) {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { error: "You must be logged in to add items to your cart." };
   }
@@ -157,7 +158,7 @@ export async function addToCart(productId: string, quantity: number = 1) {
 
 /** Update the quantity of a cart item. */
 export async function updateCartItem(itemId: string, quantity: number) {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { error: "Not authenticated." };
   }
@@ -189,7 +190,7 @@ export async function updateCartItem(itemId: string, quantity: number) {
 
 /** Remove a single item from the cart. */
 export async function removeCartItem(itemId: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { error: "Not authenticated." };
   }
@@ -213,7 +214,7 @@ export async function removeCartItem(itemId: string) {
 
 /** Remove all items from the user's cart. */
 export async function clearCart() {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { error: "Not authenticated." };
   }

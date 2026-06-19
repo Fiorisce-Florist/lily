@@ -21,7 +21,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
-import { updateProfile, updatePassword, deleteAddress } from "@/app/actions/profile";
+import { updateProfile, deleteAddress } from "@/app/actions/profile";
+import { authClient } from "@/lib/auth-client";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
 
 // ─── Personal Info Section ────────────────────────────────────────────────────
@@ -206,10 +207,14 @@ function PasswordSection({ hasPassword }: { hasPassword: boolean }) {
       return;
     }
     setIsSaving(true);
-    const result = await updatePassword(current, next);
+    const { error } = await authClient.changePassword({
+      newPassword: next,
+      currentPassword: current,
+      revokeOtherSessions: true
+    });
     setIsSaving(false);
-    if (result.error) {
-      toast.error(result.error);
+    if (error) {
+      toast.error(error.message || "Failed to update password.");
     } else {
       toast.success(hasPassword ? "Password updated!" : "Password set!");
       setCurrent("");

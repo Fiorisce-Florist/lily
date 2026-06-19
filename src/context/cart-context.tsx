@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import type { CartItemData } from "@/app/actions/cart";
 
@@ -32,7 +32,8 @@ export function useCart(): CartContextValue {
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession();
+  const { data: session, isPending } = useSession();
+  const status = isPending ? "loading" : session ? "authenticated" : "unauthenticated";
   const [items, setItems] = React.useState<CartItemData[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
