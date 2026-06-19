@@ -478,7 +478,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
     return (
       <div className="min-h-screen bg-cornsilk-50 dark:bg-neutral-950 flex items-center justify-center">
         <div className="text-center space-y-4 px-4">
-          <h2 className="text-h4 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+          <h2 className="text-h2 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
             Your cart is empty
           </h2>
           <p className="text-b4 font-inter text-neutral-500 dark:text-neutral-400">

@@ -34,7 +34,7 @@ const DEFAULT_FILTERS: FilterState = {
   colors: [],
   flowers: [],
   sizes: [],
-  priceRange: [0, 1000000],
+  priceRange: [0, 2000000],
   availability: "all",
 };
 

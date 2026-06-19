@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { getProductForCart, syncLocalCart } from "@/app/actions/cart";
 import type { CartItemData } from "@/app/actions/cart";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -41,14 +42,39 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
   const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-  // ── Fetch cart from server ──────────────────────────────────────────────────
+  // ── Fetch cart from server or local storage ────────────────────────────────
   const fetchCart = React.useCallback(async () => {
-    if (status !== "authenticated") {
-      setItems([]);
+    if (status === "loading") return;
+
+    if (status === "unauthenticated") {
+      try {
+        const local = localStorage.getItem("guest_cart");
+        if (local) {
+          setItems(JSON.parse(local));
+        } else {
+          setItems([]);
+        }
+      } catch {
+        setItems([]);
+      }
       return;
     }
+
+    // Authenticated flow
     setIsLoading(true);
     try {
+      // Sync local cart first if exists
+      const localCartStr = localStorage.getItem("guest_cart");
+      if (localCartStr) {
+        const localCart = JSON.parse(localCartStr) as CartItemData[];
+        if (localCart.length > 0) {
+          await syncLocalCart(
+            localCart.map((i) => ({ productId: i.productId, quantity: i.quantity }))
+          );
+        }
+        localStorage.removeItem("guest_cart");
+      }
+
       const res = await fetch("/api/cart", { cache: "no-store" });
       if (!res.ok) throw new Error("Failed to fetch cart");
       const data = await res.json();
@@ -70,10 +96,46 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = React.useCallback(
     async (productId: string, quantity: number = 1) => {
-      if (status !== "authenticated") {
-        toast.error("Please sign in to add items to your cart.");
+      if (status === "unauthenticated") {
+        // Guest cart flow
+        let newItems = [...items];
+        const idx = newItems.findIndex((i) => i.productId === productId);
+        if (idx !== -1) {
+          newItems[idx] = {
+            ...newItems[idx],
+            quantity: Math.min(10, newItems[idx].quantity + quantity),
+          };
+          setItems(newItems);
+          localStorage.setItem("guest_cart", JSON.stringify(newItems));
+          toast.success("Added to cart!");
+          return;
+        }
+
+        // Need to fetch product details to construct CartItemData
+        try {
+          const { product, error } = await getProductForCart(productId);
+          if (error || !product) throw new Error(error ?? "Product not found");
+
+          const newItem: CartItemData = {
+            id: crypto.randomUUID(), // Local ID
+            productId,
+            quantity: Math.min(10, quantity),
+            price: product.price,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            product: product as any, // Cast to match exactly
+          };
+          newItems = [...newItems, newItem];
+          setItems(newItems);
+          localStorage.setItem("guest_cart", JSON.stringify(newItems));
+          toast.success("Added to cart!");
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : "Could not add to cart.";
+          toast.error(message);
+        }
         return;
       }
+
+      // Authenticated flow
       // Optimistic update: bump quantity if already in cart
       setItems((prev) => {
         const idx = prev.findIndex((i) => i.productId === productId);
@@ -103,11 +165,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         await fetchCart(); // Revert optimistic update
       }
     },
-    [status, fetchCart]
+    [status, fetchCart, items]
   );
 
   const updateItem = React.useCallback(
     async (itemId: string, quantity: number) => {
+      if (status === "unauthenticated") {
+        const newItems = items.map((i) => (i.id === itemId ? { ...i, quantity } : i));
+        setItems(newItems);
+        localStorage.setItem("guest_cart", JSON.stringify(newItems));
+        return;
+      }
+
       // Optimistic update
       setItems((prev) => prev.map((i) => (i.id === itemId ? { ...i, quantity } : i)));
 
@@ -127,11 +196,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         await fetchCart(); // Revert
       }
     },
-    [fetchCart]
+    [fetchCart, status, items]
   );
 
   const removeItem = React.useCallback(
     async (itemId: string) => {
+      if (status === "unauthenticated") {
+        const newItems = items.filter((i) => i.id !== itemId);
+        setItems(newItems);
+        localStorage.setItem("guest_cart", JSON.stringify(newItems));
+        toast.success("Item removed from cart.");
+        return;
+      }
+
       // Optimistic update
       setItems((prev) => prev.filter((i) => i.id !== itemId));
 
@@ -148,10 +225,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         await fetchCart(); // Revert
       }
     },
-    [fetchCart]
+    [fetchCart, status, items]
   );
 
   const clearCart = React.useCallback(async () => {
+    if (status === "unauthenticated") {
+      setItems([]);
+      localStorage.removeItem("guest_cart");
+      return;
+    }
+
     const previous = items;
     setItems([]);
 
@@ -166,7 +249,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       toast.error(message);
       setItems(previous); // Revert
     }
-  }, [items]);
+  }, [items, status]);
 
   return (
     <CartContext.Provider
