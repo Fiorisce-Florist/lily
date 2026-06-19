@@ -44,15 +44,12 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
       <article
         id={`product-${product.slug}`}
         className={cn(
-          "group flex gap-5 rounded-2xl border border-cornsilk-300 bg-white p-4 transition-shadow hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900",
+          "group relative flex gap-5 rounded-2xl border border-cornsilk-300 bg-white p-4 transition-shadow hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900",
           className
         )}
       >
         {/* Image */}
-        <Link
-          href={`/shop/${product.slug}`}
-          className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl block"
-        >
+        <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl block">
           {product.image ? (
             <>
               {!imgLoaded && <Skeleton className="absolute inset-0" />}
@@ -79,10 +76,10 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
               </span>
             </div>
           )}
-        </Link>
+        </div>
 
         {/* Info */}
-        <div className="flex flex-1 flex-col justify-between min-w-0">
+        <div className="flex flex-1 flex-col gap-1 min-w-0">
           <div>
             <div className="flex items-start justify-between gap-2">
               <div>
@@ -103,11 +100,9 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
                     </Badge>
                   )}
                 </div>
-                <Link href={`/shop/${product.slug}`}>
-                  <h3 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 hover:text-blush-600 dark:hover:text-blush-400 transition-colors">
-                    {product.name}
-                  </h3>
-                </Link>
+                <h3 className="text-h3 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 group-hover:text-blush-600 dark:group-hover:text-blush-400 transition-colors">
+                  {product.name}
+                </h3>
               </div>
             </div>
             {product.description && (
@@ -117,7 +112,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
             )}
           </div>
 
-          <div className="flex items-center justify-between mt-3">
+          <div className="flex items-center justify-between mt-1">
             <div className="flex items-baseline gap-2">
               <span className="text-h5 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100">
                 {formatPrice(product.price)}
@@ -128,18 +123,6 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
                 </span>
               )}
             </div>
-            <Button
-              variant="primary"
-              size="sm"
-              disabled={!inStock}
-              id={`add-to-cart-${product.slug}`}
-              className="z-10"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              <span className="hidden sm:inline-block ml-2">
-                {inStock ? "Add to Cart" : "Sold Out"}
-              </span>
-            </Button>
           </div>
         </div>
       </article>
@@ -155,10 +138,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
       )}
     >
       {/* Image */}
-      <Link
-        href={`/shop/${product.slug}`}
-        className="relative block aspect-4/5 sm:aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800"
-      >
+      <div className="relative block aspect-4/5 sm:aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800">
         {product.image ? (
           <>
             {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
@@ -211,7 +191,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
             </span>
           </div>
         )}
-      </Link>
+      </div>
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-4">
@@ -223,8 +203,8 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
           </div>
         )}
 
-        <Link href={`/shop/${product.slug}`}>
-          <h3 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 leading-tight hover:text-blush-600 dark:hover:text-blush-400 transition-colors">
+        <Link href={`/shop/${product.slug}`} className="after:absolute after:inset-0 z-0">
+          <h3 className="text-h4 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 leading-tight group-hover:text-blush-600 dark:group-hover:text-blush-400 transition-colors">
             {product.name}
           </h3>
         </Link>
@@ -234,22 +214,8 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
           </p>
         )}
 
-        {/* Tags */}
-        {product.tags && product.tags.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {product.tags.slice(0, 3).map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full capitalize bg-cornsilk-200 px-2 py-0.5 text-[10px] font-inter text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
         {/* Price + CTA */}
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-2 flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-h5 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100">
               {formatPrice(product.price)}
@@ -260,16 +226,6 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
               </span>
             )}
           </div>
-          <Button
-            variant="primary"
-            size="sm"
-            disabled={!inStock}
-            id={`add-to-cart-${product.slug}`}
-            className="z-10"
-          >
-            <ShoppingBag className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:ml-2">Add</span>
-          </Button>
         </div>
       </div>
     </article>
