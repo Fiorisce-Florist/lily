@@ -231,3 +231,89 @@ export async function clearCart() {
   revalidatePath("/cart");
   return { error: null };
 }
+
+/** Fetch product details to populate a local guest cart item. */
+export async function getProductForCart(productId: string) {
+  const product = await prisma.product.findUnique({
+    where: { id: productId, status: "ACTIVE", isAvailable: true },
+    include: {
+      images: {
+        where: { isPrimary: true },
+        take: 1,
+      },
+      variants: true,
+      category: {
+        select: { name: true, slug: true },
+      },
+    },
+  });
+
+  if (!product) {
+    return { error: "Product not found or unavailable." };
+  }
+
+  return {
+    product: {
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: Number(product.price),
+      isAvailable: product.isAvailable,
+      images: product.images.map((img) => ({
+        imageUrl: img.imageUrl,
+        isPrimary: img.isPrimary,
+      })),
+      variants: product.variants.map((v) => ({
+        id: v.id,
+        variantName: v.variantName,
+        additionalPrice: Number(v.additionalPrice),
+        isAvailable: v.isAvailable,
+      })),
+      category: product.category,
+    },
+    error: null,
+  };
+}
+
+/** Sync local guest cart to the user's database cart upon login. */
+export async function syncLocalCart(localItems: { productId: string; quantity: number }[]) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    return { error: "Not authenticated." };
+  }
+
+  if (!localItems || localItems.length === 0) return { error: null };
+
+  const cartId = await getOrCreateCart(session.user.id);
+
+  for (const item of localItems) {
+    const product = await prisma.product.findUnique({
+      where: { id: item.productId, status: "ACTIVE", isAvailable: true },
+      select: { price: true },
+    });
+    if (!product) continue;
+
+    const existingItem = await prisma.cartItem.findFirst({
+      where: { cartId, productId: item.productId },
+    });
+
+    if (existingItem) {
+      await prisma.cartItem.update({
+        where: { id: existingItem.id },
+        data: { quantity: Math.min(10, existingItem.quantity + item.quantity) },
+      });
+    } else {
+      await prisma.cartItem.create({
+        data: {
+          cartId,
+          productId: item.productId,
+          quantity: Math.min(10, item.quantity),
+          price: product.price,
+        },
+      });
+    }
+  }
+
+  revalidatePath("/cart");
+  return { error: null };
+}

@@ -30,14 +30,14 @@ function EmptyCart() {
         <ShoppingBag className="h-10 w-10 text-blush-400 dark:text-blush-500" />
       </div>
       <div>
-        <h2 className="text-h4 font-fraunces text-neutral-900 dark:text-cornsilk-100">
+        <h2 className="text-h2 font-fraunces text-neutral-900 dark:text-cornsilk-100">
           Your cart is empty
         </h2>
         <p className="mt-2 text-b5 font-inter text-neutral-500 dark:text-neutral-400">
           Looks like you haven&apos;t added any bouquets yet.
         </p>
       </div>
-      <Button variant="primary" size="lg" asChild>
+      <Button variant="primary"  asChild>
         <Link href="/shop">Browse Bouquets</Link>
       </Button>
     </div>
