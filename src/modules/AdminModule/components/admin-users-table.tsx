@@ -89,7 +89,8 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
     });
   }, [users, search, roleFilter]);
 
-  const newLocal = "px-6 py-4 font-inter text-neutral-600 dark:text-neutral-400 max-w-[200px] truncate";
+  const newLocal =
+    "px-6 py-4 font-inter text-neutral-600 dark:text-neutral-400 max-w-[200px] truncate";
   return (
     <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden">
       {/* Filters */}
@@ -168,9 +169,7 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
                       </p>
                     </div>
                   </td>
-                  <td className={newLocal}>
-                    {user.email ?? "—"}
-                  </td>
+                  <td className={newLocal}>{user.email ?? "—"}</td>
                   <td className="px-6 py-4 font-inter text-neutral-500 dark:text-neutral-500">
                     {user.phone ?? (
                       <span className="text-neutral-300 dark:text-neutral-600">—</span>

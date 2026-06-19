@@ -328,7 +328,7 @@ export async function adminGetCategories() {
 
 export async function adminCreateCategory(name: string) {
   await requireAdmin();
-  
+
   const slug = name
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "")
@@ -341,6 +341,7 @@ export async function adminCreateCategory(name: string) {
       data: { name, slug },
     });
     return { category, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error?.code === "P2002") {
       return { category: null, error: "A category with that name already exists." };

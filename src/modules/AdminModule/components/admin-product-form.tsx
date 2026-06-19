@@ -73,7 +73,9 @@ export function AdminProductForm({
         toast.error(res.error);
       } else if (res.category) {
         toast.success("Category created!");
-        setLocalCategories((prev) => [...prev, res.category].sort((a, b) => a.name.localeCompare(b.name)));
+        setLocalCategories((prev) =>
+          [...prev, res.category].sort((a, b) => a.name.localeCompare(b.name))
+        );
         set("categoryId")(res.category.id);
         setIsCreatingCategory(false);
         setNewCategoryName("");
@@ -230,19 +232,19 @@ export function AdminProductForm({
                   }}
                   autoFocus
                 />
-                <Button 
-                  type="button" 
-                  variant="primary" 
-                  size="sm" 
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
                   onClick={handleCreateCategory}
                   disabled={isSubmittingCategory || !newCategoryName.trim()}
                 >
                   {isSubmittingCategory ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
                   className="px-2"
                   onClick={() => {
                     setIsCreatingCategory(false);

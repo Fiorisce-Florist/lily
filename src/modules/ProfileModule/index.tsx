@@ -210,7 +210,7 @@ function PasswordSection({ hasPassword }: { hasPassword: boolean }) {
     const { error } = await authClient.changePassword({
       newPassword: next,
       currentPassword: current,
-      revokeOtherSessions: true
+      revokeOtherSessions: true,
     });
     setIsSaving(false);
     if (error) {
