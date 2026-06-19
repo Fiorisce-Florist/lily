@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 interface UserRow {
   id: string;
   name: string | null;
@@ -102,7 +103,7 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
           className="flex-1"
         />
         <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-fit">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="All Roles" />
           </SelectTrigger>
           <SelectContent>
@@ -149,20 +150,12 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
                   {/* User avatar + name */}
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 shrink-0 rounded-full bg-blush-100 dark:bg-blush-900/30 flex items-center justify-center overflow-hidden">
-                        {user.image ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={user.image}
-                            alt={user.name ?? "Avatar"}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <span className="text-sm font-fraunces font-bold text-blush-600 dark:text-blush-400">
-                            {(user.name ?? user.email ?? "?")[0].toUpperCase()}
-                          </span>
-                        )}
-                      </div>
+                      <Avatar className="h-9 w-9 shrink-0 border border-blush-200 dark:border-blush-800">
+                        <AvatarImage src={user.image || ""} alt={user.name ?? "Avatar"} className="object-cover" />
+                        <AvatarFallback className="bg-blush-100 dark:bg-blush-900/30 text-sm font-fraunces font-bold text-blush-600 dark:text-blush-400">
+                          {(user.name || user.email || "?")[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
                       <p className="font-inter font-medium text-neutral-900 dark:text-cornsilk-100 max-w-35 truncate">
                         {user.name ?? <span className="text-neutral-400 italic">No name</span>}
                       </p>

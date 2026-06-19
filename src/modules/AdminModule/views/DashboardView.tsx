@@ -198,7 +198,7 @@ export function DashboardView({ stats }: { stats: DashboardStats }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           href="/admin/products/new"
-          className="flex items-center gap-4 p-5 bg-blush-600 hover:bg-blush-700 rounded-2xl text-white transition-colors group"
+          className="flex items-center gap-4 p-5 bg-blush-600 hover:bg-blush-700 rounded-2xl text-white shadow-sm transition-colors group"
         >
           <Package className="h-6 w-6 shrink-0" />
           <div>
@@ -209,14 +209,14 @@ export function DashboardView({ stats }: { stats: DashboardStats }) {
         </Link>
         <Link
           href="/admin/orders"
-          className="flex items-center gap-4 p-5 bg-neutral-800 hover:bg-neutral-700 rounded-2xl text-white transition-colors group"
+          className="flex items-center gap-4 p-5 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 rounded-2xl border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white shadow-sm transition-colors group"
         >
-          <ShoppingCart className="h-6 w-6 shrink-0" />
+          <ShoppingCart className="h-6 w-6 shrink-0 text-neutral-500 dark:text-neutral-400" />
           <div>
             <p className="font-inter font-semibold">Manage Orders</p>
-            <p className="text-b5 font-inter text-neutral-400">Update order statuses</p>
+            <p className="text-b5 font-inter text-neutral-500 dark:text-neutral-400">Update order statuses</p>
           </div>
-          <ArrowRight className="h-5 w-5 ml-auto group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="h-5 w-5 ml-auto text-neutral-400 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
     </div>

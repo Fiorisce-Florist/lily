@@ -123,7 +123,7 @@ export function AdminOrdersTable({ orders }: { orders: Order[] }) {
           className="flex-1"
         />
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-fit">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
           <SelectContent>
