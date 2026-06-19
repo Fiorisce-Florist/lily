@@ -29,6 +29,22 @@ import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { useCart } from "@/context/cart-context";
 import { useState } from "react";
+import { ProductCard } from "@/components/elements/product-card";
+import { cn } from "@/lib/utils";
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const COLOR_DOT: Record<string, string> = {
+  Pink: "bg-pink-300",
+  White: "bg-neutral-100 border border-neutral-300",
+  Green: "bg-green-400",
+  Yellow: "bg-yellow-300",
+  Orange: "bg-orange-400",
+  Purple: "bg-purple-400",
+  Red: "bg-red-500",
+  Burgundy: "bg-rose-900",
+  Peach: "bg-orange-200",
+};
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -246,12 +262,12 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
 
         {/* Rating */}
         <div className="mt-2 flex items-center gap-3">
-          <StarRating rating={bouquet.rating} size={16} />
+          <StarRating rating={0} size={16} />
           <span className="text-b5 font-inter font-semibold text-neutral-700 dark:text-neutral-200">
-            {bouquet.rating}
+            0
           </span>
           <span className="text-b5 font-inter text-neutral-400">
-            ({bouquet.reviewCount} reviews)
+            (0 reviews)
           </span>
           <Separator orientation="vertical" className="h-4" />
           <span className="text-b5 font-inter text-neutral-400">
@@ -313,8 +329,14 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
           {bouquet.colors.map((color) => (
             <span
               key={color}
-              className="rounded-full border border-cornsilk-300 dark:border-neutral-700 bg-cornsilk-50 dark:bg-neutral-800 px-3 py-1 text-b5 font-inter text-neutral-600 dark:text-neutral-300"
+              className="flex items-center gap-1.5 rounded-full border border-cornsilk-300 dark:border-neutral-700 bg-cornsilk-50 dark:bg-neutral-800 px-2.5 py-1 text-b5 font-inter text-neutral-600 dark:text-neutral-300"
             >
+              <span
+                className={cn(
+                  "h-3 w-3 rounded-full shrink-0",
+                  COLOR_DOT[color] ?? "bg-neutral-300"
+                )}
+              />
               {color}
             </span>
           ))}
@@ -332,7 +354,7 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
             </p>
             <span className="text-b6 font-inter text-neutral-400">
               Selected:{" "}
-              <strong className="text-neutral-700 dark:text-neutral-200 capitalize">
+              <strong className="text-neutral-700 dark:text-neutral-200 uppercase">
                 {selectedVariant?.name || "Standard"}
               </strong>
             </span>
@@ -440,26 +462,6 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
         </TooltipProvider>
       </div>
 
-      {/* Delivery info strip */}
-      <div className="grid grid-cols-3 gap-2">
-        {[
-          { icon: <Truck className="h-4 w-4" />, text: "Free delivery over Rp 500k" },
-          { icon: <Calendar className="h-4 w-4" />, text: "Same-day before 2 pm" },
-          { icon: <Leaf className="h-4 w-4" />, text: "Fresh & sustainably sourced" },
-        ].map((tile, i) => (
-          <div
-            key={i}
-            id={`delivery-tile-${i}`}
-            className="flex flex-col items-center gap-1.5 rounded-xl border border-cornsilk-300 dark:border-neutral-700 bg-cornsilk-50 dark:bg-neutral-800/50 p-3 text-center"
-          >
-            <span className="text-blush-500 dark:text-blush-400">{tile.icon}</span>
-            <span className="text-[11px] font-inter text-neutral-600 dark:text-neutral-300 leading-tight">
-              {tile.text}
-            </span>
-          </div>
-        ))}
-      </div>
-
       {/* Stock indicator */}
       {bouquet.inStock ? (
         <div className="flex items-center gap-2">
@@ -480,32 +482,7 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
 
 // ─── Tabs Section ─────────────────────────────────────────────────────────────
 
-const HARDCODED_REVIEWS = [
-  {
-    name: "Anindya R.",
-    date: "May 2025",
-    rating: 5,
-    text: "Absolutely stunning arrangement! The flowers arrived fresh and the packaging was beautiful. I ordered this for my anniversary dinner and it made the whole evening magical.",
-    initial: "A",
-    color: "bg-blush-200 text-blush-700",
-  },
-  {
-    name: "Marcus T.",
-    date: "April 2025",
-    rating: 5,
-    text: "Second time ordering from Fiorisce and they never disappoint. The bouquet lasted over two weeks with proper care. My partner was overjoyed.",
-    initial: "M",
-    color: "bg-olive-200 text-olive-700",
-  },
-  {
-    name: "Sari W.",
-    date: "March 2025",
-    rating: 4,
-    text: "Lovely flowers, very true to the photos. Delivery was right on time. Took off one star only because the wrapping was slightly damaged, but the flowers themselves were perfect.",
-    initial: "S",
-    color: "bg-camel-200 text-camel-700",
-  },
-];
+const HARDCODED_REVIEWS: any[] = [];
 
 function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
   return (
@@ -515,8 +492,8 @@ function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
         <h3 className="text-h5 font-fraunces font-semibold text-neutral-800 dark:text-cornsilk-100 mb-3">
           About this arrangement
         </h3>
-        <p className="text-b4 font-inter text-neutral-600 dark:text-neutral-300 leading-relaxed">
-          {bouquet.description} Each bouquet is hand-arranged by our skilled florists on the day of
+        <p className="text-b5 font-inter text-neutral-600 dark:text-neutral-300 leading-relaxed">
+          {bouquet.description} {" "}Each bouquet is hand-arranged by our skilled florists on the day of
           delivery to ensure maximum freshness. We source only the finest seasonal blooms from
           trusted local and international growers committed to sustainable practices. Every stem is
           inspected for quality before being artfully composed into this signature arrangement. The
@@ -566,31 +543,6 @@ function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
           </table>
         </div>
       </div>
-
-      {/* Care instructions */}
-      <div>
-        <h3 className="text-h5 font-fraunces font-semibold text-neutral-800 dark:text-cornsilk-100 mb-3">
-          Care instructions
-        </h3>
-        <ul className="flex flex-col gap-3">
-          {[
-            "Trim 2–3 cm off the stems at a 45° angle immediately upon arrival.",
-            "Place in a clean vase with fresh, cool water — change every 2 days.",
-            "Keep away from direct sunlight, drafts, and ripening fruit.",
-            "Remove any leaves that sit below the waterline to prevent bacterial growth.",
-            "Mist delicate petals lightly in warm weather to maintain hydration.",
-          ].map((tip, i) => (
-            <li key={i} className="flex items-start gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blush-100 dark:bg-blush-950/40 text-[11px] font-jetbrains font-semibold text-blush-600 dark:text-blush-400">
-                {i + 1}
-              </span>
-              <span className="text-b4 font-inter text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                {tip}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
   );
 }
@@ -602,17 +554,17 @@ function ReviewsTab({ bouquet }: { bouquet: Bouquet }) {
       <div className="flex items-center gap-8 rounded-2xl border border-cornsilk-300 dark:border-neutral-700 bg-cornsilk-50 dark:bg-neutral-800/50 p-6">
         <div className="flex flex-col items-center gap-1">
           <span className="text-[3rem] font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 leading-none">
-            {bouquet.rating}
+            0
           </span>
-          <StarRating rating={bouquet.rating} size={18} />
+          <StarRating rating={0} size={18} />
           <span className="text-b6 font-inter text-neutral-400 mt-1">
-            Based on {bouquet.reviewCount} reviews
+            Based on 0 reviews
           </span>
         </div>
         <Separator orientation="vertical" className="h-20" />
         <div className="flex flex-1 flex-col gap-1.5">
           {[5, 4, 3, 2, 1].map((stars) => {
-            const pct = stars === 5 ? 72 : stars === 4 ? 20 : stars === 3 ? 6 : stars === 2 ? 1 : 1;
+            const pct = 0;
             return (
               <div key={stars} className="flex items-center gap-2">
                 <span className="text-[11px] font-inter text-neutral-400 w-3">{stars}</span>
@@ -629,6 +581,11 @@ function ReviewsTab({ bouquet }: { bouquet: Bouquet }) {
 
       {/* Review cards */}
       <div className="flex flex-col gap-4">
+        {HARDCODED_REVIEWS.length === 0 && (
+          <div className="py-8 text-center text-neutral-500 dark:text-neutral-400 font-inter">
+            No reviews yet. Be the first to review this!
+          </div>
+        )}
         {HARDCODED_REVIEWS.map((review, i) => (
           <article
             key={i}
@@ -798,68 +755,10 @@ function RelatedProducts({ bouquet, allBouquets }: { bouquet: Bouquet; allBouque
 
       <div className="flex gap-5 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory -mx-2 px-2">
         {related.map((b) => (
-          <RelatedCard key={b.id} bouquet={b} />
+          <ProductCard key={b.id} product={b} className="w-72 shrink-0 snap-start" />
         ))}
       </div>
     </section>
-  );
-}
-
-function RelatedCard({ bouquet }: { bouquet: Bouquet }) {
-  const [imgLoaded, setImgLoaded] = useState(false);
-
-  return (
-    <article
-      id={`related-${bouquet.slug}`}
-      className="group relative flex w-56 shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-cornsilk-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-    >
-      <Link href={`/shop/${bouquet.slug}`} className="block" tabIndex={-1} aria-hidden="true">
-        <div className="relative aspect-square overflow-hidden bg-cornsilk-100 dark:bg-neutral-800">
-          {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
-          <Image
-            src={bouquet.image}
-            alt={bouquet.name}
-            fill
-            onLoad={() => setImgLoaded(true)}
-            className={`object-cover transition-all duration-500 group-hover:scale-105 ${
-              imgLoaded ? "opacity-100" : "opacity-0"
-            }`}
-          />
-          {bouquet.isBestseller && (
-            <div className="absolute top-2 left-2">
-              <Badge variant="default" className="text-[10px] shadow">
-                Bestseller
-              </Badge>
-            </div>
-          )}
-        </div>
-      </Link>
-
-      <div className="flex flex-1 flex-col p-3">
-        <Link href={`/shop/${bouquet.slug}`}>
-          <h3 className="text-b4 font-fraunces font-semibold text-neutral-800 dark:text-cornsilk-100 hover:text-blush-600 dark:hover:text-blush-400 transition-colors line-clamp-1">
-            {bouquet.name}
-          </h3>
-        </Link>
-        <p className="text-b6 font-inter text-neutral-400 mt-0.5 line-clamp-1">
-          {bouquet.occasion}
-        </p>
-        <div className="mt-3 flex items-center justify-between">
-          <span className="text-b4 font-jetbrains font-semibold text-neutral-800 dark:text-cornsilk-100">
-            {formatPrice(bouquet.price)}
-          </span>
-          <Button
-            id={`related-add-${bouquet.slug}`}
-            variant="primary"
-            size="sm"
-            disabled={!bouquet.inStock}
-          >
-            <ShoppingBag className="h-3.5 w-3.5" />
-            Add
-          </Button>
-        </div>
-      </div>
-    </article>
   );
 }
 
@@ -900,15 +799,12 @@ export function ProductDetailModule({
           {/* Tabs */}
           <section id="product-tabs" className="mt-16">
             <Tabs defaultValue="details">
-              <TabsList className="w-full justify-start gap-1 h-auto p-1.5">
+              <TabsList className="w-fit justify-start gap-1 h-auto p-1.5">
                 <TabsTrigger value="details" id="tab-details" className="px-5 py-2">
-                  Details & Care
+                  Details
                 </TabsTrigger>
                 <TabsTrigger value="reviews" id="tab-reviews" className="px-5 py-2">
-                  Reviews ({bouquet.reviewCount})
-                </TabsTrigger>
-                <TabsTrigger value="delivery" id="tab-delivery" className="px-5 py-2">
-                  Delivery & Returns
+                  Reviews (0)
                 </TabsTrigger>
               </TabsList>
 
