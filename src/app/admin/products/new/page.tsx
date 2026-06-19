@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { adminGetCategories } from "@/app/actions/admin";
-import { AdminProductForm } from "@/components/admin/admin-product-form";
+import { AdminProductForm } from "@/modules/AdminModule/components/admin-product-form";
 
 export const metadata: Metadata = { title: "New Product" };
 

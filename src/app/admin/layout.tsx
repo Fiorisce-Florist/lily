@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { AdminSidebar } from "@/components/admin/admin-sidebar";
-import { AdminBreadcrumb } from "@/components/admin/admin-breadcrumb";
+import { AdminSidebar } from "@/modules/AdminModule/components/admin-sidebar";
+import { AdminBreadcrumb } from "@/modules/AdminModule/components/admin-breadcrumb";
 
 export const metadata: Metadata = {
   title: { default: "Admin — Fiorisce", template: "%s | Admin — Fiorisce" },

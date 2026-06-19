@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { adminGetProduct, adminGetCategories } from "@/app/actions/admin";
-import { AdminProductForm } from "@/components/admin/admin-product-form";
+import { AdminProductForm } from "@/modules/AdminModule/components/admin-product-form";
 
 export const metadata: Metadata = { title: "Edit Product" };
 
