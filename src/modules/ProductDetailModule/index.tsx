@@ -8,8 +8,6 @@ import {
   ShoppingBag,
   Star,
   Truck,
-  Calendar,
-  Leaf,
   Minus,
   Plus,
   Package,
@@ -33,6 +31,14 @@ import { ProductCard } from "@/components/elements/product-card";
 import { cn } from "@/lib/utils";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
+interface Review {
+  name: string;
+  date: string;
+  rating: number;
+  text: string;
+  initial: string;
+  color: "bg-blush-200 text-blush-700";
+}
 
 const COLOR_DOT: Record<string, string> = {
   Pink: "bg-pink-300",
@@ -266,9 +272,7 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
           <span className="text-b5 font-inter font-semibold text-neutral-700 dark:text-neutral-200">
             0
           </span>
-          <span className="text-b5 font-inter text-neutral-400">
-            (0 reviews)
-          </span>
+          <span className="text-b5 font-inter text-neutral-400">(0 reviews)</span>
           <Separator orientation="vertical" className="h-4" />
           <span className="text-b5 font-inter text-neutral-400">
             {bouquet.soldCount.toLocaleString()} sold
@@ -482,7 +486,7 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
 
 // ─── Tabs Section ─────────────────────────────────────────────────────────────
 
-const HARDCODED_REVIEWS: any[] = [];
+const HARDCODED_REVIEWS: Review[] = [];
 
 function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
   return (
@@ -493,7 +497,7 @@ function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
           About this arrangement
         </h3>
         <p className="text-b5 font-inter text-neutral-600 dark:text-neutral-300 leading-relaxed">
-          {bouquet.description} {" "}Each bouquet is hand-arranged by our skilled florists on the day of
+          {bouquet.description} Each bouquet is hand-arranged by our skilled florists on the day of
           delivery to ensure maximum freshness. We source only the finest seasonal blooms from
           trusted local and international growers committed to sustainable practices. Every stem is
           inspected for quality before being artfully composed into this signature arrangement. The
@@ -557,9 +561,7 @@ function ReviewsTab({ bouquet }: { bouquet: Bouquet }) {
             0
           </span>
           <StarRating rating={0} size={18} />
-          <span className="text-b6 font-inter text-neutral-400 mt-1">
-            Based on 0 reviews
-          </span>
+          <span className="text-b6 font-inter text-neutral-400 mt-1">Based on 0 reviews</span>
         </div>
         <Separator orientation="vertical" className="h-20" />
         <div className="flex flex-1 flex-col gap-1.5">

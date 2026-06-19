@@ -214,7 +214,9 @@ export function DashboardView({ stats }: { stats: DashboardStats }) {
           <ShoppingCart className="h-6 w-6 shrink-0 text-neutral-500 dark:text-neutral-400" />
           <div>
             <p className="font-inter font-semibold">Manage Orders</p>
-            <p className="text-b5 font-inter text-neutral-500 dark:text-neutral-400">Update order statuses</p>
+            <p className="text-b5 font-inter text-neutral-500 dark:text-neutral-400">
+              Update order statuses
+            </p>
           </div>
           <ArrowRight className="h-5 w-5 ml-auto text-neutral-400 group-hover:translate-x-1 transition-transform" />
         </Link>

@@ -101,7 +101,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         let newItems = [...items];
         const idx = newItems.findIndex((i) => i.productId === productId);
         if (idx !== -1) {
-          newItems[idx] = { ...newItems[idx], quantity: Math.min(10, newItems[idx].quantity + quantity) };
+          newItems[idx] = {
+            ...newItems[idx],
+            quantity: Math.min(10, newItems[idx].quantity + quantity),
+          };
           setItems(newItems);
           localStorage.setItem("guest_cart", JSON.stringify(newItems));
           toast.success("Added to cart!");

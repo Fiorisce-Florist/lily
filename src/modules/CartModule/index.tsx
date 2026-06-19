@@ -37,7 +37,7 @@ function EmptyCart() {
           Looks like you haven&apos;t added any bouquets yet.
         </p>
       </div>
-      <Button variant="primary"  asChild>
+      <Button variant="primary" asChild>
         <Link href="/shop">Browse Bouquets</Link>
       </Button>
     </div>

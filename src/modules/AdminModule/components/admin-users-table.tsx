@@ -90,7 +90,8 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
     });
   }, [users, search, roleFilter]);
 
-  const newLocal = "px-6 py-4 font-inter text-neutral-600 dark:text-neutral-400 max-w-[200px] truncate";
+  const newLocal =
+    "px-6 py-4 font-inter text-neutral-600 dark:text-neutral-400 max-w-[200px] truncate";
   return (
     <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden">
       {/* Filters */}
@@ -151,7 +152,11 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9 shrink-0 border border-blush-200 dark:border-blush-800">
-                        <AvatarImage src={user.image || ""} alt={user.name ?? "Avatar"} className="object-cover" />
+                        <AvatarImage
+                          src={user.image || ""}
+                          alt={user.name ?? "Avatar"}
+                          className="object-cover"
+                        />
                         <AvatarFallback className="bg-blush-100 dark:bg-blush-900/30 text-sm font-fraunces font-bold text-blush-600 dark:text-blush-400">
                           {(user.name || user.email || "?")[0].toUpperCase()}
                         </AvatarFallback>
@@ -161,9 +166,7 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
                       </p>
                     </div>
                   </td>
-                  <td className={newLocal}>
-                    {user.email ?? "—"}
-                  </td>
+                  <td className={newLocal}>{user.email ?? "—"}</td>
                   <td className="px-6 py-4 font-inter text-neutral-500 dark:text-neutral-500">
                     {user.phone ?? (
                       <span className="text-neutral-300 dark:text-neutral-600">—</span>

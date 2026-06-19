@@ -31,6 +31,7 @@ export function AdminSidebar() {
 
   // Close mobile sidebar on route change
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false);
   }, [pathname]);
 
@@ -42,7 +43,7 @@ export function AdminSidebar() {
   return (
     <>
       {/* Mobile Toggle Button */}
-      <button 
+      <button
         onClick={() => setMobileOpen(true)}
         className="md:hidden fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-blush-600 text-white shadow-lg shadow-blush-900/30"
         aria-label="Open sidebar"
@@ -52,7 +53,7 @@ export function AdminSidebar() {
 
       {/* Mobile Overlay */}
       {mobileOpen && (
-        <div 
+        <div
           className="md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
           onClick={() => setMobileOpen(false)}
         />
