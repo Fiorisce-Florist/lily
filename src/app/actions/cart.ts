@@ -22,6 +22,7 @@ export interface CartItemData {
     variants: { id: string; variantName: string; additionalPrice: number; isAvailable: boolean }[];
     category: { name: string; slug: string };
   };
+  size?: string;
 }
 
 export interface CartData {
@@ -109,12 +110,13 @@ export async function getCart(): Promise<CartData | null> {
         })),
         category: item.product.category,
       },
+      size: item.product.variants.find(v => Number(item.price) === Number(item.product.price) + Number(v.additionalPrice))?.variantName || "Standard",
     })),
   };
 }
 
 /** Add a product to the cart. Creates cart if it doesn't exist. */
-export async function addToCart(productId: string, quantity: number = 1) {
+export async function addToCart(productId: string, quantity: number = 1, variantId?: string) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { error: "You must be logged in to add items to your cart." };
@@ -129,11 +131,21 @@ export async function addToCart(productId: string, quantity: number = 1) {
     return { error: "Product not found or unavailable." };
   }
 
+  let finalPrice = Number(product.price);
+  if (variantId) {
+    const variant = await prisma.productVariant.findFirst({
+      where: { id: variantId, productId, isAvailable: true }
+    });
+    if (variant) {
+      finalPrice = Number(product.price) + Number(variant.additionalPrice);
+    }
+  }
+
   const cartId = await getOrCreateCart(session.user.id);
 
-  // Check if the product is already in the cart
+  // Check if the product is already in the cart with the SAME PRICE (same variant)
   const existingItem = await prisma.cartItem.findFirst({
-    where: { cartId, productId },
+    where: { cartId, productId, price: finalPrice },
   });
 
   if (existingItem) {
@@ -147,7 +159,7 @@ export async function addToCart(productId: string, quantity: number = 1) {
         cartId,
         productId,
         quantity: Math.min(10, quantity),
-        price: product.price,
+        price: finalPrice,
       },
     });
   }
@@ -276,7 +288,7 @@ export async function getProductForCart(productId: string) {
 }
 
 /** Sync local guest cart to the user's database cart upon login. */
-export async function syncLocalCart(localItems: { productId: string; quantity: number }[]) {
+export async function syncLocalCart(localItems: { productId: string; quantity: number; variantId?: string }[]) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { error: "Not authenticated." };
@@ -293,8 +305,18 @@ export async function syncLocalCart(localItems: { productId: string; quantity: n
     });
     if (!product) continue;
 
+    let finalPrice = Number(product.price);
+    if (item.variantId) {
+      const variant = await prisma.productVariant.findFirst({
+        where: { id: item.variantId, productId: item.productId, isAvailable: true }
+      });
+      if (variant) {
+        finalPrice = Number(product.price) + Number(variant.additionalPrice);
+      }
+    }
+
     const existingItem = await prisma.cartItem.findFirst({
-      where: { cartId, productId: item.productId },
+      where: { cartId, productId: item.productId, price: finalPrice },
     });
 
     if (existingItem) {
@@ -308,7 +330,7 @@ export async function syncLocalCart(localItems: { productId: string; quantity: n
           cartId,
           productId: item.productId,
           quantity: Math.min(10, item.quantity),
-          price: product.price,
+          price: finalPrice,
         },
       });
     }

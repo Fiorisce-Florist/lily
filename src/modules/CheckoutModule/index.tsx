@@ -85,7 +85,7 @@ function OrderSummaryPanel({
 
   if (isLoading) {
     return (
-      <div className="rounded-3xl border border-cornsilk-200 bg-white dark:border-neutral-800 dark:bg-neutral-900 overflow-hidden shadow-sm sticky top-24 p-6 space-y-4">
+      <div className="rounded-3xl border border-cornsilk-200 bg-white dark:border-neutral-800 dark:bg-neutral-900 overflow-hidden shadow-sm p-6 space-y-4">
         <Skeleton className="h-6 w-40 rounded" />
         {[1, 2].map((i) => (
           <div key={i} className="flex items-center gap-3">
@@ -104,7 +104,7 @@ function OrderSummaryPanel({
   }
 
   return (
-    <div className="rounded-3xl border border-cornsilk-200 bg-white dark:border-neutral-800 dark:bg-neutral-900 overflow-hidden shadow-sm sticky top-24">
+    <div className="rounded-3xl border border-cornsilk-200 bg-white dark:border-neutral-800 dark:bg-neutral-900 overflow-hidden shadow-sm">
       <div className="bg-linear-to-r from-camel-100 to-cornsilk-100 dark:from-neutral-800 dark:to-neutral-800 px-6 py-4 border-b border-cornsilk-200 dark:border-neutral-700">
         <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
           Order Summary
@@ -658,7 +658,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
           </div>
 
           {/* Right Column: Order Summary */}
-          <div className="lg:col-span-5 xl:col-span-4 space-y-4 sticky top-24 self-start">
+          <div className="lg:col-span-5 xl:col-span-4 space-y-4 lg:sticky lg:top-24 lg:self-start">
             <OrderSummaryPanel
               isLoading={cartLoading || status === "loading"}
               subtotal={subtotal}

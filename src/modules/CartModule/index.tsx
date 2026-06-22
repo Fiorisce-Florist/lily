@@ -95,28 +95,35 @@ function CartItemRow({ item }: { item: CartItemData }) {
       </Link>
 
       {/* Details */}
-      <div className="flex flex-1 flex-col gap-2">
+      <div className="flex flex-1 flex-col gap-2 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <Link
             href={`/shop/${item.product.slug}`}
-            className="text-b4 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
+            className="text-b4 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 hover:text-blush-600 dark:hover:text-blush-400 transition-colors flex-1 line-clamp-2"
           >
             {item.product.name}
           </Link>
           <button
             onClick={() => removeItem(item.id)}
             aria-label="Remove item"
-            className="shrink-0 rounded-lg p-1.5 text-neutral-400 hover:text-blush-600 dark:hover:text-blush-400 hover:bg-blush-50 dark:hover:bg-blush-900/20 transition-colors"
+            className="shrink-0 rounded-lg p-1.5 text-neutral-400 hover:text-blush-600 dark:hover:text-blush-400 hover:bg-blush-50 dark:hover:bg-blush-900/20 transition-colors -mr-1.5"
           >
             <Trash2 className="h-4 w-4" />
           </button>
         </div>
 
-        <span className="text-b6 font-inter text-neutral-500 dark:text-neutral-400 capitalize">
-          {item.product.category.name}
-        </span>
+        <div className="flex flex-col gap-0.5">
+          <span className="text-b6 font-inter text-neutral-500 dark:text-neutral-400 capitalize">
+            {item.product.category.name}
+          </span>
+          {(item as any).size && (
+            <span className="text-b6 font-inter text-neutral-600 dark:text-neutral-300">
+              Size: <span className="font-medium text-neutral-700 dark:text-neutral-200">{(item as any).size}</span>
+            </span>
+          )}
+        </div>
 
-        <div className="mt-auto flex items-center justify-between gap-4">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-4">
           {/* Quantity stepper */}
           <div className="flex items-center gap-1 rounded-xl border border-cornsilk-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 overflow-hidden">
             <button
@@ -141,7 +148,7 @@ function CartItemRow({ item }: { item: CartItemData }) {
           </div>
 
           {/* Price */}
-          <span className="text-b4 font-jetbrains font-semibold text-neutral-900 dark:text-cornsilk-100">
+          <span className="text-b4 font-jetbrains font-semibold text-neutral-900 dark:text-cornsilk-100 text-right">
             {formatPrice(item.price * item.quantity)}
           </span>
         </div>
