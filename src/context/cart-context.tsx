@@ -13,7 +13,7 @@ export interface CartContextValue {
   itemCount: number;
   subtotal: number;
   isLoading: boolean;
-  addItem: (productId: string, quantity?: number) => Promise<void>;
+  addItem: (productId: string, quantity?: number, variantId?: string) => Promise<void>;
   updateItem: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -95,11 +95,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // ── Actions ─────────────────────────────────────────────────────────────────
 
   const addItem = React.useCallback(
-    async (productId: string, quantity: number = 1) => {
+    async (productId: string, quantity: number = 1, variantId?: string) => {
       if (status === "unauthenticated") {
         // Guest cart flow
         let newItems = [...items];
-        const idx = newItems.findIndex((i) => i.productId === productId);
+        // Match product AND price (to differentiate variants). Wait, locally we just match by variantId.
+        const idx = newItems.findIndex((i) => i.productId === productId && (i as any).variantId === variantId);
         if (idx !== -1) {
           newItems[idx] = {
             ...newItems[idx],
@@ -123,6 +124,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             price: product.price,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             product: product as any, // Cast to match exactly
+            // @ts-ignore
+            variantId,
+            size: variantId ? product.variants.find(v => v.id === variantId)?.variantName : "Standard"
           };
           newItems = [...newItems, newItem];
           setItems(newItems);
@@ -151,7 +155,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const res = await fetch("/api/cart", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productId, quantity }),
+          body: JSON.stringify({ productId, quantity, variantId }),
         });
         if (!res.ok) {
           const err = await res.json();

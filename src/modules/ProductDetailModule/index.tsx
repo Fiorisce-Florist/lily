@@ -227,7 +227,7 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
   async function handleAddToCart() {
     if (isAddingToCart) return;
     setIsAddingToCart(true);
-    await addItem(bouquet.id as string, quantity);
+    await addItem(bouquet.id as string, quantity, selectedVariantId || undefined);
     setIsAddingToCart(false);
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
