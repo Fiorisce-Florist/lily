@@ -88,6 +88,13 @@ export async function adminGetAllProducts() {
   }));
 }
 
+export interface AdminProductVariantData {
+  id?: string;
+  variantName: string;
+  additionalPrice: number;
+  isAvailable?: boolean;
+}
+
 export interface AdminProductFormData {
   name: string;
   slug: string;
@@ -97,6 +104,7 @@ export interface AdminProductFormData {
   isAvailable?: boolean;
   status?: ProductStatus;
   imageUrl?: string;
+  variants?: AdminProductVariantData[];
 }
 
 export async function adminCreateProduct(data: AdminProductFormData) {
@@ -120,6 +128,16 @@ export async function adminCreateProduct(data: AdminProductFormData) {
               },
             }
           : undefined,
+        variants:
+          data.variants && data.variants.length > 0
+            ? {
+                create: data.variants.map((v) => ({
+                  variantName: v.variantName,
+                  additionalPrice: v.additionalPrice,
+                  isAvailable: v.isAvailable ?? true,
+                })),
+              }
+            : undefined,
       },
     });
 
@@ -163,6 +181,12 @@ export async function adminGetProduct(id: string) {
       categoryId: product.categoryId,
       imageUrl:
         product.images.find((i) => i.isPrimary)?.imageUrl ?? product.images[0]?.imageUrl ?? "",
+      variants: product.variants.map((v) => ({
+        id: v.id,
+        variantName: v.variantName,
+        additionalPrice: Number(v.additionalPrice),
+        isAvailable: v.isAvailable,
+      })),
     },
     error: null,
   };
@@ -208,6 +232,43 @@ export async function adminUpdateProduct(id: string, data: Partial<AdminProductF
           await tx.productImage.create({
             data: { productId: id, imageUrl: data.imageUrl, isPrimary: true },
           });
+        }
+      }
+
+      // Sync size variants if provided
+      if (data.variants !== undefined) {
+        const incoming = data.variants ?? [];
+        const incomingIds = incoming.filter((v) => v.id).map((v) => v.id!);
+
+        // Delete variants that were removed
+        await tx.productVariant.deleteMany({
+          where: {
+            productId: id,
+            ...(incomingIds.length > 0 ? { id: { notIn: incomingIds } } : {}),
+          },
+        });
+
+        // Upsert each variant
+        for (const v of incoming) {
+          if (v.id) {
+            await tx.productVariant.update({
+              where: { id: v.id },
+              data: {
+                variantName: v.variantName,
+                additionalPrice: v.additionalPrice,
+                isAvailable: v.isAvailable ?? true,
+              },
+            });
+          } else {
+            await tx.productVariant.create({
+              data: {
+                productId: id,
+                variantName: v.variantName,
+                additionalPrice: v.additionalPrice,
+                isAvailable: v.isAvailable ?? true,
+              },
+            });
+          }
         }
       }
     });

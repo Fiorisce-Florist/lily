@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +21,7 @@ import {
   adminCreateProduct,
   adminUpdateProduct,
   type AdminProductFormData,
+  type AdminProductVariantData,
 } from "@/app/actions/admin";
 
 interface Category {
@@ -53,6 +54,7 @@ export function AdminProductForm({
     isAvailable: defaultValues?.isAvailable ?? true,
     status: defaultValues?.status ?? "ACTIVE",
     imageUrl: defaultValues?.imageUrl ?? "",
+    variants: defaultValues?.variants ?? [],
   });
 
   const set = (key: keyof AdminProductFormData) => (v: string | number | boolean) =>
@@ -70,6 +72,37 @@ export function AdminProductForm({
         .trim();
       set("slug")(slug);
     }
+  };
+
+  // ─── Variant helpers ──────────────────────────────────────────────────────
+  const addVariant = () => {
+    setForm((prev) => ({
+      ...prev,
+      variants: [
+        ...(prev.variants ?? []),
+        { variantName: "", additionalPrice: 0, isAvailable: true },
+      ],
+    }));
+  };
+
+  const removeVariant = (index: number) => {
+    setForm((prev) => ({
+      ...prev,
+      variants: (prev.variants ?? []).filter((_, i) => i !== index),
+    }));
+  };
+
+  const updateVariant = (
+    index: number,
+    field: keyof AdminProductVariantData,
+    value: string | number | boolean
+  ) => {
+    setForm((prev) => ({
+      ...prev,
+      variants: (prev.variants ?? []).map((v, i) =>
+        i === index ? { ...v, [field]: value } : v
+      ),
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -228,6 +261,117 @@ export function AdminProductForm({
                 (e.target as HTMLImageElement).style.display = "none";
               }}
             />
+          </div>
+        )}
+      </section>
+
+      {/* Size Variants */}
+      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+              Bouquet Sizes
+            </h2>
+            <p className="text-b6 font-inter text-neutral-400 mt-1">
+              Add size options with pricing. The additional price is added to the base price above.
+            </p>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={addVariant}
+            className="gap-1.5"
+          >
+            <Plus className="h-4 w-4" />
+            Add Size
+          </Button>
+        </div>
+
+        {(form.variants ?? []).length === 0 ? (
+          <div className="rounded-xl border-2 border-dashed border-neutral-200 dark:border-neutral-700 py-8 text-center">
+            <p className="text-b5 font-inter text-neutral-400">
+              No size variants yet. Click &ldquo;Add Size&rdquo; to create options like Small, Medium, Large.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {(form.variants ?? []).map((variant, index) => (
+              <div
+                key={variant.id ?? `new-${index}`}
+                className="flex items-start gap-3 p-4 rounded-xl bg-cornsilk-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-700/50"
+              >
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor={`variant-name-${index}`} className="text-b6">
+                      Size Name <span className="text-blush-500">*</span>
+                    </Label>
+                    <Input
+                      id={`variant-name-${index}`}
+                      required
+                      placeholder="e.g., Small, Medium, Large"
+                      value={variant.variantName}
+                      onChange={(e) =>
+                        updateVariant(index, "variantName", e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label
+                      htmlFor={`variant-price-${index}`}
+                      className="text-b6"
+                    >
+                      Additional Price (IDR)
+                    </Label>
+                    <Input
+                      id={`variant-price-${index}`}
+                      type="number"
+                      min={0}
+                      step={1000}
+                      placeholder="e.g., 50000"
+                      value={variant.additionalPrice || ""}
+                      onChange={(e) =>
+                        updateVariant(
+                          index,
+                          "additionalPrice",
+                          Number(e.target.value)
+                        )
+                      }
+                    />
+                    <p className="text-[11px] font-inter text-neutral-400">
+                      Total: IDR{" "}
+                      {((form.price || 0) + (variant.additionalPrice || 0)).toLocaleString("id-ID")}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 pt-6">
+                  <div className="flex items-center gap-1.5">
+                    <Checkbox
+                      id={`variant-available-${index}`}
+                      checked={variant.isAvailable ?? true}
+                      onCheckedChange={(checked) =>
+                        updateVariant(index, "isAvailable", !!checked)
+                      }
+                    />
+                    <Label
+                      htmlFor={`variant-available-${index}`}
+                      className="text-b6 font-inter text-neutral-500 dark:text-neutral-400 cursor-pointer whitespace-nowrap"
+                    >
+                      In Stock
+                    </Label>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeVariant(index)}
+                    className="text-neutral-400 hover:text-red-500 dark:hover:text-red-400 p-1.5 h-auto"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </section>

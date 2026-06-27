@@ -52,6 +52,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           status: product.status as any,
           imageUrl: product.imageUrl,
+          variants: product.variants,
         }}
       />
     </div>
