@@ -192,6 +192,8 @@ model CheckoutAddress {
   address       String
   city          String   @db.VarChar(100)
   postalCode    String   @map("postal_code") @db.VarChar(10)
+  isDefault     Boolean  @default(false) @map("is_default")
+  isHidden      Boolean  @default(false) @map("is_hidden")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)

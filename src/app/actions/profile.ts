@@ -24,6 +24,7 @@ export interface AddressData {
   address: string;
   city: string;
   postalCode: string;
+  isDefault: boolean;
 }
 
 export interface UpdateProfileData {
@@ -113,11 +114,12 @@ export async function getUserAddresses(): Promise<{
   if (!session?.user?.id) return { addresses: [], error: "Not authenticated." };
 
   try {
-    // Get unique addresses from CheckoutAddress (deduped by address+city+postalCode)
     const addresses = await prisma.checkoutAddress.findMany({
-      where: { userId: session.user.id },
-      orderBy: { id: "desc" },
-      distinct: ["address", "city", "postalCode"],
+      where: { userId: session.user.id, isHidden: false },
+      orderBy: [
+        { isDefault: "desc" },
+        { createdAt: "desc" }
+      ],
     });
 
     return {
@@ -128,6 +130,7 @@ export async function getUserAddresses(): Promise<{
         address: a.address,
         city: a.city,
         postalCode: a.postalCode,
+        isDefault: a.isDefault,
       })),
       error: null,
     };
@@ -137,24 +140,158 @@ export async function getUserAddresses(): Promise<{
   }
 }
 
+// ─── saveAddress ──────────────────────────────────────────────────────────────
+
+export async function saveAddress(data: Omit<AddressData, "id" | "isDefault"> & { id?: string }): Promise<{ error: string | null }> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) return { error: "Not authenticated." };
+
+  try {
+    // If it's the first address, make it default
+    const count = await prisma.checkoutAddress.count({
+      where: { userId: session.user.id, isHidden: false }
+    });
+    const isFirst = count === 0;
+
+    if (data.id) {
+      // Update (actually create new and hide old to preserve order history)
+      const old = await prisma.checkoutAddress.findFirst({
+        where: { id: data.id, userId: session.user.id },
+        include: { _count: { select: { orders: true } } }
+      });
+      
+      if (!old) return { error: "Address not found." };
+      
+      if (old._count.orders > 0) {
+        // Has orders, hide old and create new
+        await prisma.$transaction([
+          prisma.checkoutAddress.update({
+            where: { id: data.id },
+            data: { isHidden: true, isDefault: false }
+          }),
+          prisma.checkoutAddress.create({
+            data: {
+              userId: session.user.id,
+              recipientName: data.recipientName,
+              phone: data.phone,
+              address: data.address,
+              city: data.city,
+              postalCode: data.postalCode,
+              isDefault: old.isDefault, // Carry over default status
+            }
+          })
+        ]);
+      } else {
+        // No orders, just update in place
+        await prisma.checkoutAddress.update({
+          where: { id: data.id },
+          data: {
+            recipientName: data.recipientName,
+            phone: data.phone,
+            address: data.address,
+            city: data.city,
+            postalCode: data.postalCode,
+          }
+        });
+      }
+    } else {
+      // Create new
+      await prisma.checkoutAddress.create({
+        data: {
+          userId: session.user.id,
+          recipientName: data.recipientName,
+          phone: data.phone,
+          address: data.address,
+          city: data.city,
+          postalCode: data.postalCode,
+          isDefault: isFirst,
+        }
+      });
+    }
+
+    revalidatePath("/profile");
+    return { error: null };
+  } catch (error) {
+    console.error("Error saving address:", error);
+    return { error: "Failed to save address." };
+  }
+}
+
+// ─── setDefaultAddress ────────────────────────────────────────────────────────
+
+export async function setDefaultAddress(id: string): Promise<{ error: string | null }> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) return { error: "Not authenticated." };
+
+  try {
+    const address = await prisma.checkoutAddress.findFirst({
+      where: { id, userId: session.user.id, isHidden: false }
+    });
+    
+    if (!address) return { error: "Address not found." };
+
+    await prisma.$transaction([
+      prisma.checkoutAddress.updateMany({
+        where: { userId: session.user.id },
+        data: { isDefault: false }
+      }),
+      prisma.checkoutAddress.update({
+        where: { id },
+        data: { isDefault: true }
+      })
+    ]);
+
+    revalidatePath("/profile");
+    return { error: null };
+  } catch (error) {
+    console.error("Error setting default address:", error);
+    return { error: "Failed to set default address." };
+  }
+}
+
 // ─── deleteAddress ────────────────────────────────────────────────────────────
 
 export async function deleteAddress(id: string): Promise<{ error: string | null }> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return { error: "Not authenticated." };
 
-  // Ensure it belongs to this user
-  const address = await prisma.checkoutAddress.findFirst({
-    where: { id, userId: session.user.id },
-  });
-
-  if (!address) return { error: "Address not found." };
-
   try {
-    await prisma.checkoutAddress.delete({ where: { id } });
+    const address = await prisma.checkoutAddress.findFirst({
+      where: { id, userId: session.user.id },
+      include: { _count: { select: { orders: true } } }
+    });
+
+    if (!address) return { error: "Address not found." };
+
+    if (address._count.orders > 0) {
+      // Used in order, just hide
+      await prisma.checkoutAddress.update({
+        where: { id },
+        data: { isHidden: true, isDefault: false }
+      });
+    } else {
+      // Safe to delete
+      await prisma.checkoutAddress.delete({ where: { id } });
+    }
+
+    // If we just hid/deleted the default, try to set a new default
+    if (address.isDefault) {
+      const nextAddress = await prisma.checkoutAddress.findFirst({
+        where: { userId: session.user.id, isHidden: false },
+        orderBy: { createdAt: "desc" }
+      });
+      if (nextAddress) {
+        await prisma.checkoutAddress.update({
+          where: { id: nextAddress.id },
+          data: { isDefault: true }
+        });
+      }
+    }
+
     revalidatePath("/profile");
     return { error: null };
-  } catch {
+  } catch (error) {
+    console.error("Error deleting address:", error);
     return { error: "Failed to delete address." };
   }
 }

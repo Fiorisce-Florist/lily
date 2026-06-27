@@ -409,7 +409,11 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
     setIsProcessing(true);
 
     try {
-      const result = await createOrder(form);
+      const payload = {
+        ...form,
+        addressId: selectedAddressId,
+      };
+      const result = await createOrder(payload);
 
       if (result.error) {
         toast.error(result.error);

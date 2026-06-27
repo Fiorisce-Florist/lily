@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { CldUploadWidget } from "next-cloudinary";
 import {
   Select,
   SelectContent,
@@ -229,15 +230,18 @@ export function AdminProductForm({
 
           <div className="space-y-3 md:col-span-2 mt-2">
             <Label className="text-b6">Tags</Label>
-            <div className="flex flex-col gap-5 border rounded-xl p-5 bg-neutral-50/50 dark:bg-neutral-800/20 border-neutral-200 dark:border-neutral-800">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 border rounded-xl p-5 bg-neutral-50/50 dark:bg-neutral-800/20 border-neutral-200 dark:border-neutral-800">
               {Object.entries(tagsByType).map(([type, typeTags]) => (
                 <div key={type} className="space-y-3">
-                  <h4 className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">{type}</h4>
-                  <div className="flex flex-wrap gap-2.5">
+                  <h4 className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider flex items-center gap-2">
+                    {type}
+                    <span className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700"></span>
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
                     {typeTags.map((tag) => (
                       <label
                         key={tag.id}
-                        className={`flex items-center gap-2 border rounded-full px-3.5 py-1.5 cursor-pointer transition-all ${
+                        className={`flex items-center gap-2 border rounded-lg px-3 py-1.5 cursor-pointer transition-all ${
                           form.tagIds?.includes(tag.id)
                             ? "bg-blush-50 border-blush-300 text-blush-900 dark:bg-blush-900/30 dark:border-blush-700 dark:text-blush-100 shadow-sm"
                             : "bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
@@ -254,7 +258,7 @@ export function AdminProductForm({
                             set("tagIds")(newIds);
                           }}
                         />
-                        <span className="text-sm font-medium leading-none">{tag.name}</span>
+                        <span className="text-xs font-medium leading-none">{tag.name}</span>
                       </label>
                     ))}
                   </div>
@@ -325,40 +329,69 @@ export function AdminProductForm({
         </div>
       </section>
 
-      {/* Media */}
-      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
-        <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-          Media
-        </h2>
-        <div className="flex gap-4 items-start">
-          <div className="flex-1 space-y-2">
-            <Label htmlFor="imageUrl">Primary Image URL</Label>
-            <Input
-              id="imageUrl"
-              type="url"
-              placeholder="https://example.com/image.jpg"
-              value={form.imageUrl ?? ""}
-              onChange={(e) => set("imageUrl")(e.target.value)}
-            />
-            <p className="text-b6 font-inter text-neutral-400">
-              Paste a direct image URL for the main product photo.
-            </p>
-          </div>
-          {form.imageUrl && (
-            <div className="relative h-24 w-24 overflow-hidden rounded-xl bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shrink-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={form.imageUrl}
-                alt="Preview"
-                className="h-full w-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
+      {/* Media (Hidden if variants exist per user request) */}
+      {(form.variants ?? []).length === 0 && (
+        <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
+          <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+            Media
+          </h2>
+          <div className="flex gap-4 items-start">
+            <div className="flex-1 space-y-2">
+              <Label>Primary Image URL</Label>
+              <div className="flex items-center gap-4 mt-2">
+                <CldUploadWidget
+                  signatureEndpoint="/api/cloudinary/sign"
+                  onSuccess={(result: any) => {
+                    if (result?.info?.secure_url) {
+                      set("imageUrl")(result.info.secure_url);
+                    }
+                  }}
+                  options={{
+                    multiple: false,
+                    resourceType: "image",
+                  }}
+                >
+                  {({ open }) => {
+                    return (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => open()}
+                      >
+                        Upload Image
+                      </Button>
+                    );
+                  }}
+                </CldUploadWidget>
+                <Input
+                  id="imageUrl"
+                  type="url"
+                  placeholder="Or paste an image URL..."
+                  value={form.imageUrl ?? ""}
+                  onChange={(e) => set("imageUrl")(e.target.value)}
+                  className="flex-1"
+                />
+              </div>
+              <p className="text-b6 font-inter text-neutral-400">
+                Upload a direct image or paste a URL for the main product photo.
+              </p>
             </div>
-          )}
-        </div>
-      </section>
+            {form.imageUrl && (
+              <div className="relative h-24 w-24 overflow-hidden rounded-xl bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={form.imageUrl}
+                  alt="Preview"
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Size Variants */}
       <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
@@ -478,10 +511,35 @@ export function AdminProductForm({
                     Variant-Specific Image URL
                   </Label>
                   <div className="flex gap-3 items-center">
+                    <CldUploadWidget
+                      signatureEndpoint="/api/cloudinary/sign"
+                      onSuccess={(result: any) => {
+                        if (result?.info?.secure_url) {
+                          updateVariant(index, "imageUrl", result.info.secure_url);
+                        }
+                      }}
+                      options={{
+                        multiple: false,
+                        resourceType: "image",
+                      }}
+                    >
+                      {({ open }) => {
+                        return (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => open()}
+                            size="sm"
+                          >
+                            Upload
+                          </Button>
+                        );
+                      }}
+                    </CldUploadWidget>
                     <Input
                       id={`variant-image-${index}`}
                       type="url"
-                      placeholder="https://example.com/variant-image.jpg"
+                      placeholder="Or paste URL..."
                       value={variant.imageUrl ?? ""}
                       onChange={(e) =>
                         updateVariant(index, "imageUrl", e.target.value)

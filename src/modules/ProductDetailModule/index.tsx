@@ -89,7 +89,7 @@ function StarRating({ rating, size = 16 }: { rating: number; size?: number }) {
 // ─── Image Gallery ────────────────────────────────────────────────────────────
 
 function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedImage?: string }) {
-  const displayImage = selectedImage || bouquet.image;
+  const displayImage = selectedImage || bouquet.image || "/placeholder-image.png";
   const [imgLoaded, setImgLoaded] = useState(false);
   const [zoomed, setZoomed] = useState(false);
 
@@ -106,16 +106,22 @@ function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedIm
       >
         {!imgLoaded && <Skeleton className="absolute inset-0 rounded-2xl" />}
 
-        <Image
-          key={displayImage}
-          src={displayImage}
-          alt={bouquet.name}
-          fill
-          onLoad={() => setImgLoaded(true)}
-          className={`object-cover transition-all duration-700 ${
-            zoomed ? "scale-110" : "scale-100"
-          } ${imgLoaded ? "opacity-100" : "opacity-0"}`}
-        />
+        {displayImage && displayImage !== "/placeholder-image.png" ? (
+          <Image
+            key={displayImage}
+            src={displayImage}
+            alt={bouquet.name}
+            fill
+            onLoad={() => setImgLoaded(true)}
+            className={`object-cover transition-all duration-700 ${
+              zoomed ? "scale-110" : "scale-100"
+            } ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Package className="h-16 w-16 text-neutral-300" />
+          </div>
+        )}
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent pointer-events-none" />

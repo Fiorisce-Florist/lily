@@ -61,31 +61,56 @@ export async function adminGetDashboardStats() {
 
 // ─── Product Management ───────────────────────────────────────────────────────
 
-export async function adminGetAllProducts() {
+export async function adminGetAllProducts(
+  page: number = 1,
+  limit: number = 20,
+  search: string = ""
+) {
   await requireAdmin();
 
-  const products = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      category: { select: { id: true, name: true } },
-      images: { where: { isPrimary: true }, take: 1 },
-      _count: { select: { orderItems: true } },
-    },
-  });
+  const skip = (page - 1) * limit;
+  
+  const where: any = search
+    ? {
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { slug: { contains: search, mode: "insensitive" } },
+        ],
+      }
+    : {};
 
-  return products.map((p) => ({
-    id: p.id,
-    name: p.name,
-    slug: p.slug,
-    price: Number(p.price),
-    status: p.status,
-    isAvailable: p.isAvailable,
-    categoryName: p.category.name,
-    categoryId: p.category.id,
-    image: p.images[0]?.imageUrl ?? null,
-    soldCount: p._count.orderItems,
-    createdAt: p.createdAt.toISOString(),
-  }));
+  const [products, totalCount] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: "desc" },
+      include: {
+        category: { select: { id: true, name: true } },
+        images: { where: { isPrimary: true }, take: 1 },
+        _count: { select: { orderItems: true } },
+      },
+    }),
+    prisma.product.count({ where }),
+  ]);
+
+  return {
+    products: products.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      price: Number(p.price),
+      status: p.status,
+      isAvailable: p.isAvailable,
+      categoryName: p.category.name,
+      categoryId: p.category.id,
+      image: p.images[0]?.imageUrl ?? null,
+      soldCount: p._count.orderItems,
+      createdAt: p.createdAt.toISOString(),
+    })),
+    totalPages: Math.ceil(totalCount / limit),
+    totalCount,
+  };
 }
 
 export interface AdminProductVariantData {
@@ -354,30 +379,61 @@ export async function adminDeleteProduct(id: string) {
 
 // ─── Order Management ─────────────────────────────────────────────────────────
 
-export async function adminGetAllOrders() {
+export async function adminGetAllOrders(
+  page: number = 1,
+  limit: number = 20,
+  search: string = "",
+  status: string = "all"
+) {
   await requireAdmin();
 
-  const orders = await prisma.order.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      user: { select: { name: true, email: true } },
-      payment: { select: { status: true, paymentMethod: true } },
-      _count: { select: { items: true } },
-    },
-  });
+  const skip = (page - 1) * limit;
 
-  return orders.map((o) => ({
-    id: o.id,
-    orderNumber: o.orderNumber,
-    status: o.status,
-    totalAmount: Number(o.totalAmount),
-    createdAt: o.createdAt.toISOString(),
-    customerName: o.user?.name ?? o.user?.email ?? "Unknown",
-    customerEmail: o.user?.email ?? "",
-    paymentStatus: o.payment?.status ?? null,
-    paymentMethod: o.payment?.paymentMethod ?? null,
-    itemCount: o._count.items,
-  }));
+  const where: any = {};
+  
+  if (status !== "all") {
+    where.status = status;
+  }
+  
+  if (search) {
+    where.OR = [
+      { orderNumber: { contains: search, mode: "insensitive" } },
+      { user: { name: { contains: search, mode: "insensitive" } } },
+      { user: { email: { contains: search, mode: "insensitive" } } },
+    ];
+  }
+
+  const [orders, totalCount] = await Promise.all([
+    prisma.order.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: { select: { name: true, email: true } },
+        payment: { select: { status: true, paymentMethod: true } },
+        _count: { select: { items: true } },
+      },
+    }),
+    prisma.order.count({ where }),
+  ]);
+
+  return {
+    orders: orders.map((o) => ({
+      id: o.id,
+      orderNumber: o.orderNumber,
+      status: o.status,
+      totalAmount: Number(o.totalAmount),
+      createdAt: o.createdAt.toISOString(),
+      customerName: o.user?.name ?? o.user?.email ?? "Unknown",
+      customerEmail: o.user?.email ?? "",
+      paymentStatus: o.payment?.status ?? null,
+      paymentMethod: o.payment?.paymentMethod ?? null,
+      itemCount: o._count.items,
+    })),
+    totalPages: Math.ceil(totalCount / limit),
+    totalCount,
+  };
 }
 
 export async function adminGetOrder(id: string) {

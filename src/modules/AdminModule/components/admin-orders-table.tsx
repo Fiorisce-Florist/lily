@@ -96,34 +96,41 @@ function StatusUpdater({ orderId, currentStatus }: { orderId: string; currentSta
   );
 }
 
-export function AdminOrdersTable({ orders }: { orders: Order[] }) {
-  const [search, setSearch] = React.useState("");
-  const [statusFilter, setStatusFilter] = React.useState<string>("ALL");
+import { AdminSearch } from "@/modules/AdminModule/components/admin-search";
+import { useSearchParams, usePathname } from "next/navigation";
 
-  const filtered = React.useMemo(() => {
-    return orders.filter((o) => {
-      const matchSearch =
-        !search ||
-        o.orderNumber.toLowerCase().includes(search.toLowerCase()) ||
-        o.customerName.toLowerCase().includes(search.toLowerCase()) ||
-        o.customerEmail.toLowerCase().includes(search.toLowerCase());
-      const matchStatus = statusFilter === "ALL" || o.status === statusFilter;
-      return matchSearch && matchStatus;
-    });
-  }, [orders, search, statusFilter]);
+export function AdminOrdersTable({ 
+  orders, 
+  search = "", 
+  status = "all" 
+}: { 
+  orders: Order[];
+  search?: string;
+  status?: string;
+}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const handleStatusFilterChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value && value !== "ALL") {
+      params.set("status", value);
+    } else {
+      params.delete("status");
+    }
+    params.set("page", "1"); // Reset pagination
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden">
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 px-6 py-4 border-b border-neutral-200 dark:border-neutral-800">
-        <Input
-          type="text"
-          placeholder="Search by order # or customer…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="flex-1"
-        />
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <div className="flex-1">
+          <AdminSearch placeholder="Search by order # or customer…" initialValue={search} />
+        </div>
+        <Select value={status.toUpperCase()} onValueChange={handleStatusFilterChange}>
           <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
@@ -138,20 +145,20 @@ export function AdminOrdersTable({ orders }: { orders: Order[] }) {
         </Select>
       </div>
 
-      {filtered.length === 0 ? (
+      {orders.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <ShoppingCart className="h-12 w-12 text-neutral-300 mb-4" />
           <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
             No orders found
           </h2>
           <p className="text-b5 font-inter text-neutral-500 mt-2">
-            {search || statusFilter !== "ALL"
+            {search || (status && status !== "ALL" && status !== "all")
               ? "Try adjusting your search or filter."
               : "No orders have been placed yet."}
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
+            <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 dark:bg-neutral-800/50">
               <tr>
@@ -166,7 +173,7 @@ export function AdminOrdersTable({ orders }: { orders: Order[] }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
-              {filtered.map((order) => (
+              {orders.map((order) => (
                 <tr
                   key={order.id}
                   className="hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors"

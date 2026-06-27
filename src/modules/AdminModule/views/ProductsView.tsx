@@ -4,6 +4,8 @@ import { Plus, Package } from "lucide-react";
 import type { adminGetAllProducts } from "@/app/actions/admin";
 import { Button } from "@/components/ui/button";
 import { AdminProductActions } from "@/modules/AdminModule/components/admin-product-actions";
+import { AdminPagination } from "@/modules/AdminModule/components/admin-pagination";
+import { AdminSearch } from "@/modules/AdminModule/components/admin-search";
 
 type ProductsList = Awaited<ReturnType<typeof adminGetAllProducts>>;
 
@@ -20,7 +22,9 @@ const STATUS_COLORS: Record<string, string> = {
   INACTIVE: "text-neutral-600 bg-neutral-100 dark:text-neutral-400 dark:bg-neutral-800",
 };
 
-export function ProductsView({ products }: { products: ProductsList }) {
+export function ProductsView({ data, search, page }: { data: ProductsList; search: string; page: number }) {
+  const { products, totalCount, totalPages } = data;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -30,15 +34,18 @@ export function ProductsView({ products }: { products: ProductsList }) {
             Products
           </h1>
           <p className="text-b4 font-inter text-neutral-500 dark:text-neutral-400 mt-1">
-            {products.length} product{products.length !== 1 ? "s" : ""} total
+            {totalCount} product{totalCount !== 1 ? "s" : ""} total
           </p>
         </div>
-        <Button variant="primary" asChild>
-          <Link href="/admin/products/new" className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            Add Product
-          </Link>
-        </Button>
+        <div className="flex items-center gap-4">
+          <AdminSearch placeholder="Search products..." initialValue={search} />
+          <Button variant="primary" asChild>
+            <Link href="/admin/products/new" className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              Add Product
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Table */}
@@ -136,6 +143,10 @@ export function ProductsView({ products }: { products: ProductsList }) {
           </div>
         )}
       </div>
+      
+      {totalPages > 1 && (
+        <AdminPagination currentPage={page} totalPages={totalPages} />
+      )}
     </div>
   );
 }
