@@ -274,12 +274,6 @@ function ProductInfo({
 
         {/* Rating */}
         <div className="mt-2 flex items-center gap-3">
-          <StarRating rating={0} size={16} />
-          <span className="text-b5 font-inter font-semibold text-neutral-700 dark:text-neutral-200">
-            0
-          </span>
-          <span className="text-b5 font-inter text-neutral-400">(0 reviews)</span>
-          <Separator orientation="vertical" className="h-4" />
           <span className="text-b5 font-inter text-neutral-400">
             {bouquet.soldCount.toLocaleString()} sold
           </span>
@@ -492,8 +486,6 @@ function ProductInfo({
 
 // ─── Tabs Section ─────────────────────────────────────────────────────────────
 
-const HARDCODED_REVIEWS: Review[] = [];
-
 function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
   return (
     <div className="flex flex-col gap-8 pt-4">
@@ -511,124 +503,6 @@ function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
           to any space.
         </p>
       </div>
-
-      {/* Flower table */}
-      <div>
-        <h3 className="text-h5 font-fraunces font-semibold text-neutral-800 dark:text-cornsilk-100 mb-3">
-          Flower composition
-        </h3>
-        <div className="overflow-hidden rounded-xl border border-cornsilk-300 dark:border-neutral-700">
-          <table className="w-full text-b5 font-inter">
-            <thead>
-              <tr className="bg-cornsilk-100 dark:bg-neutral-800 border-b border-cornsilk-300 dark:border-neutral-700">
-                <th className="px-4 py-3 text-left font-semibold text-neutral-600 dark:text-neutral-300">
-                  Flower
-                </th>
-                <th className="px-4 py-3 text-left font-semibold text-neutral-600 dark:text-neutral-300">
-                  Type
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {bouquet.flowers.map((flower, i) => (
-                <tr
-                  key={flower}
-                  className={`border-b border-cornsilk-200 dark:border-neutral-800 last:border-0 ${
-                    i % 2 === 0
-                      ? "bg-white dark:bg-neutral-900"
-                      : "bg-cornsilk-50 dark:bg-neutral-800/50"
-                  }`}
-                >
-                  <td className="px-4 py-3 font-medium text-neutral-800 dark:text-neutral-200">
-                    {flower}
-                  </td>
-                  <td className="px-4 py-3 text-neutral-500 dark:text-neutral-400 capitalize">
-                    {flower.includes("Grass") || flower.includes("Eucalyptus")
-                      ? "Foliage / filler"
-                      : "Feature bloom"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ReviewsTab({ bouquet }: { bouquet: Bouquet }) {
-  return (
-    <div className="flex flex-col gap-8 pt-4">
-      {/* Overall rating */}
-      <div className="flex items-center gap-8 rounded-2xl border border-cornsilk-300 dark:border-neutral-700 bg-cornsilk-50 dark:bg-neutral-800/50 p-6">
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-[3rem] font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 leading-none">
-            0
-          </span>
-          <StarRating rating={0} size={18} />
-          <span className="text-b6 font-inter text-neutral-400 mt-1">Based on 0 reviews</span>
-        </div>
-        <Separator orientation="vertical" className="h-20" />
-        <div className="flex flex-1 flex-col gap-1.5">
-          {[5, 4, 3, 2, 1].map((stars) => {
-            const pct = 0;
-            return (
-              <div key={stars} className="flex items-center gap-2">
-                <span className="text-[11px] font-inter text-neutral-400 w-3">{stars}</span>
-                <Star className="h-3 w-3 fill-camel-400 text-camel-400" />
-                <div className="flex-1 h-1.5 rounded-full bg-cornsilk-200 dark:bg-neutral-700 overflow-hidden">
-                  <div className="h-full rounded-full bg-camel-400" style={{ width: `${pct}%` }} />
-                </div>
-                <span className="text-[11px] font-inter text-neutral-400 w-6">{pct}%</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Review cards */}
-      <div className="flex flex-col gap-4">
-        {HARDCODED_REVIEWS.length === 0 && (
-          <div className="py-8 text-center text-neutral-500 dark:text-neutral-400 font-inter">
-            No reviews yet. Be the first to review this!
-          </div>
-        )}
-        {HARDCODED_REVIEWS.map((review, i) => (
-          <article
-            key={i}
-            id={`review-card-${i}`}
-            className="rounded-2xl border border-cornsilk-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-5"
-          >
-            <div className="flex items-start gap-4">
-              <div
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-b4 font-fraunces font-semibold ${review.color}`}
-              >
-                {review.initial}
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <div>
-                    <p className="text-b4 font-inter font-semibold text-neutral-800 dark:text-neutral-100">
-                      {review.name}
-                    </p>
-                    <p className="text-b6 font-inter text-neutral-400">{review.date}</p>
-                  </div>
-                  <StarRating rating={review.rating} size={14} />
-                </div>
-                <p className="mt-3 text-b4 font-inter text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                  {review.text}
-                </p>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      {/* Write a review */}
-      <Button id="write-review-btn" variant="outline" size="md" className="self-start">
-        Write a Review
-      </Button>
     </div>
   );
 }
@@ -814,27 +688,11 @@ export function ProductDetailModule({
           </div>
 
           {/* Tabs */}
-          <section id="product-tabs" className="mt-16">
-            <Tabs defaultValue="details">
-              <TabsList className="w-fit justify-start gap-1 h-auto p-1.5">
-                <TabsTrigger value="details" id="tab-details" className="px-5 py-2">
-                  Details
-                </TabsTrigger>
-                <TabsTrigger value="reviews" id="tab-reviews" className="px-5 py-2">
-                  Reviews (0)
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="details">
-                <DetailsTab bouquet={bouquet} />
-              </TabsContent>
-              <TabsContent value="reviews">
-                <ReviewsTab bouquet={bouquet} />
-              </TabsContent>
-              <TabsContent value="delivery">
-                <DeliveryTab />
-              </TabsContent>
-            </Tabs>
+          {/* Details */}
+          <section id="product-details" className="mt-16">
+            <div className="w-full">
+              <DetailsTab bouquet={bouquet} />
+            </div>
           </section>
 
           {/* Related products */}

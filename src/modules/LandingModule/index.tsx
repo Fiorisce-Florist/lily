@@ -58,7 +58,6 @@ export default function LandingModule({
       <OccasionSection />
       <AboutSection />
       <LocationSection />
-      <CtaSection />
     </div>
   );
 }

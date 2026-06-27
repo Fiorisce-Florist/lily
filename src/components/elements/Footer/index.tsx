@@ -30,26 +30,6 @@ export function Footer() {
               Bringing the beauty of nature into your everyday life with carefully curated,
               sustainable floral arrangements.
             </p>
-            <div className="space-y-4">
-              <h3 className="text-b5 font-inter text-cornsilk-200 font-semibold tracking-wider uppercase">
-                Subscribe to our newsletter
-              </h3>
-              <form className="flex max-w-sm gap-2">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="text-cornsilk-100 focus-visible:ring-cornsilk-200 dark:border-olive-700 border-olive-700 bg-olive-800 dark:bg-olive-800 placeholder:text-olive-400"
-                  required
-                />
-                <Button
-                  type="submit"
-                  variant="secondary"
-                  className="bg-cornsilk-200 hover:bg-cornsilk-300 text-olive-900"
-                >
-                  Subscribe
-                </Button>
-              </form>
-            </div>
           </div>
 
           {/* Links Grid */}
