@@ -16,9 +16,7 @@ export default async function AdminCategoriesPage() {
           <h1 className="text-h4 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
             Categories
           </h1>
-          <p className="text-b5 font-inter text-neutral-500">
-            Manage product categories
-          </p>
+          <p className="text-b5 font-inter text-neutral-500">Manage product categories</p>
         </div>
         <Link
           href="/admin/categories/new"
@@ -34,20 +32,32 @@ export default async function AdminCategoriesPage() {
           <table className="w-full text-left text-sm">
             <thead className="bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800">
               <tr>
-                <th className="px-6 py-4 font-fraunces font-medium text-neutral-600 dark:text-neutral-300">Name</th>
-                <th className="px-6 py-4 font-fraunces font-medium text-neutral-600 dark:text-neutral-300">Slug</th>
-                <th className="px-6 py-4 font-fraunces font-medium text-neutral-600 dark:text-neutral-300">Products</th>
+                <th className="px-6 py-4 font-fraunces font-medium text-neutral-600 dark:text-neutral-300">
+                  Name
+                </th>
+                <th className="px-6 py-4 font-fraunces font-medium text-neutral-600 dark:text-neutral-300">
+                  Slug
+                </th>
+                <th className="px-6 py-4 font-fraunces font-medium text-neutral-600 dark:text-neutral-300">
+                  Products
+                </th>
                 <th className="px-6 py-4 text-right"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
               {categories.map((category) => (
-                <tr key={category.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
+                <tr
+                  key={category.id}
+                  className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
+                >
                   <td className="px-6 py-4 font-medium">{category.name}</td>
                   <td className="px-6 py-4 text-neutral-500">{category.slug}</td>
                   <td className="px-6 py-4 text-neutral-500">{category._count.products}</td>
                   <td className="px-6 py-4 text-right">
-                    <Link href={`/admin/categories/${category.id}/edit`} className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                    <Link
+                      href={`/admin/categories/${category.id}/edit`}
+                      className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                    >
                       <Edit className="h-4 w-4 mr-1" /> Edit
                     </Link>
                   </td>

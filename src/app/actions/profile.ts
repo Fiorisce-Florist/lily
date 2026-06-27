@@ -116,10 +116,7 @@ export async function getUserAddresses(): Promise<{
   try {
     const addresses = await prisma.checkoutAddress.findMany({
       where: { userId: session.user.id, isHidden: false },
-      orderBy: [
-        { isDefault: "desc" },
-        { createdAt: "desc" }
-      ],
+      orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
     });
 
     return {
@@ -142,14 +139,16 @@ export async function getUserAddresses(): Promise<{
 
 // ─── saveAddress ──────────────────────────────────────────────────────────────
 
-export async function saveAddress(data: Omit<AddressData, "id" | "isDefault"> & { id?: string }): Promise<{ error: string | null }> {
+export async function saveAddress(
+  data: Omit<AddressData, "id" | "isDefault"> & { id?: string }
+): Promise<{ error: string | null }> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return { error: "Not authenticated." };
 
   try {
     // If it's the first address, make it default
     const count = await prisma.checkoutAddress.count({
-      where: { userId: session.user.id, isHidden: false }
+      where: { userId: session.user.id, isHidden: false },
     });
     const isFirst = count === 0;
 
@@ -157,17 +156,17 @@ export async function saveAddress(data: Omit<AddressData, "id" | "isDefault"> & 
       // Update (actually create new and hide old to preserve order history)
       const old = await prisma.checkoutAddress.findFirst({
         where: { id: data.id, userId: session.user.id },
-        include: { _count: { select: { orders: true } } }
+        include: { _count: { select: { orders: true } } },
       });
-      
+
       if (!old) return { error: "Address not found." };
-      
+
       if (old._count.orders > 0) {
         // Has orders, hide old and create new
         await prisma.$transaction([
           prisma.checkoutAddress.update({
             where: { id: data.id },
-            data: { isHidden: true, isDefault: false }
+            data: { isHidden: true, isDefault: false },
           }),
           prisma.checkoutAddress.create({
             data: {
@@ -178,8 +177,8 @@ export async function saveAddress(data: Omit<AddressData, "id" | "isDefault"> & 
               city: data.city,
               postalCode: data.postalCode,
               isDefault: old.isDefault, // Carry over default status
-            }
-          })
+            },
+          }),
         ]);
       } else {
         // No orders, just update in place
@@ -191,7 +190,7 @@ export async function saveAddress(data: Omit<AddressData, "id" | "isDefault"> & 
             address: data.address,
             city: data.city,
             postalCode: data.postalCode,
-          }
+          },
         });
       }
     } else {
@@ -205,7 +204,7 @@ export async function saveAddress(data: Omit<AddressData, "id" | "isDefault"> & 
           city: data.city,
           postalCode: data.postalCode,
           isDefault: isFirst,
-        }
+        },
       });
     }
 
@@ -225,20 +224,20 @@ export async function setDefaultAddress(id: string): Promise<{ error: string | n
 
   try {
     const address = await prisma.checkoutAddress.findFirst({
-      where: { id, userId: session.user.id, isHidden: false }
+      where: { id, userId: session.user.id, isHidden: false },
     });
-    
+
     if (!address) return { error: "Address not found." };
 
     await prisma.$transaction([
       prisma.checkoutAddress.updateMany({
         where: { userId: session.user.id },
-        data: { isDefault: false }
+        data: { isDefault: false },
       }),
       prisma.checkoutAddress.update({
         where: { id },
-        data: { isDefault: true }
-      })
+        data: { isDefault: true },
+      }),
     ]);
 
     revalidatePath("/profile");
@@ -258,7 +257,7 @@ export async function deleteAddress(id: string): Promise<{ error: string | null 
   try {
     const address = await prisma.checkoutAddress.findFirst({
       where: { id, userId: session.user.id },
-      include: { _count: { select: { orders: true } } }
+      include: { _count: { select: { orders: true } } },
     });
 
     if (!address) return { error: "Address not found." };
@@ -267,7 +266,7 @@ export async function deleteAddress(id: string): Promise<{ error: string | null 
       // Used in order, just hide
       await prisma.checkoutAddress.update({
         where: { id },
-        data: { isHidden: true, isDefault: false }
+        data: { isHidden: true, isDefault: false },
       });
     } else {
       // Safe to delete
@@ -278,12 +277,12 @@ export async function deleteAddress(id: string): Promise<{ error: string | null 
     if (address.isDefault) {
       const nextAddress = await prisma.checkoutAddress.findFirst({
         where: { userId: session.user.id, isHidden: false },
-        orderBy: { createdAt: "desc" }
+        orderBy: { createdAt: "desc" },
       });
       if (nextAddress) {
         await prisma.checkoutAddress.update({
           where: { id: nextAddress.id },
-          data: { isDefault: true }
+          data: { isDefault: true },
         });
       }
     }

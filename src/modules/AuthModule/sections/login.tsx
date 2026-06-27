@@ -23,7 +23,8 @@ export function LoginModule() {
     const password = formData.get("password") as string;
 
     try {
-      const { data, error: authError } = await signIn.email({
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { data: _data, error: authError } = await signIn.email({
         email,
         password,
       });
@@ -34,7 +35,8 @@ export function LoginModule() {
         router.push("/");
         router.refresh();
       }
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_err) {
       setError("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);

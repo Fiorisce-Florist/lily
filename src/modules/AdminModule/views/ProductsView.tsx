@@ -22,7 +22,15 @@ const STATUS_COLORS: Record<string, string> = {
   INACTIVE: "text-neutral-600 bg-neutral-100 dark:text-neutral-400 dark:bg-neutral-800",
 };
 
-export function ProductsView({ data, search, page }: { data: ProductsList; search: string; page: number }) {
+export function ProductsView({
+  data,
+  search,
+  page,
+}: {
+  data: ProductsList;
+  search: string;
+  page: number;
+}) {
   const { products, totalCount, totalPages } = data;
 
   return (
@@ -143,10 +151,8 @@ export function ProductsView({ data, search, page }: { data: ProductsList; searc
           </div>
         )}
       </div>
-      
-      {totalPages > 1 && (
-        <AdminPagination currentPage={page} totalPages={totalPages} />
-      )}
+
+      {totalPages > 1 && <AdminPagination currentPage={page} totalPages={totalPages} />}
     </div>
   );
 }

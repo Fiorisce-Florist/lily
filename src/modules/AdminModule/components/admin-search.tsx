@@ -15,7 +15,7 @@ export function AdminSearch({ placeholder = "Search...", initialValue = "" }: Ad
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  
+
   const [query, setQuery] = React.useState(initialValue);
   const [debouncedQuery] = useDebounce(query, 500);
 

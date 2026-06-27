@@ -29,10 +29,10 @@ export default async function ShopPage({
   const bouquets: Bouquet[] = (products || []).map(mapProductToBouquet);
 
   return (
-    <ShopModule 
-      bouquets={bouquets} 
-      initialOccasion={occasion} 
-      initialCategory={categorySlug} 
+    <ShopModule
+      bouquets={bouquets}
+      initialOccasion={occasion}
+      initialCategory={categorySlug}
       availableCategories={categories || []}
       availableTags={tags || []}
     />

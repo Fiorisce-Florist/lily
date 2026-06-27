@@ -153,7 +153,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
       } else {
         // Verify address belongs to user
         const existing = await tx.checkoutAddress.findFirst({
-          where: { id: addressIdToUse, userId }
+          where: { id: addressIdToUse, userId },
         });
         if (!existing) {
           throw new Error("Selected address not found or does not belong to you.");

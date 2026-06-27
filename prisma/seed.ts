@@ -355,7 +355,7 @@ async function main() {
     b.colors.forEach((c) => productTagIds.add(tagMap.get(c)!));
     b.flowers.forEach((f) => productTagIds.add(tagMap.get(f)!));
     productTagIds.add(tagMap.get(b.occasion)!);
-    
+
     if (b.isNew) productTagIds.add(tagMap.get("New Arrival")!);
     if (b.isBestseller) productTagIds.add(tagMap.get("Best Seller")!);
 
@@ -369,11 +369,11 @@ async function main() {
     ];
 
     const VARIANT_IMAGES: Record<string, string> = {
-      "xs": "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=600&q=80",
-      "s": "https://images.unsplash.com/photo-1591886960571-74d43a9d4166?w=600&q=80",
-      "m": b.image,
-      "l": "https://images.unsplash.com/photo-1508611449339-16a2180800b3?w=600&q=80",
-      "xl": "https://images.unsplash.com/photo-1490750967868-88df5691cc64?w=600&q=80",
+      xs: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=600&q=80",
+      s: "https://images.unsplash.com/photo-1591886960571-74d43a9d4166?w=600&q=80",
+      m: b.image,
+      l: "https://images.unsplash.com/photo-1508611449339-16a2180800b3?w=600&q=80",
+      xl: "https://images.unsplash.com/photo-1490750967868-88df5691cc64?w=600&q=80",
       "human size": "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=600&q=80",
     };
 

@@ -42,7 +42,8 @@ export function CartItems({
   items,
   updateQuantity,
   removeItem,
-  toggleWishlist,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  toggleWishlist: _toggleWishlist,
   wishlisted,
   selectedIds,
   toggleSelected,
@@ -88,7 +89,8 @@ export function CartItems({
       {/* ── Item cards ─────────────────────────────────────────── */}
       {items.map((item) => {
         const isSelected = selectedIds.has(item.bouquet.id);
-        const isWishlisted = wishlisted.has(item.bouquet.id);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const _isWishlisted = wishlisted.has(item.bouquet.id);
         const lineTotal = item.bouquet.price * item.quantity;
 
         return (

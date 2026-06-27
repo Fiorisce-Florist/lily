@@ -82,8 +82,8 @@ export async function POST(req: NextRequest) {
             oldStatus: order.status,
             newStatus: newOrderStatus,
             changedBy: order.userId, // System change attributed to order owner
-          }
-        })
+          },
+        }),
       ]);
     }
 

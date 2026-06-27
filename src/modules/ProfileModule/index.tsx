@@ -21,7 +21,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
-import { updateProfile, deleteAddress, setDefaultAddress, saveAddress } from "@/app/actions/profile";
+import { updateProfile, deleteAddress, setDefaultAddress } from "@/app/actions/profile";
 import { authClient } from "@/lib/auth-client";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
 
@@ -407,7 +407,7 @@ function AddressesSection({ addresses }: { addresses: AddressData[] }) {
                 </p>
                 <p className="text-b6 mt-1 text-neutral-400">{addr.phone}</p>
               </address>
-              
+
               <div className="flex items-center gap-2">
                 {!addr.isDefault && (
                   <Button

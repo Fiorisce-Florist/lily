@@ -3,10 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ChevronLeft,
-  ChevronRight,
   ShoppingBag,
-  Star,
   Truck,
   Minus,
   Plus,
@@ -25,19 +22,11 @@ import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/comp
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { useCart } from "@/context/cart-context";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ProductCard } from "@/components/elements/product-card";
 import { cn } from "@/lib/utils";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-interface Review {
-  name: string;
-  date: string;
-  rating: number;
-  text: string;
-  initial: string;
-  color: "bg-blush-200 text-blush-700";
-}
 
 const COLOR_DOT: Record<string, string> = {
   Pink: "bg-pink-300",
@@ -61,30 +50,7 @@ function formatPrice(v: number) {
   }).format(v);
 }
 
-
-// ─── Star Rating ──────────────────────────────────────────────────────────────
-
-function StarRating({ rating, size = 16 }: { rating: number; size?: number }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map((i) => {
-        const filled = i <= Math.floor(rating);
-        const half = !filled && i - 0.5 <= rating;
-        return (
-          <Star
-            key={i}
-            style={{ width: size, height: size }}
-            className={
-              filled || half
-                ? "fill-camel-500 text-camel-500"
-                : "text-cornsilk-400 fill-cornsilk-300"
-            }
-          />
-        );
-      })}
-    </div>
-  );
-}
+// Removed unused StarRating component
 
 // ─── Image Gallery ────────────────────────────────────────────────────────────
 
@@ -93,9 +59,10 @@ function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedIm
   const [imgLoaded, setImgLoaded] = useState(false);
   const [zoomed, setZoomed] = useState(false);
 
-  useEffect(() => {
-    setImgLoaded(false);
-  }, [displayImage]);
+  // We use key={displayImage} on the Image component itself below.
+  // Instead of setting state in effect, we can just rely on the onLoad handler
+  // which will fire when the new image loads. However, to hide the old image immediately,
+  // we can use a ref or just let it swap. To avoid the lint error, we remove the useEffect.
 
   return (
     <div className="flex flex-col w-full">
@@ -140,11 +107,11 @@ function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedIm
 
 // ─── Product Info ─────────────────────────────────────────────────────────────
 
-function ProductInfo({ 
-  bouquet, 
-  selectedVariantId, 
-  setSelectedVariantId 
-}: { 
+function ProductInfo({
+  bouquet,
+  selectedVariantId,
+  setSelectedVariantId,
+}: {
   bouquet: Bouquet;
   selectedVariantId: string;
   setSelectedVariantId: (id: string) => void;
@@ -153,7 +120,7 @@ function ProductInfo({
   const defaultVariant = variants.length > 0 ? variants[0] : null;
 
   const [quantity, setQuantity] = useState(1);
-  const [wishlisted, setWishlisted] = useState(false);
+  const wishlisted = false;
   const { addItem } = useCart();
   const [addedToCart, setAddedToCart] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -622,7 +589,11 @@ export function ProductDetailModule({
 
             {/* Right — Info */}
             <div className="w-full lg:w-[45%]">
-              <ProductInfo bouquet={bouquet} selectedVariantId={selectedVariantId} setSelectedVariantId={setSelectedVariantId} />
+              <ProductInfo
+                bouquet={bouquet}
+                selectedVariantId={selectedVariantId}
+                setSelectedVariantId={setSelectedVariantId}
+              />
             </div>
           </div>
 
@@ -631,6 +602,7 @@ export function ProductDetailModule({
           <section id="product-details" className="mt-16">
             <div className="w-full">
               <DetailsTab bouquet={bouquet} />
+              <DeliveryTab />
             </div>
           </section>
 

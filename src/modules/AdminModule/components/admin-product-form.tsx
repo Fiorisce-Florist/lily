@@ -25,10 +25,6 @@ import {
   type AdminProductVariantData,
 } from "@/app/actions/admin";
 
-interface Category {
-  id: string;
-}
-
 interface AdminProductFormProps {
   mode: "create" | "edit";
   productId?: string;
@@ -102,9 +98,7 @@ export function AdminProductForm({
   ) => {
     setForm((prev) => ({
       ...prev,
-      variants: (prev.variants ?? []).map((v, i) =>
-        i === index ? { ...v, [field]: value } : v
-      ),
+      variants: (prev.variants ?? []).map((v, i) => (i === index ? { ...v, [field]: value } : v)),
     }));
   };
 
@@ -137,12 +131,15 @@ export function AdminProductForm({
   };
 
   const tagsByType = React.useMemo(() => {
-    return tags.reduce((acc, tag) => {
-      const type = tag.type || "OTHER";
-      if (!acc[type]) acc[type] = [];
-      acc[type].push(tag);
-      return acc;
-    }, {} as Record<string, typeof tags>);
+    return tags.reduce(
+      (acc, tag) => {
+        const type = tag.type || "OTHER";
+        if (!acc[type]) acc[type] = [];
+        acc[type].push(tag);
+        return acc;
+      },
+      {} as Record<string, typeof tags>
+    );
   }, [tags]);
 
   return (
@@ -202,7 +199,7 @@ export function AdminProductForm({
         <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
           Organization
         </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="category">
@@ -341,6 +338,7 @@ export function AdminProductForm({
               <div className="flex items-center gap-4 mt-2">
                 <CldUploadWidget
                   signatureEndpoint="/api/cloudinary/sign"
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   onSuccess={(result: any) => {
                     if (result?.info?.secure_url) {
                       set("imageUrl")(result.info.secure_url);
@@ -353,11 +351,7 @@ export function AdminProductForm({
                 >
                   {({ open }) => {
                     return (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => open()}
-                      >
+                      <Button type="button" variant="outline" onClick={() => open()}>
                         Upload Image
                       </Button>
                     );
@@ -419,7 +413,8 @@ export function AdminProductForm({
         {(form.variants ?? []).length === 0 ? (
           <div className="rounded-xl border-2 border-dashed border-neutral-200 dark:border-neutral-700 py-8 text-center">
             <p className="text-b5 font-inter text-neutral-400">
-              No size variants yet. Click &ldquo;Add Size&rdquo; to create options like Small, Medium, Large.
+              No size variants yet. Click &ldquo;Add Size&rdquo; to create options like Small,
+              Medium, Large.
             </p>
           </div>
         ) : (
@@ -440,17 +435,12 @@ export function AdminProductForm({
                       required
                       placeholder="e.g., Small, Medium, Large"
                       value={variant.variantName}
-                      onChange={(e) =>
-                        updateVariant(index, "variantName", e.target.value)
-                      }
+                      onChange={(e) => updateVariant(index, "variantName", e.target.value)}
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label
-                      htmlFor={`variant-price-${index}`}
-                      className="text-b6"
-                    >
+                    <Label htmlFor={`variant-price-${index}`} className="text-b6">
                       Additional Cost (IDR)
                     </Label>
                     <Input
@@ -461,17 +451,15 @@ export function AdminProductForm({
                       placeholder="e.g., 50000"
                       value={variant.additionalPrice || ""}
                       onChange={(e) =>
-                        updateVariant(
-                          index,
-                          "additionalPrice",
-                          Number(e.target.value)
-                        )
+                        updateVariant(index, "additionalPrice", Number(e.target.value))
                       }
                     />
                     <p className="text-[11px] font-inter text-neutral-500">
                       Final Price: IDR{" "}
                       <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-                        {((form.price || 0) + (variant.additionalPrice || 0)).toLocaleString("id-ID")}
+                        {((form.price || 0) + (variant.additionalPrice || 0)).toLocaleString(
+                          "id-ID"
+                        )}
                       </span>
                     </p>
                   </div>
@@ -513,6 +501,7 @@ export function AdminProductForm({
                   <div className="flex gap-3 items-center">
                     <CldUploadWidget
                       signatureEndpoint="/api/cloudinary/sign"
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       onSuccess={(result: any) => {
                         if (result?.info?.secure_url) {
                           updateVariant(index, "imageUrl", result.info.secure_url);
@@ -525,12 +514,7 @@ export function AdminProductForm({
                     >
                       {({ open }) => {
                         return (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => open()}
-                            size="sm"
-                          >
+                          <Button type="button" variant="outline" onClick={() => open()} size="sm">
                             Upload
                           </Button>
                         );
@@ -541,9 +525,7 @@ export function AdminProductForm({
                       type="url"
                       placeholder="Or paste URL..."
                       value={variant.imageUrl ?? ""}
-                      onChange={(e) =>
-                        updateVariant(index, "imageUrl", e.target.value)
-                      }
+                      onChange={(e) => updateVariant(index, "imageUrl", e.target.value)}
                       className="flex-1"
                     />
                     {variant.imageUrl && (

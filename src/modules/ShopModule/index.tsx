@@ -48,15 +48,24 @@ export default function ShopModule({
   bouquets: Bouquet[];
   initialOccasion?: string;
   initialCategory?: string;
-  availableCategories?: any[];
-  availableTags?: any[];
+  availableCategories?: { id: string; name: string; slug: string }[];
+  availableTags?: { id: string; name: string; slug: string; type: string }[];
 }) {
   const options = React.useMemo<FilterOptions>(() => {
     return {
-      categories: availableCategories.map(c => c.name).sort(),
-      occasions: availableTags.filter(t => t.type === "OCCASION").map(t => t.name).sort(),
-      colors: availableTags.filter(t => t.type === "COLOR").map(t => t.name).sort(),
-      flowers: availableTags.filter(t => t.type === "FLOWER").map(t => t.name).sort(),
+      categories: availableCategories.map((c) => c.name).sort(),
+      occasions: availableTags
+        .filter((t) => t.type === "OCCASION")
+        .map((t) => t.name)
+        .sort(),
+      colors: availableTags
+        .filter((t) => t.type === "COLOR")
+        .map((t) => t.name)
+        .sort(),
+      flowers: availableTags
+        .filter((t) => t.type === "FLOWER")
+        .map((t) => t.name)
+        .sort(),
       sizes: [...new Set(bouquets.flatMap((b) => (b.variants || []).map((v) => v.name)))],
       maxPrice: Math.max(0, ...bouquets.map((b) => Number(b.price) || 0)),
     };

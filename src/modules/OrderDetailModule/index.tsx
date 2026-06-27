@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Clock,
   Truck,
-  Download,
   MapPin,
   AlertCircle,
   CreditCard,

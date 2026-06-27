@@ -40,10 +40,10 @@ export function AdminPagination({ currentPage, totalPages }: AdminPaginationProp
   const renderPageLinks = () => {
     const pages = [];
     const maxVisible = 5;
-    
+
     let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-    
+    const endPage = Math.min(totalPages, startPage + maxVisible - 1);
+
     if (endPage - startPage + 1 < maxVisible) {
       startPage = Math.max(1, endPage - maxVisible + 1);
     }
@@ -89,7 +89,10 @@ export function AdminPagination({ currentPage, totalPages }: AdminPaginationProp
       }
       pages.push(
         <PaginationItem key={totalPages}>
-          <PaginationLink href={createPageUrl(totalPages)} onClick={(e) => handlePageChange(e, totalPages)}>
+          <PaginationLink
+            href={createPageUrl(totalPages)}
+            onClick={(e) => handlePageChange(e, totalPages)}
+          >
             {totalPages}
           </PaginationLink>
         </PaginationItem>
@@ -109,7 +112,7 @@ export function AdminPagination({ currentPage, totalPages }: AdminPaginationProp
             className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
           />
         </PaginationItem>
-        
+
         {renderPageLinks()}
 
         <PaginationItem>

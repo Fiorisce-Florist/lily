@@ -6,7 +6,13 @@ import { ArrowLeft, Package, MapPin, CreditCard } from "lucide-react";
 import { adminUpdateOrderStatus } from "@/app/actions/admin";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 
 const ORDER_STATUSES = [
@@ -37,6 +43,7 @@ function formatDate(iso: string) {
 }
 
 // Minimal types for the view based on adminGetOrder
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function OrderDetailView({ order }: { order: any }) {
   const router = useRouter();
   const [isUpdating, setIsUpdating] = React.useState(false);
@@ -60,7 +67,10 @@ export function OrderDetailView({ order }: { order: any }) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/admin/orders" className="text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100">
+          <Link
+            href="/admin/orders"
+            className="text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+          >
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
@@ -85,6 +95,7 @@ export function OrderDetailView({ order }: { order: any }) {
               </h2>
             </div>
             <div className="divide-y divide-neutral-200 dark:divide-neutral-800">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {order.items.map((item: any) => (
                 <div key={item.id} className="p-6 flex gap-4">
                   <div className="flex-1 space-y-1">
@@ -92,9 +103,7 @@ export function OrderDetailView({ order }: { order: any }) {
                       {item.productName}
                     </p>
                     {item.variantName && (
-                      <p className="text-sm text-neutral-500">
-                        Size: {item.variantName}
-                      </p>
+                      <p className="text-sm text-neutral-500">Size: {item.variantName}</p>
                     )}
                     <p className="text-sm font-inter text-neutral-500">
                       Qty: {item.quantity} × {formatPrice(Number(item.price))}
@@ -121,11 +130,13 @@ export function OrderDetailView({ order }: { order: any }) {
               </div>
             </div>
           </div>
-          
+
           {order.notes && (
             <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm">
               <h2 className="font-fraunces font-medium mb-2">Customer Notes</h2>
-              <p className="text-sm font-inter text-neutral-600 dark:text-neutral-300 whitespace-pre-wrap">{order.notes}</p>
+              <p className="text-sm font-inter text-neutral-600 dark:text-neutral-300 whitespace-pre-wrap">
+                {order.notes}
+              </p>
             </div>
           )}
         </div>
@@ -142,7 +153,9 @@ export function OrderDetailView({ order }: { order: any }) {
                 </SelectTrigger>
                 <SelectContent>
                   {ORDER_STATUSES.map((s) => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -157,10 +170,14 @@ export function OrderDetailView({ order }: { order: any }) {
             <div className="text-sm font-inter space-y-1">
               {shippingAddress ? (
                 <>
-                  <p className="font-medium text-neutral-900 dark:text-white">{shippingAddress.recipientName}</p>
+                  <p className="font-medium text-neutral-900 dark:text-white">
+                    {shippingAddress.recipientName}
+                  </p>
                   <p className="text-neutral-500">{shippingAddress.phone}</p>
                   <p className="text-neutral-500 mt-2">{shippingAddress.address}</p>
-                  <p className="text-neutral-500">{shippingAddress.city}, {shippingAddress.postalCode}</p>
+                  <p className="text-neutral-500">
+                    {shippingAddress.city}, {shippingAddress.postalCode}
+                  </p>
                 </>
               ) : (
                 <p className="text-neutral-500 italic">No shipping address provided.</p>
@@ -176,13 +193,17 @@ export function OrderDetailView({ order }: { order: any }) {
             <div className="text-sm font-inter space-y-3">
               <div>
                 <p className="text-neutral-500 mb-1">Customer</p>
-                <p className="font-medium text-neutral-900 dark:text-white">{user?.name || "Guest User"}</p>
+                <p className="font-medium text-neutral-900 dark:text-white">
+                  {user?.name || "Guest User"}
+                </p>
                 <p className="text-neutral-500">{user?.email}</p>
               </div>
               {order.payment && (
                 <div>
                   <p className="text-neutral-500 mb-1">Payment Method</p>
-                  <p className="font-medium text-neutral-900 dark:text-white">{order.payment.paymentMethod}</p>
+                  <p className="font-medium text-neutral-900 dark:text-white">
+                    {order.payment.paymentMethod}
+                  </p>
                   <p className="text-neutral-500 text-xs">Status: {order.payment.status}</p>
                 </div>
               )}

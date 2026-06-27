@@ -6,7 +6,11 @@ export const metadata = {
   title: "Order Details | Admin Dashboard",
 };
 
-export default async function AdminOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function AdminOrderDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const { order, error } = await adminGetOrder(id);
 

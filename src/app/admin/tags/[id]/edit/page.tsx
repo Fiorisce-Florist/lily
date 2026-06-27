@@ -28,15 +28,15 @@ export default async function EditTagPage({ params }: { params: Promise<{ id: st
           </h1>
         </div>
       </div>
-      <AdminTagForm 
-        mode="edit" 
-        tagId={tag.id} 
+      <AdminTagForm
+        mode="edit"
+        tagId={tag.id}
         defaultValues={{
           name: tag.name,
           slug: tag.slug,
           description: tag.description || "",
           type: tag.type,
-        }} 
+        }}
       />
     </div>
   );

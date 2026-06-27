@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { ProductStatus } from "@prisma/client";
+import { Prisma, ProductStatus, TagType } from "@prisma/client";
 
 // ─── Auth guard ───────────────────────────────────────────────────────────────
 
@@ -69,8 +69,8 @@ export async function adminGetAllProducts(
   await requireAdmin();
 
   const skip = (page - 1) * limit;
-  
-  const where: any = search
+
+  const where: Prisma.CategoryWhereInput = search
     ? {
         OR: [
           { name: { contains: search, mode: "insensitive" } },
@@ -389,12 +389,12 @@ export async function adminGetAllOrders(
 
   const skip = (page - 1) * limit;
 
-  const where: any = {};
-  
+  const where: Prisma.OrderWhereInput = {};
+
   if (status !== "all") {
-    where.status = status;
+    where.status = status as Prisma.OrderWhereInput["status"];
   }
-  
+
   if (search) {
     where.OR = [
       { orderNumber: { contains: search, mode: "insensitive" } },
@@ -462,15 +462,17 @@ export async function adminGetOrder(id: string) {
     subtotal: Number(plainOrder.subtotal),
     shippingCost: Number(plainOrder.shippingCost),
     totalAmount: Number(plainOrder.totalAmount),
-    items: plainOrder.items.map((item: any) => ({
+    items: plainOrder.items.map((item: Record<string, unknown>) => ({
       ...item,
       unitPrice: Number(item.unitPrice),
       price: Number(item.unitPrice), // mapped for UI
     })),
-    payment: plainOrder.payment ? {
-      ...plainOrder.payment,
-      amount: Number(plainOrder.payment.amount),
-    } : null,
+    payment: plainOrder.payment
+      ? {
+          ...plainOrder.payment,
+          amount: Number(plainOrder.payment.amount),
+        }
+      : null,
   };
 
   return { order: serializedOrder, error: null };
@@ -518,37 +520,47 @@ export async function adminGetCategory(id: string) {
   return prisma.category.findUnique({ where: { id } });
 }
 
-export async function adminCreateCategory(data: { name: string; slug: string; description?: string }) {
-  const session = await requireAdmin();
-  
+export async function adminCreateCategory(data: {
+  name: string;
+  slug: string;
+  description?: string;
+}) {
+  await requireAdmin();
+
   try {
     const category = await prisma.category.create({ data });
     revalidatePath("/admin/categories");
     return { category, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     return { category: null, error: e.message || "Failed to create category" };
   }
 }
 
-export async function adminUpdateCategory(id: string, data: { name: string; slug: string; description?: string }) {
-  const session = await requireAdmin();
-  
+export async function adminUpdateCategory(
+  id: string,
+  data: { name: string; slug: string; description?: string }
+) {
+  await requireAdmin();
+
   try {
     const category = await prisma.category.update({ where: { id }, data });
     revalidatePath("/admin/categories");
     return { category, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     return { category: null, error: e.message || "Failed to update category" };
   }
 }
 
 export async function adminDeleteCategory(id: string) {
-  const session = await requireAdmin();
-  
+  await requireAdmin();
+
   try {
     await prisma.category.delete({ where: { id } });
     revalidatePath("/admin/categories");
     return { success: true, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     return { success: false, error: e.message || "Failed to delete category" };
   }
@@ -560,10 +572,7 @@ export async function adminGetTags() {
   await requireAdmin();
 
   return prisma.tag.findMany({
-    orderBy: [
-      { type: "asc" },
-      { name: "asc" },
-    ],
+    orderBy: [{ type: "asc" }, { name: "asc" }],
     include: { _count: { select: { products: true } } },
   });
 }
@@ -573,37 +582,48 @@ export async function adminGetTag(id: string) {
   return prisma.tag.findUnique({ where: { id } });
 }
 
-export async function adminCreateTag(data: { name: string; slug: string; description?: string; type: any }) {
-  const session = await requireAdmin();
-  
+export async function adminCreateTag(data: {
+  name: string;
+  slug: string;
+  description?: string;
+  type: TagType;
+}) {
+  await requireAdmin();
+
   try {
     const tag = await prisma.tag.create({ data });
     revalidatePath("/admin/tags");
     return { tag, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     return { tag: null, error: e.message || "Failed to create tag" };
   }
 }
 
-export async function adminUpdateTag(id: string, data: { name: string; slug: string; description?: string; type: any }) {
-  const session = await requireAdmin();
-  
+export async function adminUpdateTag(
+  id: string,
+  data: { name: string; slug: string; description?: string; type: TagType }
+) {
+  await requireAdmin();
+
   try {
     const tag = await prisma.tag.update({ where: { id }, data });
     revalidatePath("/admin/tags");
     return { tag, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     return { tag: null, error: e.message || "Failed to update tag" };
   }
 }
 
 export async function adminDeleteTag(id: string) {
-  const session = await requireAdmin();
-  
+  await requireAdmin();
+
   try {
     await prisma.tag.delete({ where: { id } });
     revalidatePath("/admin/tags");
     return { success: true, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     return { success: false, error: e.message || "Failed to delete tag" };
   }

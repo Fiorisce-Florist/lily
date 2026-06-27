@@ -9,7 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AdminTagFormProps {
   mode: "create" | "edit";
@@ -28,7 +34,7 @@ export function AdminTagForm({ mode, tagId, defaultValues }: AdminTagFormProps) 
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
-  
+
   const [form, setForm] = React.useState({
     name: defaultValues?.name || "",
     slug: defaultValues?.slug || "",
@@ -48,20 +54,22 @@ export function AdminTagForm({ mode, tagId, defaultValues }: AdminTagFormProps) 
     setForm((prev) => ({
       ...prev,
       name: newName,
-      slug: mode === "create" && !prev.slug.includes("-manual-") ? generateSlug(newName) : prev.slug,
+      slug:
+        mode === "create" && !prev.slug.includes("-manual-") ? generateSlug(newName) : prev.slug,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     let res;
     if (mode === "create") {
       res = await adminCreateTag({
         name: form.name,
         slug: form.slug,
         description: form.description || undefined,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type: form.type as any,
       });
     } else {
@@ -69,6 +77,7 @@ export function AdminTagForm({ mode, tagId, defaultValues }: AdminTagFormProps) 
         name: form.name,
         slug: form.slug,
         description: form.description || undefined,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type: form.type as any,
       });
     }
@@ -88,7 +97,7 @@ export function AdminTagForm({ mode, tagId, defaultValues }: AdminTagFormProps) 
     setIsDeleting(true);
     const res = await adminDeleteTag(tagId!);
     setIsDeleting(false);
-    
+
     if (res.error) {
       toast.error(res.error);
     } else {
@@ -101,12 +110,12 @@ export function AdminTagForm({ mode, tagId, defaultValues }: AdminTagFormProps) 
     <form onSubmit={handleSubmit} className="max-w-2xl space-y-8">
       <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
         <h2 className="text-h5 font-fraunces font-semibold">Basic Details</h2>
-        
+
         <div className="space-y-4">
           <div className="space-y-1.5">
             <Label htmlFor="type">Tag Type</Label>
-            <Select 
-              value={form.type} 
+            <Select
+              value={form.type}
               onValueChange={(val) => setForm((prev) => ({ ...prev, type: val }))}
             >
               <SelectTrigger>
@@ -114,7 +123,9 @@ export function AdminTagForm({ mode, tagId, defaultValues }: AdminTagFormProps) 
               </SelectTrigger>
               <SelectContent>
                 {TAG_TYPES.map((t) => (
-                  <SelectItem key={t} value={t}>{t}</SelectItem>
+                  <SelectItem key={t} value={t}>
+                    {t}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -158,7 +169,13 @@ export function AdminTagForm({ mode, tagId, defaultValues }: AdminTagFormProps) 
           {mode === "create" ? "Create Tag" : "Save Changes"}
         </Button>
         {mode === "edit" && (
-          <Button type="button" variant="outline" className="text-red-500 hover:text-red-600 border-red-200 hover:bg-red-50" onClick={handleDelete} disabled={isDeleting}>
+          <Button
+            type="button"
+            variant="outline"
+            className="text-red-500 hover:text-red-600 border-red-200 hover:bg-red-50"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
             {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Delete Tag
           </Button>

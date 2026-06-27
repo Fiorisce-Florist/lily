@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { ShoppingCart, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { adminUpdateOrderStatus } from "@/app/actions/admin";
-import { Input } from "@/components/ui/input";
+
 import {
   Select,
   SelectContent,
@@ -99,11 +99,11 @@ function StatusUpdater({ orderId, currentStatus }: { orderId: string; currentSta
 import { AdminSearch } from "@/modules/AdminModule/components/admin-search";
 import { useSearchParams, usePathname } from "next/navigation";
 
-export function AdminOrdersTable({ 
-  orders, 
-  search = "", 
-  status = "all" 
-}: { 
+export function AdminOrdersTable({
+  orders,
+  search = "",
+  status = "all",
+}: {
   orders: Order[];
   search?: string;
   status?: string;
@@ -158,7 +158,7 @@ export function AdminOrdersTable({
           </p>
         </div>
       ) : (
-            <div className="overflow-x-auto">
+        <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 dark:bg-neutral-800/50">
               <tr>
@@ -179,7 +179,10 @@ export function AdminOrdersTable({
                   className="hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors"
                 >
                   <td className="px-6 py-4">
-                    <Link href={`/admin/orders/${order.id}`} className="font-jetbrains font-medium text-blue-600 hover:underline dark:text-blue-400">
+                    <Link
+                      href={`/admin/orders/${order.id}`}
+                      className="font-jetbrains font-medium text-blue-600 hover:underline dark:text-blue-400"
+                    >
                       {order.orderNumber}
                     </Link>
                   </td>

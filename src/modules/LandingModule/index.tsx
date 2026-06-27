@@ -5,7 +5,6 @@ import { CollectionSection } from "./sections/collection-section";
 import { OccasionSection } from "./sections/occasion-section";
 import { AboutSection } from "./sections/about-section";
 import { LocationSection } from "./sections/location-section";
-import { CtaSection } from "./sections/cta-section";
 import type { LandingProduct } from "@/app/actions/landing";
 
 interface LandingModuleProps {

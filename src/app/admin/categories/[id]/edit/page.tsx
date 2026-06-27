@@ -28,14 +28,14 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ i
           </h1>
         </div>
       </div>
-      <AdminCategoryForm 
-        mode="edit" 
-        categoryId={category.id} 
+      <AdminCategoryForm
+        mode="edit"
+        categoryId={category.id}
         defaultValues={{
           name: category.name,
           slug: category.slug,
           description: category.description || "",
-        }} 
+        }}
       />
     </div>
   );

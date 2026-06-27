@@ -74,7 +74,8 @@ export function RegisterModule() {
     setIsSubmitting(true);
 
     try {
-      const { data, error: authError } = await signUp.email({
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { data: _data, error: authError } = await signUp.email({
         name: formData.get("name") as string,
         email: formData.get("email") as string,
         password: formData.get("password") as string,
@@ -87,7 +88,8 @@ export function RegisterModule() {
         router.push("/");
         router.refresh();
       }
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       setServerError("An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);

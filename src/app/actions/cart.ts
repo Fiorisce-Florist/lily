@@ -135,7 +135,7 @@ export async function addToCart(productId: string, quantity: number = 1, variant
   let finalPrice = Number(product.price);
   if (variantId) {
     const variant = await prisma.productVariant.findFirst({
-      where: { id: variantId, productId, isAvailable: true }
+      where: { id: variantId, productId, isAvailable: true },
     });
     if (variant) {
       finalPrice = Number(product.price) + Number(variant.additionalPrice);
@@ -146,10 +146,10 @@ export async function addToCart(productId: string, quantity: number = 1, variant
 
   // Check if the product is already in the cart with the SAME variant
   const existingItem = await prisma.cartItem.findFirst({
-    where: { 
-      cartId, 
-      productId, 
-      variantId: variantId || null
+    where: {
+      cartId,
+      productId,
+      variantId: variantId || null,
     },
   });
 
@@ -294,7 +294,9 @@ export async function getProductForCart(productId: string) {
 }
 
 /** Sync local guest cart to the user's database cart upon login. */
-export async function syncLocalCart(localItems: { productId: string; quantity: number; variantId?: string }[]) {
+export async function syncLocalCart(
+  localItems: { productId: string; quantity: number; variantId?: string }[]
+) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { error: "Not authenticated." };
@@ -314,7 +316,7 @@ export async function syncLocalCart(localItems: { productId: string; quantity: n
     let finalPrice = Number(product.price);
     if (item.variantId) {
       const variant = await prisma.productVariant.findFirst({
-        where: { id: item.variantId, productId: item.productId, isAvailable: true }
+        where: { id: item.variantId, productId: item.productId, isAvailable: true },
       });
       if (variant) {
         finalPrice = Number(product.price) + Number(variant.additionalPrice);
@@ -322,10 +324,10 @@ export async function syncLocalCart(localItems: { productId: string; quantity: n
     }
 
     const existingItem = await prisma.cartItem.findFirst({
-      where: { 
-        cartId, 
-        productId: item.productId, 
-        variantId: item.variantId || null 
+      where: {
+        cartId,
+        productId: item.productId,
+        variantId: item.variantId || null,
       },
     });
 
