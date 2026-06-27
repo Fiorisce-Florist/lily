@@ -70,7 +70,7 @@ export async function adminGetAllProducts(
 
   const skip = (page - 1) * limit;
 
-  const where: Prisma.CategoryWhereInput = search
+  const where: Prisma.ProductWhereInput = search
     ? {
         OR: [
           { name: { contains: search, mode: "insensitive" } },

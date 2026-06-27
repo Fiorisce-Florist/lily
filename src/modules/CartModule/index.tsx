@@ -119,9 +119,9 @@ function CartItemRow({ item }: { item: CartItemData }) {
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(item as any).size && (
             <span className="text-b6 font-inter text-neutral-600 dark:text-neutral-300">
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               Size:{" "}
               <span className="font-medium text-neutral-700 dark:text-neutral-200">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {(item as any).size}
               </span>
             </span>

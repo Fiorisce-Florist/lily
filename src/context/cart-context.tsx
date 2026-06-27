@@ -100,8 +100,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         // Guest cart flow
         let newItems = [...items];
         // Match product AND price (to differentiate variants). Wait, locally we just match by variantId.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const idx = newItems.findIndex(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (i) => i.productId === productId && (i as any).variantId === variantId
         );
         if (idx !== -1) {
