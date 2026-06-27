@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { notFound } from "next/navigation";
-import { adminGetProduct, adminGetCategories } from "@/app/actions/admin";
+import { adminGetProduct, adminGetCategories, adminGetTags } from "@/app/actions/admin";
 import { AdminProductForm } from "@/modules/AdminModule/components/admin-product-form";
 
 export const metadata: Metadata = { title: "Edit Product" };
@@ -13,9 +13,10 @@ interface EditProductPageProps {
 
 export default async function EditProductPage({ params }: EditProductPageProps) {
   const { id } = await params;
-  const [{ product, error }, categories] = await Promise.all([
+  const [{ product, error }, categories, tags] = await Promise.all([
     adminGetProduct(id),
     adminGetCategories(),
+    adminGetTags(),
   ]);
 
   if (error || !product) notFound();
@@ -42,6 +43,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
         mode="edit"
         productId={id}
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+        tags={tags}
         defaultValues={{
           name: product.name,
           slug: product.slug,
@@ -53,6 +55,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
           status: product.status as any,
           imageUrl: product.imageUrl,
           variants: product.variants,
+          tagIds: product.tagIds ?? [],
         }}
       />
     </div>

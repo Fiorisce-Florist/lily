@@ -14,6 +14,8 @@ import {
   Flower2,
   ShieldCheck,
   Menu,
+  FolderTree,
+  Tags,
 } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
 
@@ -21,6 +23,8 @@ const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/admin/categories", label: "Categories", icon: FolderTree },
+  { href: "/admin/tags", label: "Tags", icon: Tags },
   { href: "/admin/users", label: "Users", icon: Users },
 ];
 

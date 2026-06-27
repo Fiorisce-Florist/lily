@@ -26,13 +26,13 @@ import {
 
 interface Category {
   id: string;
-  name: string;
 }
 
 interface AdminProductFormProps {
   mode: "create" | "edit";
   productId?: string;
-  categories: Category[];
+  categories: { id: string; name: string }[];
+  tags?: { id: string; name: string; type: string }[];
   defaultValues?: Partial<AdminProductFormData>;
 }
 
@@ -40,6 +40,7 @@ export function AdminProductForm({
   mode,
   productId,
   categories,
+  tags = [],
   defaultValues,
 }: AdminProductFormProps) {
   const router = useRouter();
@@ -55,9 +56,10 @@ export function AdminProductForm({
     status: defaultValues?.status ?? "ACTIVE",
     imageUrl: defaultValues?.imageUrl ?? "",
     variants: defaultValues?.variants ?? [],
+    tagIds: defaultValues?.tagIds ?? [],
   });
 
-  const set = (key: keyof AdminProductFormData) => (v: string | number | boolean) =>
+  const set = (key: keyof AdminProductFormData) => (v: string | number | boolean | string[]) =>
     setForm((prev) => ({ ...prev, [key]: v }));
 
   // Auto-generate slug from name
@@ -183,10 +185,10 @@ export function AdminProductForm({
         </div>
       </section>
 
-      {/* Pricing & Category */}
+      {/* Pricing, Category & Tags */}
       <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
         <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-          Pricing &amp; Category
+          Pricing, Category &amp; Tags
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -228,6 +230,31 @@ export function AdminProductForm({
                 )}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-1.5 sm:col-span-2">
+            <Label className="text-b6">Tags</Label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {tags.map((tag) => (
+                <label key={tag.id} className="flex items-center gap-2 border rounded-md px-3 py-2 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800">
+                  <input
+                    type="checkbox"
+                    className="rounded border-neutral-300 dark:border-neutral-700"
+                    checked={form.tagIds?.includes(tag.id) || false}
+                    onChange={(e) => {
+                      const newIds = e.target.checked
+                        ? [...(form.tagIds || []), tag.id]
+                        : (form.tagIds || []).filter((id) => id !== tag.id);
+                      set("tagIds")(newIds);
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">{tag.name}</span>
+                    <span className="text-xs text-neutral-500">{tag.type}</span>
+                  </div>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -171,9 +172,9 @@ export function AdminOrdersTable({ orders }: { orders: Order[] }) {
                   className="hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors"
                 >
                   <td className="px-6 py-4">
-                    <span className="font-jetbrains font-medium text-neutral-900 dark:text-cornsilk-100">
+                    <Link href={`/admin/orders/${order.id}`} className="font-jetbrains font-medium text-blue-600 hover:underline dark:text-blue-400">
                       {order.orderNumber}
-                    </span>
+                    </Link>
                   </td>
                   <td className="px-6 py-4 max-w-40">
                     <p className="font-inter font-medium text-neutral-800 dark:text-neutral-200 truncate">

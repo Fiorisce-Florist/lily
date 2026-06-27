@@ -106,6 +106,7 @@ export interface AdminProductFormData {
   status?: ProductStatus;
   imageUrl?: string;
   variants?: AdminProductVariantData[];
+  tagIds?: string[];
 }
 
 export async function adminCreateProduct(data: AdminProductFormData) {
@@ -138,6 +139,12 @@ export async function adminCreateProduct(data: AdminProductFormData) {
                   isAvailable: v.isAvailable ?? true,
                   imageUrl: v.imageUrl,
                 })),
+              }
+            : undefined,
+        tags:
+          data.tagIds && data.tagIds.length > 0
+            ? {
+                create: data.tagIds.map((tagId) => ({ tagId })),
               }
             : undefined,
       },
@@ -190,6 +197,7 @@ export async function adminGetProduct(id: string) {
         isAvailable: v.isAvailable,
         imageUrl: v.imageUrl ?? undefined,
       })),
+      tagIds: product.tags.map((t) => t.tagId),
     },
     error: null,
   };
@@ -276,6 +284,23 @@ export async function adminUpdateProduct(id: string, data: Partial<AdminProductF
           }
         }
       }
+
+      // Sync tags if provided
+      if (data.tagIds !== undefined) {
+        // Simple approach: delete all and recreate
+        await tx.productTag.deleteMany({
+          where: { productId: id },
+        });
+
+        if (data.tagIds.length > 0) {
+          await tx.productTag.createMany({
+            data: data.tagIds.map((tagId) => ({
+              productId: id,
+              tagId,
+            })),
+          });
+        }
+      }
     });
 
     revalidatePath("/admin/products");
@@ -355,6 +380,46 @@ export async function adminGetAllOrders() {
   }));
 }
 
+export async function adminGetOrder(id: string) {
+  await requireAdmin();
+
+  const order = await prisma.order.findUnique({
+    where: { id },
+    include: {
+      user: { select: { name: true, email: true, phone: true } },
+      address: true,
+      items: true,
+      payment: true,
+      statusHistories: {
+        orderBy: { createdAt: "desc" },
+        include: { changedByUser: { select: { name: true, email: true } } },
+      },
+    },
+  });
+
+  if (!order) return { order: null, error: "Order not found" };
+
+  const plainOrder = JSON.parse(JSON.stringify(order));
+
+  const serializedOrder = {
+    ...plainOrder,
+    subtotal: Number(plainOrder.subtotal),
+    shippingCost: Number(plainOrder.shippingCost),
+    totalAmount: Number(plainOrder.totalAmount),
+    items: plainOrder.items.map((item: any) => ({
+      ...item,
+      unitPrice: Number(item.unitPrice),
+      price: Number(item.unitPrice), // mapped for UI
+    })),
+    payment: plainOrder.payment ? {
+      ...plainOrder.payment,
+      amount: Number(plainOrder.payment.amount),
+    } : null,
+  };
+
+  return { order: serializedOrder, error: null };
+}
+
 export async function adminUpdateOrderStatus(orderId: string, newStatus: string) {
   const session = await requireAdmin();
 
@@ -390,6 +455,102 @@ export async function adminGetCategories() {
     orderBy: { name: "asc" },
     include: { _count: { select: { products: true } } },
   });
+}
+
+export async function adminGetCategory(id: string) {
+  await requireAdmin();
+  return prisma.category.findUnique({ where: { id } });
+}
+
+export async function adminCreateCategory(data: { name: string; slug: string; description?: string }) {
+  const session = await requireAdmin();
+  
+  try {
+    const category = await prisma.category.create({ data });
+    revalidatePath("/admin/categories");
+    return { category, error: null };
+  } catch (e: any) {
+    return { category: null, error: e.message || "Failed to create category" };
+  }
+}
+
+export async function adminUpdateCategory(id: string, data: { name: string; slug: string; description?: string }) {
+  const session = await requireAdmin();
+  
+  try {
+    const category = await prisma.category.update({ where: { id }, data });
+    revalidatePath("/admin/categories");
+    return { category, error: null };
+  } catch (e: any) {
+    return { category: null, error: e.message || "Failed to update category" };
+  }
+}
+
+export async function adminDeleteCategory(id: string) {
+  const session = await requireAdmin();
+  
+  try {
+    await prisma.category.delete({ where: { id } });
+    revalidatePath("/admin/categories");
+    return { success: true, error: null };
+  } catch (e: any) {
+    return { success: false, error: e.message || "Failed to delete category" };
+  }
+}
+
+// ─── Tags ─────────────────────────────────────────────────────────────────────
+
+export async function adminGetTags() {
+  await requireAdmin();
+
+  return prisma.tag.findMany({
+    orderBy: [
+      { type: "asc" },
+      { name: "asc" },
+    ],
+    include: { _count: { select: { products: true } } },
+  });
+}
+
+export async function adminGetTag(id: string) {
+  await requireAdmin();
+  return prisma.tag.findUnique({ where: { id } });
+}
+
+export async function adminCreateTag(data: { name: string; slug: string; description?: string; type: any }) {
+  const session = await requireAdmin();
+  
+  try {
+    const tag = await prisma.tag.create({ data });
+    revalidatePath("/admin/tags");
+    return { tag, error: null };
+  } catch (e: any) {
+    return { tag: null, error: e.message || "Failed to create tag" };
+  }
+}
+
+export async function adminUpdateTag(id: string, data: { name: string; slug: string; description?: string; type: any }) {
+  const session = await requireAdmin();
+  
+  try {
+    const tag = await prisma.tag.update({ where: { id }, data });
+    revalidatePath("/admin/tags");
+    return { tag, error: null };
+  } catch (e: any) {
+    return { tag: null, error: e.message || "Failed to update tag" };
+  }
+}
+
+export async function adminDeleteTag(id: string) {
+  const session = await requireAdmin();
+  
+  try {
+    await prisma.tag.delete({ where: { id } });
+    revalidatePath("/admin/tags");
+    return { success: true, error: null };
+  } catch (e: any) {
+    return { success: false, error: e.message || "Failed to delete tag" };
+  }
 }
 
 // ─── User Management ──────────────────────────────────────────────────────────

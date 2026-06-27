@@ -13,6 +13,7 @@ const categories = [
 ];
 
 export function CategorySection() {
+
   return (
     <section id="explore-collection" className="bg-cornsilk-100 dark:bg-neutral-950 py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
