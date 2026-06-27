@@ -19,14 +19,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { useCart } from "@/context/cart-context";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProductCard } from "@/components/elements/product-card";
 import { cn } from "@/lib/utils";
 
@@ -62,13 +61,6 @@ function formatPrice(v: number) {
   }).format(v);
 }
 
-// Alternative Unsplash angles for the gallery
-function buildGalleryImages(baseUrl: string): string[] {
-  // Extract base without query params and build 4 variants
-  const alt1 = "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=600&q=80";
-  const alt2 = "https://images.unsplash.com/photo-1490750967868-88df5691cc64?w=600&q=80";
-  return [baseUrl, baseUrl.replace("w=600", "w=200").replace("w=600", "w=600"), alt1, alt2];
-}
 
 // ─── Star Rating ──────────────────────────────────────────────────────────────
 
@@ -97,18 +89,16 @@ function StarRating({ rating, size = 16 }: { rating: number; size?: number }) {
 // ─── Image Gallery ────────────────────────────────────────────────────────────
 
 function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedImage?: string }) {
-  const baseImage = selectedImage || bouquet.image;
-  const images = buildGalleryImages(baseImage);
-  const [activeIdx, setActiveIdx] = useState(0);
+  const displayImage = selectedImage || bouquet.image;
   const [imgLoaded, setImgLoaded] = useState(false);
   const [zoomed, setZoomed] = useState(false);
 
-  const prev = () => setActiveIdx((i) => (i - 1 + images.length) % images.length);
-  const next = () => setActiveIdx((i) => (i + 1) % images.length);
+  useEffect(() => {
+    setImgLoaded(false);
+  }, [displayImage]);
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      {/* Main image */}
+    <div className="flex flex-col w-full">
       <div
         className="relative overflow-hidden rounded-2xl bg-cornsilk-100 dark:bg-neutral-800 aspect-4/5 w-full cursor-zoom-in group"
         onMouseEnter={() => setZoomed(true)}
@@ -117,9 +107,9 @@ function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedIm
         {!imgLoaded && <Skeleton className="absolute inset-0 rounded-2xl" />}
 
         <Image
-          key={images[activeIdx]}
-          src={images[activeIdx]}
-          alt={`${bouquet.name} — view ${activeIdx + 1}`}
+          key={displayImage}
+          src={displayImage}
+          alt={bouquet.name}
           fill
           onLoad={() => setImgLoaded(true)}
           className={`object-cover transition-all duration-700 ${
@@ -137,63 +127,6 @@ function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedIm
             Hover to zoom
           </span>
         </div>
-
-        {/* Prev/Next arrows */}
-        <button
-          id="gallery-prev"
-          onClick={prev}
-          aria-label="Previous image"
-          className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm shadow-md text-neutral-700 dark:text-neutral-200 hover:bg-white dark:hover:bg-neutral-800 transition-all opacity-0 group-hover:opacity-100"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-        <button
-          id="gallery-next"
-          onClick={next}
-          aria-label="Next image"
-          className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm shadow-md text-neutral-700 dark:text-neutral-200 hover:bg-white dark:hover:bg-neutral-800 transition-all opacity-0 group-hover:opacity-100"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
-
-        {/* Dot indicators */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              id={`gallery-dot-${i}`}
-              onClick={() => setActiveIdx(i)}
-              aria-label={`View image ${i + 1}`}
-              className={`rounded-full transition-all duration-300 ${
-                i === activeIdx ? "bg-white w-5 h-2" : "bg-white/60 w-2 h-2 hover:bg-white/90"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Thumbnails */}
-      <div className="grid grid-cols-4 gap-2.5">
-        {images.map((src, i) => (
-          <button
-            key={i}
-            id={`gallery-thumb-${i}`}
-            onClick={() => setActiveIdx(i)}
-            aria-label={`Thumbnail ${i + 1}`}
-            className={`relative aspect-square overflow-hidden rounded-xl transition-all duration-200 ${
-              i === activeIdx
-                ? "ring-2 ring-blush-500 ring-offset-2 ring-offset-white dark:ring-offset-neutral-900"
-                : "opacity-70 hover:opacity-100"
-            }`}
-          >
-            <Image
-              src={src}
-              alt={`${bouquet.name} thumbnail ${i + 1}`}
-              fill
-              className="object-cover"
-            />
-          </button>
-        ))}
       </div>
     </div>
   );

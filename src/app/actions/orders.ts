@@ -26,6 +26,7 @@ export interface OrderItemData {
   quantity: number;
   unitPrice: number;
   image?: string;
+  variantName?: string | null;
 }
 
 export interface OrderData {
@@ -100,6 +101,9 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
               status: true,
             },
           },
+          variant: {
+            select: { id: true, variantName: true },
+          },
         },
       },
     },
@@ -155,6 +159,8 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
             create: cart.items.map((item) => ({
               productId: item.productId,
               productName: item.product.name,
+              variantId: item.variant?.id,
+              variantName: item.variant?.variantName,
               quantity: item.quantity,
               unitPrice: Number(item.price),
             })),
@@ -260,6 +266,7 @@ export async function getUserOrders(): Promise<{
           quantity: item.quantity,
           unitPrice: Number(item.unitPrice),
           image: item.product.images[0]?.imageUrl,
+          variantName: item.variantName,
         })),
         address: o.address
           ? {
@@ -341,6 +348,7 @@ export async function getOrderByNumber(orderNumber: string): Promise<{
           quantity: item.quantity,
           unitPrice: Number(item.unitPrice),
           image: item.product.images[0]?.imageUrl,
+          variantName: item.variantName,
         })),
         address: order.address
           ? {

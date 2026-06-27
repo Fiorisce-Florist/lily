@@ -64,6 +64,7 @@ function cartInclude() {
             },
           },
         },
+        variant: true,
       },
       orderBy: { id: "asc" as const },
     },
@@ -110,7 +111,7 @@ export async function getCart(): Promise<CartData | null> {
         })),
         category: item.product.category,
       },
-      size: item.product.variants.find(v => Number(item.price) === Number(item.product.price) + Number(v.additionalPrice))?.variantName || "Standard",
+      size: item.variant?.variantName || "Standard",
     })),
   };
 }
@@ -143,9 +144,13 @@ export async function addToCart(productId: string, quantity: number = 1, variant
 
   const cartId = await getOrCreateCart(session.user.id);
 
-  // Check if the product is already in the cart with the SAME PRICE (same variant)
+  // Check if the product is already in the cart with the SAME variant
   const existingItem = await prisma.cartItem.findFirst({
-    where: { cartId, productId, price: finalPrice },
+    where: { 
+      cartId, 
+      productId, 
+      variantId: variantId || null
+    },
   });
 
   if (existingItem) {
@@ -158,6 +163,7 @@ export async function addToCart(productId: string, quantity: number = 1, variant
       data: {
         cartId,
         productId,
+        variantId: variantId || null,
         quantity: Math.min(10, quantity),
         price: finalPrice,
       },
@@ -316,7 +322,11 @@ export async function syncLocalCart(localItems: { productId: string; quantity: n
     }
 
     const existingItem = await prisma.cartItem.findFirst({
-      where: { cartId, productId: item.productId, price: finalPrice },
+      where: { 
+        cartId, 
+        productId: item.productId, 
+        variantId: item.variantId || null 
+      },
     });
 
     if (existingItem) {
@@ -329,6 +339,7 @@ export async function syncLocalCart(localItems: { productId: string; quantity: n
         data: {
           cartId,
           productId: item.productId,
+          variantId: item.variantId || null,
           quantity: Math.min(10, item.quantity),
           price: finalPrice,
         },

@@ -261,18 +261,10 @@ async function main() {
   await prisma.productImage.deleteMany();
   await prisma.productVariant.deleteMany();
   await prisma.productTag.deleteMany();
+  await prisma.tag.deleteMany();
 
   // Create or update Categories
   console.log("Upserting categories...");
-  const catBouquets = await prisma.category.upsert({
-    where: { slug: "bouquets" },
-    update: { name: "Bouquets", description: "Beautiful bouquets for all occasions" },
-    create: {
-      name: "Bouquets",
-      slug: "bouquets",
-      description: "Beautiful bouquets for all occasions",
-    },
-  });
 
   const catFreshFlowers = await prisma.category.upsert({
     where: { slug: "fresh-flowers" },
@@ -307,21 +299,28 @@ async function main() {
     },
   });
 
+  const catOther = await prisma.category.upsert({
+    where: { slug: "other" },
+    update: { name: "Other", description: "Other floral products and accessories" },
+    create: {
+      name: "Other",
+      slug: "other",
+      description: "Other floral products and accessories",
+    },
+  });
+
   // Map slugs to category IDs for easy lookup
   const categoryMap = new Map<string, string>();
-  categoryMap.set("bouquets", catBouquets.id);
   categoryMap.set("fresh-flowers", catFreshFlowers.id);
   categoryMap.set("artificial-flowers", catArtificialFlowers.id);
   categoryMap.set("papan-bunga", catPapanBunga.id);
+  categoryMap.set("other", catOther.id);
 
   // Collect unique colors, flowers, occasions, and general tags
   const colors = [...new Set(ALL_BOUQUETS.flatMap((b) => b.colors))];
   const flowers = [...new Set(ALL_BOUQUETS.flatMap((b) => b.flowers))];
   const occasions = [...new Set(ALL_BOUQUETS.map((b) => b.occasion))];
-  const generalTags = [...new Set(ALL_BOUQUETS.flatMap((b) => b.tags))];
-
-  generalTags.push("New Arrival");
-  generalTags.push("Best Seller");
+  const generalTags = ["New Arrival", "Best Seller"];
 
   console.log("Upserting tags...");
   // Maps to store created tags by their name so we can link them later
@@ -356,7 +355,7 @@ async function main() {
     b.colors.forEach((c) => productTagIds.add(tagMap.get(c)!));
     b.flowers.forEach((f) => productTagIds.add(tagMap.get(f)!));
     productTagIds.add(tagMap.get(b.occasion)!);
-    b.tags.forEach((t) => productTagIds.add(tagMap.get(t)!));
+    
     if (b.isNew) productTagIds.add(tagMap.get("New Arrival")!);
     if (b.isBestseller) productTagIds.add(tagMap.get("Best Seller")!);
 
@@ -369,10 +368,19 @@ async function main() {
       { name: "human size", factor: 1.0 },
     ];
 
+    const VARIANT_IMAGES: Record<string, string> = {
+      "xs": "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=600&q=80",
+      "s": "https://images.unsplash.com/photo-1591886960571-74d43a9d4166?w=600&q=80",
+      "m": b.image,
+      "l": "https://images.unsplash.com/photo-1508611449339-16a2180800b3?w=600&q=80",
+      "xl": "https://images.unsplash.com/photo-1490750967868-88df5691cc64?w=600&q=80",
+      "human size": "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=600&q=80",
+    };
+
     // Pick a random subset of sizes for this bouquet, always ensuring 'm' is present
     const availableSizes = SIZES.filter((s) => s.name === "m" || Math.random() > 0.4);
 
-    const categoryId = categoryMap.get(b.categorySlug) ?? catBouquets.id;
+    const categoryId = categoryMap.get(b.categorySlug) ?? catOther.id;
 
     const productData = {
       categoryId,
@@ -394,6 +402,7 @@ async function main() {
           variantName: s.name,
           additionalPrice: Math.round(b.price * s.factor),
           isAvailable: b.inStock,
+          imageUrl: VARIANT_IMAGES[s.name],
         })),
       },
       tags: {

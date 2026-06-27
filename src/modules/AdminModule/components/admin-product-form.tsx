@@ -135,6 +135,15 @@ export function AdminProductForm({
     }
   };
 
+  const tagsByType = React.useMemo(() => {
+    return tags.reduce((acc, tag) => {
+      const type = tag.type || "OTHER";
+      if (!acc[type]) acc[type] = [];
+      acc[type].push(tag);
+      return acc;
+    }, {} as Record<string, typeof tags>);
+  }, [tags]);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
       {/* Basic Info */}
@@ -143,33 +152,35 @@ export function AdminProductForm({
           Basic Information
         </h2>
 
-        <div className="space-y-2">
-          <Label htmlFor="name">
-            Product Name <span className="text-blush-500">*</span>
-          </Label>
-          <Input
-            id="name"
-            required
-            placeholder="e.g., Blush Reverie Bouquet"
-            value={form.name}
-            onChange={(e) => handleNameChange(e.target.value)}
-          />
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">
+              Product Name <span className="text-blush-500">*</span>
+            </Label>
+            <Input
+              id="name"
+              required
+              placeholder="e.g., Blush Reverie Bouquet"
+              value={form.name}
+              onChange={(e) => handleNameChange(e.target.value)}
+            />
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="slug">
-            URL Slug <span className="text-blush-500">*</span>
-          </Label>
-          <Input
-            id="slug"
-            required
-            placeholder="e.g., blush-reverie-bouquet"
-            value={form.slug}
-            onChange={(e) => set("slug")(e.target.value)}
-          />
-          <p className="text-b6 font-inter text-neutral-400">
-            Used in URL: /shop/{form.slug || "your-slug"}
-          </p>
+          <div className="space-y-2">
+            <Label htmlFor="slug">
+              URL Slug <span className="text-blush-500">*</span>
+            </Label>
+            <Input
+              id="slug"
+              required
+              placeholder="e.g., blush-reverie-bouquet"
+              value={form.slug}
+              onChange={(e) => set("slug")(e.target.value)}
+            />
+            <p className="text-b6 font-inter text-neutral-400">
+              Used in URL: /shop/{form.slug || "your-slug"}
+            </p>
+          </div>
         </div>
 
         <div className="space-y-2">
@@ -185,29 +196,13 @@ export function AdminProductForm({
         </div>
       </section>
 
-      {/* Pricing, Category & Tags */}
-      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
+      {/* Organization */}
+      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-5 shadow-sm">
         <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-          Pricing, Category &amp; Tags
+          Organization
         </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="price">
-              Price (IDR) <span className="text-blush-500">*</span>
-            </Label>
-            <Input
-              id="price"
-              type="number"
-              required
-              min={0}
-              step={1000}
-              placeholder="e.g., 750000"
-              value={form.price || ""}
-              onChange={(e) => set("price")(Number(e.target.value))}
-            />
-          </div>
-
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="category">
               Category <span className="text-blush-500">*</span>
@@ -232,64 +227,137 @@ export function AdminProductForm({
             </Select>
           </div>
 
-          <div className="space-y-1.5 sm:col-span-2">
+          <div className="space-y-3 md:col-span-2 mt-2">
             <Label className="text-b6">Tags</Label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {tags.map((tag) => (
-                <label key={tag.id} className="flex items-center gap-2 border rounded-md px-3 py-2 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800">
-                  <input
-                    type="checkbox"
-                    className="rounded border-neutral-300 dark:border-neutral-700"
-                    checked={form.tagIds?.includes(tag.id) || false}
-                    onChange={(e) => {
-                      const newIds = e.target.checked
-                        ? [...(form.tagIds || []), tag.id]
-                        : (form.tagIds || []).filter((id) => id !== tag.id);
-                      set("tagIds")(newIds);
-                    }}
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium">{tag.name}</span>
-                    <span className="text-xs text-neutral-500">{tag.type}</span>
+            <div className="flex flex-col gap-5 border rounded-xl p-5 bg-neutral-50/50 dark:bg-neutral-800/20 border-neutral-200 dark:border-neutral-800">
+              {Object.entries(tagsByType).map(([type, typeTags]) => (
+                <div key={type} className="space-y-3">
+                  <h4 className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">{type}</h4>
+                  <div className="flex flex-wrap gap-2.5">
+                    {typeTags.map((tag) => (
+                      <label
+                        key={tag.id}
+                        className={`flex items-center gap-2 border rounded-full px-3.5 py-1.5 cursor-pointer transition-all ${
+                          form.tagIds?.includes(tag.id)
+                            ? "bg-blush-50 border-blush-300 text-blush-900 dark:bg-blush-900/30 dark:border-blush-700 dark:text-blush-100 shadow-sm"
+                            : "bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          className="sr-only"
+                          checked={form.tagIds?.includes(tag.id) || false}
+                          onChange={(e) => {
+                            const newIds = e.target.checked
+                              ? [...(form.tagIds || []), tag.id]
+                              : (form.tagIds || []).filter((id) => id !== tag.id);
+                            set("tagIds")(newIds);
+                          }}
+                        />
+                        <span className="text-sm font-medium leading-none">{tag.name}</span>
+                      </label>
+                    ))}
                   </div>
-                </label>
+                </div>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Image */}
-      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
+      {/* Pricing & Inventory */}
+      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-5 shadow-sm">
         <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-          Primary Image
+          Pricing &amp; Inventory
         </h2>
-        <div className="space-y-2">
-          <Label htmlFor="imageUrl">Image URL</Label>
-          <Input
-            id="imageUrl"
-            type="url"
-            placeholder="https://example.com/image.jpg"
-            value={form.imageUrl ?? ""}
-            onChange={(e) => set("imageUrl")(e.target.value)}
-          />
-          <p className="text-b6 font-inter text-neutral-400">
-            Paste a direct image URL. Image upload coming soon.
-          </p>
-        </div>
-        {form.imageUrl && (
-          <div className="relative h-32 w-32 overflow-hidden rounded-xl bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={form.imageUrl}
-              alt="Preview"
-              className="h-full w-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = "none";
-              }}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="price">
+              Base Price (IDR) <span className="text-blush-500">*</span>
+            </Label>
+            <Input
+              id="price"
+              type="number"
+              required
+              min={0}
+              step={1000}
+              placeholder="e.g., 750000"
+              value={form.price || ""}
+              onChange={(e) => set("price")(Number(e.target.value))}
+              className="text-lg font-medium"
             />
           </div>
-        )}
+
+          <div className="space-y-4">
+            <Label>Availability Status</Label>
+            <RadioGroup
+              value={form.status}
+              onValueChange={(val) => set("status")(val)}
+              className="flex items-center gap-6"
+            >
+              {(["ACTIVE", "INACTIVE"] as const).map((s) => (
+                <div key={s} className="flex items-center space-x-2">
+                  <RadioGroupItem value={s} id={`status-${s}`} />
+                  <Label
+                    htmlFor={`status-${s}`}
+                    className="font-inter text-sm text-neutral-700 dark:text-neutral-300 cursor-pointer font-medium"
+                  >
+                    {s}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+            <div className="flex items-center gap-2 pt-2">
+              <Checkbox
+                id="isAvailable"
+                checked={form.isAvailable ?? true}
+                onCheckedChange={(checked) => set("isAvailable")(!!checked)}
+              />
+              <Label
+                htmlFor="isAvailable"
+                className="font-inter text-sm text-neutral-700 dark:text-neutral-300 cursor-pointer"
+              >
+                In Stock (available to purchase)
+              </Label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Media */}
+      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
+        <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+          Media
+        </h2>
+        <div className="flex gap-4 items-start">
+          <div className="flex-1 space-y-2">
+            <Label htmlFor="imageUrl">Primary Image URL</Label>
+            <Input
+              id="imageUrl"
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              value={form.imageUrl ?? ""}
+              onChange={(e) => set("imageUrl")(e.target.value)}
+            />
+            <p className="text-b6 font-inter text-neutral-400">
+              Paste a direct image URL for the main product photo.
+            </p>
+          </div>
+          {form.imageUrl && (
+            <div className="relative h-24 w-24 overflow-hidden rounded-xl bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={form.imageUrl}
+                alt="Preview"
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
+            </div>
+          )}
+        </div>
       </section>
 
       {/* Size Variants */}
@@ -322,16 +390,17 @@ export function AdminProductForm({
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {(form.variants ?? []).map((variant, index) => (
               <div
                 key={variant.id ?? `new-${index}`}
-                className="flex items-start gap-3 p-4 rounded-xl bg-cornsilk-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-700/50"
+                className="flex flex-col gap-4 p-5 rounded-xl bg-neutral-50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-700/60"
               >
-                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Variant Top Row: Name, Price, Actions */}
+                <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_auto] gap-4 items-start">
                   <div className="space-y-1.5">
                     <Label htmlFor={`variant-name-${index}`} className="text-b6">
-                      Size Name <span className="text-blush-500">*</span>
+                      Size / Variant Name <span className="text-blush-500">*</span>
                     </Label>
                     <Input
                       id={`variant-name-${index}`}
@@ -343,12 +412,13 @@ export function AdminProductForm({
                       }
                     />
                   </div>
+
                   <div className="space-y-1.5">
                     <Label
                       htmlFor={`variant-price-${index}`}
                       className="text-b6"
                     >
-                      Additional Price (IDR)
+                      Additional Cost (IDR)
                     </Label>
                     <Input
                       id={`variant-price-${index}`}
@@ -365,111 +435,78 @@ export function AdminProductForm({
                         )
                       }
                     />
-                    <p className="text-[11px] font-inter text-neutral-400">
-                      Total: IDR{" "}
-                      {((form.price || 0) + (variant.additionalPrice || 0)).toLocaleString("id-ID")}
+                    <p className="text-[11px] font-inter text-neutral-500">
+                      Final Price: IDR{" "}
+                      <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                        {((form.price || 0) + (variant.additionalPrice || 0)).toLocaleString("id-ID")}
+                      </span>
                     </p>
                   </div>
-                  
-                  {/* Variant Image */}
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <Label htmlFor={`variant-image-${index}`} className="text-b6">
-                      Image URL (Optional)
-                    </Label>
-                    <div className="flex gap-3 items-center">
-                      <Input
-                        id={`variant-image-${index}`}
-                        type="url"
-                        placeholder="https://example.com/variant-image.jpg"
-                        value={variant.imageUrl ?? ""}
-                        onChange={(e) =>
-                          updateVariant(index, "imageUrl", e.target.value)
+
+                  <div className="flex flex-col md:items-end gap-2 pt-6 md:pt-0">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeVariant(index)}
+                      className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 p-2 h-9 w-9 md:w-auto md:px-3 self-end"
+                    >
+                      <Trash2 className="h-4 w-4 md:mr-1.5" />
+                      <span className="hidden md:inline">Remove</span>
+                    </Button>
+                    <div className="flex items-center gap-1.5">
+                      <Checkbox
+                        id={`variant-available-${index}`}
+                        checked={variant.isAvailable ?? true}
+                        onCheckedChange={(checked) =>
+                          updateVariant(index, "isAvailable", !!checked)
                         }
-                        className="flex-1"
                       />
-                      {variant.imageUrl && (
-                        <div className="relative h-10 w-10 overflow-hidden rounded-md bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shrink-0">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={variant.imageUrl}
-                            alt="Preview"
-                            className="h-full w-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = "none";
-                            }}
-                          />
-                        </div>
-                      )}
+                      <Label
+                        htmlFor={`variant-available-${index}`}
+                        className="text-xs font-inter text-neutral-500 dark:text-neutral-400 cursor-pointer"
+                      >
+                        In Stock
+                      </Label>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 pt-6">
-                  <div className="flex items-center gap-1.5">
-                    <Checkbox
-                      id={`variant-available-${index}`}
-                      checked={variant.isAvailable ?? true}
-                      onCheckedChange={(checked) =>
-                        updateVariant(index, "isAvailable", !!checked)
+
+                {/* Variant Bottom Row: Image */}
+                <div className="space-y-1.5">
+                  <Label htmlFor={`variant-image-${index}`} className="text-b6">
+                    Variant-Specific Image URL
+                  </Label>
+                  <div className="flex gap-3 items-center">
+                    <Input
+                      id={`variant-image-${index}`}
+                      type="url"
+                      placeholder="https://example.com/variant-image.jpg"
+                      value={variant.imageUrl ?? ""}
+                      onChange={(e) =>
+                        updateVariant(index, "imageUrl", e.target.value)
                       }
+                      className="flex-1"
                     />
-                    <Label
-                      htmlFor={`variant-available-${index}`}
-                      className="text-b6 font-inter text-neutral-500 dark:text-neutral-400 cursor-pointer whitespace-nowrap"
-                    >
-                      In Stock
-                    </Label>
+                    {variant.imageUrl && (
+                      <div className="relative h-10 w-10 overflow-hidden rounded-md bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shrink-0">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={variant.imageUrl}
+                          alt="Preview"
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = "none";
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeVariant(index)}
-                    className="text-neutral-400 hover:text-red-500 dark:hover:text-red-400 p-1.5 h-auto"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </section>
-
-      {/* Status */}
-      <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 shadow-sm">
-        <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-          Availability
-        </h2>
-        <RadioGroup
-          value={form.status}
-          onValueChange={(val) => set("status")(val)}
-          className="flex items-center gap-6"
-        >
-          {(["ACTIVE", "INACTIVE"] as const).map((s) => (
-            <div key={s} className="flex items-center space-x-2">
-              <RadioGroupItem value={s} id={`status-${s}`} />
-              <Label
-                htmlFor={`status-${s}`}
-                className="font-inter text-b5 text-neutral-700 dark:text-neutral-300 cursor-pointer"
-              >
-                {s}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
-        <div className="flex items-center gap-2 mt-4">
-          <Checkbox
-            id="isAvailable"
-            checked={form.isAvailable ?? true}
-            onCheckedChange={(checked) => set("isAvailable")(!!checked)}
-          />
-          <Label
-            htmlFor="isAvailable"
-            className="font-inter text-b5 text-neutral-700 dark:text-neutral-300 cursor-pointer"
-          >
-            In Stock (available to purchase)
-          </Label>
-        </div>
       </section>
 
       {/* Actions */}

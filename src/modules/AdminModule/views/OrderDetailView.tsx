@@ -159,8 +159,7 @@ export function OrderDetailView({ order }: { order: any }) {
                 <>
                   <p className="font-medium text-neutral-900 dark:text-white">{shippingAddress.recipientName}</p>
                   <p className="text-neutral-500">{shippingAddress.phone}</p>
-                  <p className="text-neutral-500 mt-2">{shippingAddress.addressLine1}</p>
-                  {shippingAddress.addressLine2 && <p className="text-neutral-500">{shippingAddress.addressLine2}</p>}
+                  <p className="text-neutral-500 mt-2">{shippingAddress.address}</p>
                   <p className="text-neutral-500">{shippingAddress.city}, {shippingAddress.postalCode}</p>
                 </>
               ) : (
