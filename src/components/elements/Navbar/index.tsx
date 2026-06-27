@@ -122,29 +122,26 @@ export function Navbar() {
                 <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800 my-2" />
                 {isLoggedIn ? (
                   <>
-                    {isAdmin ? (
+                    {isAdmin && (
                       <Link
                         href="/admin"
                         className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
                       >
                         Admin Panel
                       </Link>
-                    ) : (
-                      <>
-                        <Link
-                          href="/profile"
-                          className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
-                        >
-                          My Profile
-                        </Link>
-                        <Link
-                          href="/orders"
-                          className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
-                        >
-                          My Orders
-                        </Link>
-                      </>
                     )}
+                    <Link
+                      href="/profile"
+                      className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
+                    >
+                      My Profile
+                    </Link>
+                    <Link
+                      href="/orders"
+                      className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
+                    >
+                      My Orders
+                    </Link>
                     <button
                       onClick={async () => {
                         await signOut();
@@ -233,29 +230,26 @@ export function Navbar() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    {isAdmin ? (
+                    {isAdmin && (
                       <DropdownMenuItem asChild>
                         <Link href="/admin" className="cursor-pointer w-full">
                           <ShieldCheck />
                           Admin Panel
                         </Link>
                       </DropdownMenuItem>
-                    ) : (
-                      <>
-                        <DropdownMenuItem asChild>
-                          <Link href="/profile" className="cursor-pointer w-full">
-                            <LucideUserCircle />
-                            Profile
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href="/orders" className="cursor-pointer w-full">
-                            <LucidePackage />
-                            Orders
-                          </Link>
-                        </DropdownMenuItem>
-                      </>
                     )}
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile" className="cursor-pointer w-full">
+                        <LucideUserCircle />
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/orders" className="cursor-pointer w-full">
+                        <LucidePackage />
+                        Orders
+                      </Link>
+                    </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
