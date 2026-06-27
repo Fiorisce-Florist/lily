@@ -58,17 +58,19 @@ export function OrderDetailView({ order }: { order: any }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Link href="/admin/orders" className="text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100">
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-        <div>
-          <h1 className="text-2xl font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-            Order {order.orderNumber}
-          </h1>
-          <p className="text-sm font-inter text-neutral-500">
-            Placed on {formatDate(order.createdAt)}
-          </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link href="/admin/orders" className="text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <div>
+            <h1 className="text-2xl font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+              Order {order.orderNumber}
+            </h1>
+            <p className="text-sm font-inter text-neutral-500">
+              Placed on {formatDate(order.createdAt)}
+            </p>
+          </div>
         </div>
       </div>
 
