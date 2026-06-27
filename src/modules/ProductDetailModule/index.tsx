@@ -96,8 +96,9 @@ function StarRating({ rating, size = 16 }: { rating: number; size?: number }) {
 
 // ─── Image Gallery ────────────────────────────────────────────────────────────
 
-function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
-  const images = buildGalleryImages(bouquet.image);
+function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedImage?: string }) {
+  const baseImage = selectedImage || bouquet.image;
+  const images = buildGalleryImages(baseImage);
   const [activeIdx, setActiveIdx] = useState(0);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [zoomed, setZoomed] = useState(false);
@@ -200,13 +201,18 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
 
 // ─── Product Info ─────────────────────────────────────────────────────────────
 
-function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
+function ProductInfo({ 
+  bouquet, 
+  selectedVariantId, 
+  setSelectedVariantId 
+}: { 
+  bouquet: Bouquet;
+  selectedVariantId: string;
+  setSelectedVariantId: (id: string) => void;
+}) {
   const variants = bouquet.variants || [];
   const defaultVariant = variants.length > 0 ? variants[0] : null;
 
-  const [selectedVariantId, setSelectedVariantId] = useState<string>(
-    defaultVariant ? defaultVariant.id : ""
-  );
   const [quantity, setQuantity] = useState(1);
   const [wishlisted, setWishlisted] = useState(false);
   const { addItem } = useCart();
@@ -773,6 +779,15 @@ export function ProductDetailModule({
   bouquet: Bouquet;
   relatedBouquets?: Bouquet[];
 }) {
+  const variants = bouquet.variants || [];
+  const defaultVariant = variants.length > 0 ? variants[0] : null;
+
+  const [selectedVariantId, setSelectedVariantId] = useState<string>(
+    defaultVariant ? defaultVariant.id : ""
+  );
+
+  const selectedVariant = variants.find((v) => v.id === selectedVariantId) || defaultVariant;
+
   return (
     <TooltipProvider>
       <main className="min-h-screen bg-white dark:bg-neutral-950">
@@ -789,12 +804,12 @@ export function ProductDetailModule({
           <div className="flex flex-col gap-12 lg:flex-row lg:gap-16">
             {/* Left — Gallery */}
             <div className="w-full lg:w-[55%]">
-              <ImageGallery bouquet={bouquet} />
+              <ImageGallery bouquet={bouquet} selectedImage={selectedVariant?.imageUrl} />
             </div>
 
             {/* Right — Info */}
             <div className="w-full lg:w-[45%]">
-              <ProductInfo bouquet={bouquet} />
+              <ProductInfo bouquet={bouquet} selectedVariantId={selectedVariantId} setSelectedVariantId={setSelectedVariantId} />
             </div>
           </div>
 

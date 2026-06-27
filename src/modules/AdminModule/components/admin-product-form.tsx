@@ -80,7 +80,7 @@ export function AdminProductForm({
       ...prev,
       variants: [
         ...(prev.variants ?? []),
-        { variantName: "", additionalPrice: 0, isAvailable: true },
+        { variantName: "", additionalPrice: 0, isAvailable: true, imageUrl: "" },
       ],
     }));
   };
@@ -342,6 +342,38 @@ export function AdminProductForm({
                       Total: IDR{" "}
                       {((form.price || 0) + (variant.additionalPrice || 0)).toLocaleString("id-ID")}
                     </p>
+                  </div>
+                  
+                  {/* Variant Image */}
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <Label htmlFor={`variant-image-${index}`} className="text-b6">
+                      Image URL (Optional)
+                    </Label>
+                    <div className="flex gap-3 items-center">
+                      <Input
+                        id={`variant-image-${index}`}
+                        type="url"
+                        placeholder="https://example.com/variant-image.jpg"
+                        value={variant.imageUrl ?? ""}
+                        onChange={(e) =>
+                          updateVariant(index, "imageUrl", e.target.value)
+                        }
+                        className="flex-1"
+                      />
+                      {variant.imageUrl && (
+                        <div className="relative h-10 w-10 overflow-hidden rounded-md bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 flex-shrink-0">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={variant.imageUrl}
+                            alt="Preview"
+                            className="h-full w-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 pt-6">

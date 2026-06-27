@@ -23,6 +23,7 @@ export interface Bouquet {
     name: string;
     price: number;
     isAvailable: boolean;
+    imageUrl?: string;
   }[];
 }
 
