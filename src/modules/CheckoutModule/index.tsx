@@ -177,7 +177,7 @@ function OrderSummaryPanel({
           <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
             <span>Delivery Method</span>
             <span className="font-jetbrains text-olive-600 dark:text-olive-400">
-              {deliveryMethod === "GOSEND" ? "GoSend (Ordered by User)" : "Pick Up (Free)"}
+              {deliveryMethod === "GOSEND" ? "GoSend (Ordered by User)" : deliveryMethod === "FIORISCE_DELIVERY" ? "Fiorisce Delivery" : "Pick Up (Free)"}
             </span>
           </div>
         </div>
