@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { PayNowButton } from "@/components/pay-now-button";
 import type { OrderData } from "@/app/actions/orders";
 import { uploadOrderReceipt } from "@/app/actions/orders";
-import { QRCodeSVG } from "qrcode.react";
+import { QRCodeCanvas } from "qrcode.react";
 import { CldUploadWidget } from "next-cloudinary";
 import { toast } from "sonner";
 
@@ -34,8 +34,20 @@ export function OrderDetailModule({ order, orderNumber, error, qrisString }: Ord
   const [isMounted, setIsMounted] = React.useState(false);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
   }, []);
+
+  const handleDownloadQR = () => {
+    const canvas = document.getElementById("qris-canvas") as HTMLCanvasElement;
+    if (canvas) {
+      const url = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `qris-${orderNumber}.png`;
+      a.click();
+    }
+  };
 
   if (error || !order) {
     return (
@@ -268,8 +280,13 @@ export function OrderDetailModule({ order, orderNumber, error, qrisString }: Ord
               </p>
               
               {qrisString ? (
-                <div className="flex justify-center bg-white p-4 rounded-xl mx-auto w-fit shadow-sm border border-neutral-200">
-                  <QRCodeSVG value={qrisString} size={200} />
+                <div className="space-y-4">
+                  <div className="flex justify-center bg-white p-4 rounded-xl mx-auto w-fit shadow-sm border border-neutral-200">
+                    <QRCodeCanvas id="qris-canvas" value={qrisString} size={200} />
+                  </div>
+                  <Button variant="outline" className="w-full" onClick={handleDownloadQR}>
+                    Download QR
+                  </Button>
                 </div>
               ) : (
                 <p className="text-xs text-red-500">QRIS string is unavailable. Please contact support.</p>
