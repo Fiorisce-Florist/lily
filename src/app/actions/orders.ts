@@ -71,7 +71,7 @@ function generateOrderNumber(): string {
   return `FIO-${timestamp}${random}`;
 }
 
-function calcShipping(subtotal: number): number {
+function calcShipping(): number {
   return 0; // GoSend ordered by user, Pickup is free
 }
 
@@ -150,7 +150,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   }
   
   subtotal += paperBagCost;
-  const shippingCost = calcShipping(subtotal);
+  const shippingCost = calcShipping();
   const totalAmount = subtotal + shippingCost;
   const orderNumber = generateOrderNumber();
 

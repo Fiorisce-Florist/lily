@@ -13,9 +13,6 @@ import {
   MapPin,
   PlusCircle,
   CheckCircle2,
-  Calendar,
-  Clock,
-  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,12 +39,7 @@ function formatPrice(v: number) {
   }).format(v);
 }
 
-const SHIPPING_THRESHOLD = 500_000;
-const SHIPPING_FEE = 50_000;
 
-function calcShipping(subtotal: number): number {
-  return subtotal >= SHIPPING_THRESHOLD ? 0 : subtotal > 0 ? SHIPPING_FEE : 0;
-}
 
 // ─── Snap loader ──────────────────────────────────────────────────────────────
 
@@ -80,7 +72,18 @@ function OrderSummaryPanel({
 }: {
   isLoading: boolean;
   subtotal: number;
-  items: any[];
+  items: {
+    id: string;
+    productId: string;
+    quantity: number;
+    price: number;
+    variant?: { variantName: string } | null;
+    product: { 
+      name: string; 
+      images: { imageUrl: string; isPrimary: boolean }[];
+      variants?: { variantName: string }[] 
+    };
+  }[];
   deliveryMethod: "PICKUP" | "GOSEND";
   includePaperBag: boolean;
 }) {
@@ -417,7 +420,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const set = (key: keyof CreateOrderFormData) => (v: string) =>
+  const set = <K extends keyof CreateOrderFormData>(key: K) => (v: CreateOrderFormData[K]) =>
     setForm((prev) => ({ ...prev, [key]: v }));
 
   const handleSelectAddress = (addr: AddressData) => {

@@ -21,7 +21,6 @@ import { toast } from "sonner";
 import {
   adminCreateProduct,
   adminUpdateProduct,
-  adminCreateCategory,
   type AdminProductFormData,
   type AdminProductVariantData,
 } from "@/app/actions/admin";
@@ -45,9 +44,6 @@ export function AdminProductForm({
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const [localCategories, setLocalCategories] = React.useState(categories);
-  const [isCreatingCategory, setIsCreatingCategory] = React.useState(false);
-  const [newCategoryName, setNewCategoryName] = React.useState("");
-  const [isSubmittingCategory, setIsSubmittingCategory] = React.useState(false);
 
   const [form, setForm] = React.useState<AdminProductFormData>({
     name: defaultValues?.name ?? "",
@@ -64,35 +60,6 @@ export function AdminProductForm({
 
   const set = (key: keyof AdminProductFormData) => (v: string | number | boolean | string[]) =>
     setForm((prev) => ({ ...prev, [key]: v }));
-
-  const handleCreateCategory = async () => {
-    if (!newCategoryName.trim()) return;
-    setIsSubmittingCategory(true);
-    try {
-      const slug = newCategoryName
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
-        .trim();
-      const res = await adminCreateCategory({ name: newCategoryName, slug });
-      if (res.error) {
-        toast.error(res.error);
-      } else if (res.category) {
-        toast.success("Category created!");
-        setLocalCategories((prev) =>
-          [...prev, res.category].sort((a, b) => a.name.localeCompare(b.name))
-        );
-        set("categoryId")(res.category.id);
-        setIsCreatingCategory(false);
-        setNewCategoryName("");
-      }
-    } catch {
-      toast.error("Failed to create category");
-    } finally {
-      setIsSubmittingCategory(false);
-    }
-  };
 
   // Auto-generate slug from name
   const handleNameChange = (name: string) => {

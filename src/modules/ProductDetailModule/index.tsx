@@ -4,13 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ShoppingBag,
-  Truck,
   Minus,
   Plus,
   Package,
-  RotateCcw,
-  Clock,
-  MapPin,
   ZoomIn,
   Loader2,
 } from "lucide-react";
@@ -413,106 +409,7 @@ function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
   );
 }
 
-function DeliveryTab() {
-  return (
-    <div className="flex flex-col gap-6 pt-4">
-      {/* Delivery options */}
-      <div>
-        <h3 className="text-h5 font-fraunces font-semibold text-neutral-800 dark:text-cornsilk-100 mb-4">
-          Delivery options
-        </h3>
-        <div className="flex flex-col gap-3">
-          {[
-            {
-              icon: <Truck className="h-5 w-5" />,
-              title: "Standard Delivery",
-              desc: "Delivered within 2–3 business days",
-              price: "Rp 25.000",
-              free: "Free over Rp 500k",
-              id: "delivery-standard",
-            },
-            {
-              icon: <Clock className="h-5 w-5" />,
-              title: "Same-Day Delivery",
-              desc: "Order before 2 pm for delivery today",
-              price: "Rp 50.000",
-              free: null,
-              id: "delivery-sameday",
-            },
-            {
-              icon: <MapPin className="h-5 w-5" />,
-              title: "Express Delivery",
-              desc: "Next-morning delivery guaranteed",
-              price: "Rp 75.000",
-              free: null,
-              id: "delivery-express",
-            },
-          ].map((opt) => (
-            <div
-              key={opt.id}
-              id={opt.id}
-              className="flex items-start gap-4 rounded-xl border border-cornsilk-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-4"
-            >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blush-100 dark:bg-blush-950/40 text-blush-600 dark:text-blush-400">
-                {opt.icon}
-              </span>
-              <div className="flex-1">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-b4 font-inter font-semibold text-neutral-800 dark:text-neutral-200">
-                    {opt.title}
-                  </p>
-                  <span className="text-b5 font-jetbrains font-semibold text-neutral-700 dark:text-neutral-200">
-                    {opt.price}
-                  </span>
-                </div>
-                <p className="text-b5 font-inter text-neutral-500 dark:text-neutral-400 mt-0.5">
-                  {opt.desc}
-                </p>
-                {opt.free && (
-                  <p className="text-b6 font-inter text-olive-600 dark:text-olive-400 mt-1">
-                    🌿 {opt.free}
-                  </p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
-      <Separator />
-
-      {/* Returns */}
-      <div>
-        <div className="flex items-center gap-2 mb-3">
-          <RotateCcw className="h-5 w-5 text-blush-500" />
-          <h3 className="text-h5 font-fraunces font-semibold text-neutral-800 dark:text-cornsilk-100">
-            Returns & Freshness Guarantee
-          </h3>
-        </div>
-        <p className="text-b4 font-inter text-neutral-600 dark:text-neutral-300 leading-relaxed">
-          We stand behind every bouquet we send. If your flowers arrive damaged, wilted, or not as
-          described, please contact us within 24 hours of delivery with a photo. We will arrange a
-          complimentary replacement or issue a full refund — no questions asked. Our mission is to
-          bring joy, and we will make it right every time.
-        </p>
-      </div>
-
-      {/* Package info */}
-      <div className="flex items-start gap-4 rounded-xl bg-cornsilk-50 dark:bg-neutral-800/50 border border-cornsilk-200 dark:border-neutral-700 p-4">
-        <Package className="h-5 w-5 text-camel-600 dark:text-camel-400 mt-0.5 shrink-0" />
-        <div>
-          <p className="text-b4 font-inter font-semibold text-neutral-700 dark:text-neutral-200">
-            Eco-conscious packaging
-          </p>
-          <p className="text-b5 font-inter text-neutral-500 dark:text-neutral-400 mt-1">
-            All our bouquets are wrapped in recycled paper and biodegradable ribbon. We never use
-            plastic foam or non-recyclable fillers.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─── Related Products ─────────────────────────────────────────────────────────
 
