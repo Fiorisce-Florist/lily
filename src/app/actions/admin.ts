@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { ProductStatus } from "@prisma/client";
+import { Prisma, ProductStatus, TagType } from "@prisma/client";
 
 // ─── Auth guard ───────────────────────────────────────────────────────────────
 
@@ -61,31 +61,64 @@ export async function adminGetDashboardStats() {
 
 // ─── Product Management ───────────────────────────────────────────────────────
 
-export async function adminGetAllProducts() {
+export async function adminGetAllProducts(
+  page: number = 1,
+  limit: number = 20,
+  search: string = ""
+) {
   await requireAdmin();
 
-  const products = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      category: { select: { id: true, name: true } },
-      images: { where: { isPrimary: true }, take: 1 },
-      _count: { select: { orderItems: true } },
-    },
-  });
+  const skip = (page - 1) * limit;
 
-  return products.map((p) => ({
-    id: p.id,
-    name: p.name,
-    slug: p.slug,
-    price: Number(p.price),
-    status: p.status,
-    isAvailable: p.isAvailable,
-    categoryName: p.category.name,
-    categoryId: p.category.id,
-    image: p.images[0]?.imageUrl ?? null,
-    soldCount: p._count.orderItems,
-    createdAt: p.createdAt.toISOString(),
-  }));
+  const where: Prisma.ProductWhereInput = search
+    ? {
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { slug: { contains: search, mode: "insensitive" } },
+        ],
+      }
+    : {};
+
+  const [products, totalCount] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: "desc" },
+      include: {
+        category: { select: { id: true, name: true } },
+        images: { where: { isPrimary: true }, take: 1 },
+        _count: { select: { orderItems: true } },
+      },
+    }),
+    prisma.product.count({ where }),
+  ]);
+
+  return {
+    products: products.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      price: Number(p.price),
+      status: p.status,
+      isAvailable: p.isAvailable,
+      categoryName: p.category.name,
+      categoryId: p.category.id,
+      image: p.images[0]?.imageUrl ?? null,
+      soldCount: p._count.orderItems,
+      createdAt: p.createdAt.toISOString(),
+    })),
+    totalPages: Math.ceil(totalCount / limit),
+    totalCount,
+  };
+}
+
+export interface AdminProductVariantData {
+  id?: string;
+  variantName: string;
+  additionalPrice: number;
+  isAvailable?: boolean;
+  imageUrl?: string;
 }
 
 export interface AdminProductFormData {
@@ -97,6 +130,8 @@ export interface AdminProductFormData {
   isAvailable?: boolean;
   status?: ProductStatus;
   imageUrl?: string;
+  variants?: AdminProductVariantData[];
+  tagIds?: string[];
 }
 
 export async function adminCreateProduct(data: AdminProductFormData) {
@@ -120,6 +155,23 @@ export async function adminCreateProduct(data: AdminProductFormData) {
               },
             }
           : undefined,
+        variants:
+          data.variants && data.variants.length > 0
+            ? {
+                create: data.variants.map((v) => ({
+                  variantName: v.variantName,
+                  additionalPrice: v.additionalPrice,
+                  isAvailable: v.isAvailable ?? true,
+                  imageUrl: v.imageUrl,
+                })),
+              }
+            : undefined,
+        tags:
+          data.tagIds && data.tagIds.length > 0
+            ? {
+                create: data.tagIds.map((tagId) => ({ tagId })),
+              }
+            : undefined,
       },
     });
 
@@ -163,6 +215,14 @@ export async function adminGetProduct(id: string) {
       categoryId: product.categoryId,
       imageUrl:
         product.images.find((i) => i.isPrimary)?.imageUrl ?? product.images[0]?.imageUrl ?? "",
+      variants: product.variants.map((v) => ({
+        id: v.id,
+        variantName: v.variantName,
+        additionalPrice: Number(v.additionalPrice),
+        isAvailable: v.isAvailable,
+        imageUrl: v.imageUrl ?? undefined,
+      })),
+      tagIds: product.tags.map((t) => t.tagId),
     },
     error: null,
   };
@@ -207,6 +267,62 @@ export async function adminUpdateProduct(id: string, data: Partial<AdminProductF
         } else if (data.imageUrl) {
           await tx.productImage.create({
             data: { productId: id, imageUrl: data.imageUrl, isPrimary: true },
+          });
+        }
+      }
+
+      // Sync size variants if provided
+      if (data.variants !== undefined) {
+        const incoming = data.variants ?? [];
+        const incomingIds = incoming.filter((v) => v.id).map((v) => v.id!);
+
+        // Delete variants that were removed
+        await tx.productVariant.deleteMany({
+          where: {
+            productId: id,
+            ...(incomingIds.length > 0 ? { id: { notIn: incomingIds } } : {}),
+          },
+        });
+
+        // Upsert each variant
+        for (const v of incoming) {
+          if (v.id) {
+            await tx.productVariant.update({
+              where: { id: v.id },
+              data: {
+                variantName: v.variantName,
+                additionalPrice: v.additionalPrice,
+                isAvailable: v.isAvailable ?? true,
+                imageUrl: v.imageUrl,
+              },
+            });
+          } else {
+            await tx.productVariant.create({
+              data: {
+                productId: id,
+                variantName: v.variantName,
+                additionalPrice: v.additionalPrice,
+                isAvailable: v.isAvailable ?? true,
+                imageUrl: v.imageUrl,
+              },
+            });
+          }
+        }
+      }
+
+      // Sync tags if provided
+      if (data.tagIds !== undefined) {
+        // Simple approach: delete all and recreate
+        await tx.productTag.deleteMany({
+          where: { productId: id },
+        });
+
+        if (data.tagIds.length > 0) {
+          await tx.productTag.createMany({
+            data: data.tagIds.map((tagId) => ({
+              productId: id,
+              tagId,
+            })),
           });
         }
       }
@@ -263,30 +379,103 @@ export async function adminDeleteProduct(id: string) {
 
 // ─── Order Management ─────────────────────────────────────────────────────────
 
-export async function adminGetAllOrders() {
+export async function adminGetAllOrders(
+  page: number = 1,
+  limit: number = 20,
+  search: string = "",
+  status: string = "all"
+) {
   await requireAdmin();
 
-  const orders = await prisma.order.findMany({
-    orderBy: { createdAt: "desc" },
+  const skip = (page - 1) * limit;
+
+  const where: Prisma.OrderWhereInput = {};
+
+  if (status !== "all") {
+    where.status = status as Prisma.OrderWhereInput["status"];
+  }
+
+  if (search) {
+    where.OR = [
+      { orderNumber: { contains: search, mode: "insensitive" } },
+      { user: { name: { contains: search, mode: "insensitive" } } },
+      { user: { email: { contains: search, mode: "insensitive" } } },
+    ];
+  }
+
+  const [orders, totalCount] = await Promise.all([
+    prisma.order.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: { select: { name: true, email: true } },
+        payment: { select: { status: true, paymentMethod: true } },
+        _count: { select: { items: true } },
+      },
+    }),
+    prisma.order.count({ where }),
+  ]);
+
+  return {
+    orders: orders.map((o) => ({
+      id: o.id,
+      orderNumber: o.orderNumber,
+      status: o.status,
+      totalAmount: Number(o.totalAmount),
+      createdAt: o.createdAt.toISOString(),
+      customerName: o.user?.name ?? o.user?.email ?? "Unknown",
+      customerEmail: o.user?.email ?? "",
+      paymentStatus: o.payment?.status ?? null,
+      paymentMethod: o.payment?.paymentMethod ?? null,
+      itemCount: o._count.items,
+    })),
+    totalPages: Math.ceil(totalCount / limit),
+    totalCount,
+  };
+}
+
+export async function adminGetOrder(id: string) {
+  await requireAdmin();
+
+  const order = await prisma.order.findUnique({
+    where: { id },
     include: {
-      user: { select: { name: true, email: true } },
-      payment: { select: { status: true, paymentMethod: true } },
-      _count: { select: { items: true } },
+      user: { select: { name: true, email: true, phone: true } },
+      address: true,
+      items: true,
+      payment: true,
+      statusHistories: {
+        orderBy: { createdAt: "desc" },
+        include: { changedByUser: { select: { name: true, email: true } } },
+      },
     },
   });
 
-  return orders.map((o) => ({
-    id: o.id,
-    orderNumber: o.orderNumber,
-    status: o.status,
-    totalAmount: Number(o.totalAmount),
-    createdAt: o.createdAt.toISOString(),
-    customerName: o.user?.name ?? o.user?.email ?? "Unknown",
-    customerEmail: o.user?.email ?? "",
-    paymentStatus: o.payment?.status ?? null,
-    paymentMethod: o.payment?.paymentMethod ?? null,
-    itemCount: o._count.items,
-  }));
+  if (!order) return { order: null, error: "Order not found" };
+
+  const plainOrder = JSON.parse(JSON.stringify(order));
+
+  const serializedOrder = {
+    ...plainOrder,
+    subtotal: Number(plainOrder.subtotal),
+    shippingCost: Number(plainOrder.shippingCost),
+    totalAmount: Number(plainOrder.totalAmount),
+    items: plainOrder.items.map((item: Record<string, unknown>) => ({
+      ...item,
+      unitPrice: Number(item.unitPrice),
+      price: Number(item.unitPrice), // mapped for UI
+    })),
+    payment: plainOrder.payment
+      ? {
+          ...plainOrder.payment,
+          amount: Number(plainOrder.payment.amount),
+        }
+      : null,
+  };
+
+  return { order: serializedOrder, error: null };
 }
 
 export async function adminUpdateOrderStatus(orderId: string, newStatus: string) {
@@ -326,28 +515,117 @@ export async function adminGetCategories() {
   });
 }
 
-export async function adminCreateCategory(name: string) {
+export async function adminGetCategory(id: string) {
+  await requireAdmin();
+  return prisma.category.findUnique({ where: { id } });
+}
+
+export async function adminCreateCategory(data: {
+  name: string;
+  slug: string;
+  description?: string;
+}) {
   await requireAdmin();
 
-  const slug = name
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .trim();
-
   try {
-    const category = await prisma.category.create({
-      data: { name, slug },
-    });
+    const category = await prisma.category.create({ data });
+    revalidatePath("/admin/categories");
     return { category, error: null };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    if (error?.code === "P2002") {
-      return { category: null, error: "A category with that name already exists." };
-    }
-    console.error("Error creating category:", error);
-    return { category: null, error: "Failed to create category." };
+  } catch (e: any) {
+    return { category: null, error: e.message || "Failed to create category" };
+  }
+}
+
+export async function adminUpdateCategory(
+  id: string,
+  data: { name: string; slug: string; description?: string }
+) {
+  await requireAdmin();
+
+  try {
+    const category = await prisma.category.update({ where: { id }, data });
+    revalidatePath("/admin/categories");
+    return { category, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    return { category: null, error: e.message || "Failed to update category" };
+  }
+}
+
+export async function adminDeleteCategory(id: string) {
+  await requireAdmin();
+
+  try {
+    await prisma.category.delete({ where: { id } });
+    revalidatePath("/admin/categories");
+    return { success: true, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    return { success: false, error: e.message || "Failed to delete category" };
+  }
+}
+
+// ─── Tags ─────────────────────────────────────────────────────────────────────
+
+export async function adminGetTags() {
+  await requireAdmin();
+
+  return prisma.tag.findMany({
+    orderBy: [{ type: "asc" }, { name: "asc" }],
+    include: { _count: { select: { products: true } } },
+  });
+}
+
+export async function adminGetTag(id: string) {
+  await requireAdmin();
+  return prisma.tag.findUnique({ where: { id } });
+}
+
+export async function adminCreateTag(data: {
+  name: string;
+  slug: string;
+  description?: string;
+  type: TagType;
+}) {
+  await requireAdmin();
+
+  try {
+    const tag = await prisma.tag.create({ data });
+    revalidatePath("/admin/tags");
+    return { tag, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    return { tag: null, error: e.message || "Failed to create tag" };
+  }
+}
+
+export async function adminUpdateTag(
+  id: string,
+  data: { name: string; slug: string; description?: string; type: TagType }
+) {
+  await requireAdmin();
+
+  try {
+    const tag = await prisma.tag.update({ where: { id }, data });
+    revalidatePath("/admin/tags");
+    return { tag, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    return { tag: null, error: e.message || "Failed to update tag" };
+  }
+}
+
+export async function adminDeleteTag(id: string) {
+  await requireAdmin();
+
+  try {
+    await prisma.tag.delete({ where: { id } });
+    revalidatePath("/admin/tags");
+    return { success: true, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    return { success: false, error: e.message || "Failed to delete tag" };
   }
 }
 

@@ -69,12 +69,22 @@ export async function POST(req: NextRequest) {
 
     // Update order status
     const newOrderStatus = mapToOrderStatus(paymentStatus);
-    if (newOrderStatus) {
-      await prisma.order.update({
-        where: { id: order.id },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        data: { status: newOrderStatus as any },
-      });
+    if (newOrderStatus && order.status !== newOrderStatus) {
+      await prisma.$transaction([
+        prisma.order.update({
+          where: { id: order.id },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          data: { status: newOrderStatus as any },
+        }),
+        prisma.orderStatusHistory.create({
+          data: {
+            orderId: order.id,
+            oldStatus: order.status,
+            newStatus: newOrderStatus,
+            changedBy: order.userId, // System change attributed to order owner
+          },
+        }),
+      ]);
     }
 
     return NextResponse.json({ received: true });

@@ -128,9 +128,6 @@ export function OrderCard({ order }: OrderCardProps) {
 
       {/* Footer / Actions */}
       <div className="px-6 py-4 bg-cornsilk-50/30 dark:bg-neutral-900/30 border-t border-cornsilk-100 dark:border-neutral-800 flex items-center justify-between sm:justify-end gap-3">
-        <Button variant="outline" size="sm" className="w-full sm:w-auto font-inter">
-          View Invoice
-        </Button>
         <Button asChild variant="primary" size="sm" className="w-full sm:w-auto font-inter">
           <Link href={`/orders/${order.orderNumber}`} className="w-full sm:w-auto">
             Track Order

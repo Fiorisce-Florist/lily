@@ -33,6 +33,7 @@ export function mapProductToBouquet(p: any): Bouquet {
         name: v.variantName,
         price: (Number(p.price) || 0) + (Number(v.additionalPrice) || 0),
         isAvailable: v.isAvailable,
+        imageUrl: v.imageUrl ?? undefined,
       })) || [],
   };
 }

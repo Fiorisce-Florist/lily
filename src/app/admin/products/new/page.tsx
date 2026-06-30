@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { adminGetCategories } from "@/app/actions/admin";
+import { adminGetCategories, adminGetTags } from "@/app/actions/admin";
 import { AdminProductForm } from "@/modules/AdminModule/components/admin-product-form";
 
 export const metadata: Metadata = { title: "New Product" };
 
 export default async function NewProductPage() {
   const categories = await adminGetCategories();
+  const tags = await adminGetTags();
 
   return (
     <div className="space-y-6">
@@ -30,6 +31,7 @@ export default async function NewProductPage() {
       <AdminProductForm
         mode="create"
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+        tags={tags}
       />
     </div>
   );

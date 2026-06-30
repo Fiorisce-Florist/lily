@@ -74,7 +74,10 @@ export async function GET() {
         })),
         category: item.product.category,
       },
-      size: item.product.variants.find(v => Number(item.price) === Number(item.product.price) + Number(v.additionalPrice))?.variantName || "Standard",
+      size:
+        item.product.variants.find(
+          (v) => Number(item.price) === Number(item.product.price) + Number(v.additionalPrice)
+        )?.variantName || "Standard",
     })),
   };
 
@@ -89,7 +92,11 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { productId, quantity = 1, variantId } = body as { productId: string; quantity?: number; variantId?: string };
+  const {
+    productId,
+    quantity = 1,
+    variantId,
+  } = body as { productId: string; quantity?: number; variantId?: string };
 
   if (!productId) {
     return NextResponse.json({ error: "productId is required" }, { status: 400 });
@@ -107,7 +114,7 @@ export async function POST(request: Request) {
   let finalPrice = Number(product.price);
   if (variantId) {
     const variant = await prisma.productVariant.findFirst({
-      where: { id: variantId, productId, isAvailable: true }
+      where: { id: variantId, productId, isAvailable: true },
     });
     if (variant) {
       finalPrice = Number(product.price) + Number(variant.additionalPrice);

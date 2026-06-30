@@ -63,7 +63,7 @@ export function HeroSection() {
               className="border-cornsilk-300 text-cornsilk-100 hover:bg-cornsilk-100/10 hover:text-cornsilk-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
               asChild
             >
-              <Link href="#explore-collection">Explore Collections</Link>
+              <Link href="/#explore-collection">Explore Collections</Link>
             </Button>
           </div>
         </div>

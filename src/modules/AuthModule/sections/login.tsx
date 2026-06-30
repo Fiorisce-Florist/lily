@@ -23,7 +23,8 @@ export function LoginModule() {
     const password = formData.get("password") as string;
 
     try {
-      const { data, error: authError } = await signIn.email({
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { data: _data, error: authError } = await signIn.email({
         email,
         password,
       });
@@ -34,7 +35,8 @@ export function LoginModule() {
         router.push("/");
         router.refresh();
       }
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_err) {
       setError("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
@@ -76,12 +78,6 @@ export function LoginModule() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
-            <Link
-              href="#"
-              className="text-b6 font-inter text-blush-600 dark:text-blush-400 hover:text-blush-700 dark:hover:text-blush-300 hover:underline underline-offset-4"
-            >
-              Forgot password?
-            </Link>
           </div>
           <Input
             type="password"
@@ -103,9 +99,9 @@ export function LoginModule() {
       </form>
 
       <div className="mt-6 flex items-center justify-between">
-        <div className="w-full h-[1px] bg-neutral-200 dark:bg-neutral-800"></div>
+        <div className="w-full h-px bg-neutral-200 dark:bg-neutral-800"></div>
         <span className="px-4 text-b5 font-inter text-neutral-500 dark:text-neutral-400">or</span>
-        <div className="w-full h-[1px] bg-neutral-200 dark:bg-neutral-800"></div>
+        <div className="w-full h-px bg-neutral-200 dark:bg-neutral-800"></div>
       </div>
 
       <Button

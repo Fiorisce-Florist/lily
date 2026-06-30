@@ -100,7 +100,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         // Guest cart flow
         let newItems = [...items];
         // Match product AND price (to differentiate variants). Wait, locally we just match by variantId.
-        const idx = newItems.findIndex((i) => i.productId === productId && (i as any).variantId === variantId);
+        const idx = newItems.findIndex(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (i) => i.productId === productId && (i as any).variantId === variantId
+        );
         if (idx !== -1) {
           newItems[idx] = {
             ...newItems[idx],
@@ -124,9 +127,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             price: product.price,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             product: product as any, // Cast to match exactly
-            // @ts-ignore
+            // @ts-expect-error variantId not in CartItem type but needed for cart logic
             variantId,
-            size: variantId ? product.variants.find(v => v.id === variantId)?.variantName : "Standard"
+            size: variantId
+              ? product.variants.find((v) => v.id === variantId)?.variantName
+              : "Standard",
           };
           newItems = [...newItems, newItem];
           setItems(newItems);

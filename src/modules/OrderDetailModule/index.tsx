@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Clock,
   Truck,
-  Download,
   MapPin,
   AlertCircle,
   CreditCard,
@@ -127,10 +126,6 @@ export function OrderDetailModule({ order, orderNumber, error }: OrderDetailModu
               Placed on {formatDate(order.createdAt)}
             </p>
           </div>
-          <Button variant="outline" className="flex items-center gap-2">
-            <Download className="h-4 w-4" />
-            Invoice
-          </Button>
         </div>
       </div>
 

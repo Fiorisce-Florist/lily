@@ -21,7 +21,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
-import { updateProfile, deleteAddress } from "@/app/actions/profile";
+import { updateProfile, deleteAddress, setDefaultAddress } from "@/app/actions/profile";
 import { authClient } from "@/lib/auth-client";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
 
@@ -333,6 +333,7 @@ function PasswordSection({ hasPassword }: { hasPassword: boolean }) {
 function AddressesSection({ addresses }: { addresses: AddressData[] }) {
   const router = useRouter();
   const [deletingId, setDeletingId] = React.useState<string | null>(null);
+  const [settingDefaultId, setSettingDefaultId] = React.useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Remove this address?")) return;
@@ -347,15 +348,29 @@ function AddressesSection({ addresses }: { addresses: AddressData[] }) {
     }
   };
 
+  const handleSetDefault = async (id: string) => {
+    setSettingDefaultId(id);
+    const result = await setDefaultAddress(id);
+    setSettingDefaultId(null);
+    if (result.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Default address updated.");
+      router.refresh();
+    }
+  };
+
   return (
     <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-neutral-200 dark:border-neutral-800 shadow-sm">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="h-9 w-9 flex items-center justify-center rounded-xl bg-olive-100 dark:bg-olive-900/30">
-          <MapPin className="h-4 w-4 text-olive-600 dark:text-olive-400" />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-9 flex items-center justify-center rounded-xl bg-olive-100 dark:bg-olive-900/30">
+            <MapPin className="h-4 w-4 text-olive-600 dark:text-olive-400" />
+          </div>
+          <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+            Saved Addresses
+          </h2>
         </div>
-        <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-          Saved Addresses
-        </h2>
       </div>
 
       {addresses.length === 0 ? (
@@ -365,7 +380,7 @@ function AddressesSection({ addresses }: { addresses: AddressData[] }) {
             No saved addresses yet
           </p>
           <p className="text-b5 font-inter text-neutral-400 dark:text-neutral-500 mt-1">
-            Addresses from your orders will appear here.
+            Addresses from your orders will appear here automatically.
           </p>
         </div>
       ) : (
@@ -373,30 +388,54 @@ function AddressesSection({ addresses }: { addresses: AddressData[] }) {
           {addresses.map((addr) => (
             <div
               key={addr.id}
-              className="flex items-start justify-between gap-4 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 hover:border-camel-300 dark:hover:border-camel-800 transition-colors group"
+              className="flex items-start justify-between gap-4 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 hover:border-camel-300 dark:hover:border-camel-800 transition-colors group relative"
             >
               <address className="not-italic text-b5 font-inter text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                <p className="font-semibold text-neutral-900 dark:text-cornsilk-100 font-inter">
-                  {addr.recipientName}
-                </p>
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="font-semibold text-neutral-900 dark:text-cornsilk-100 font-inter">
+                    {addr.recipientName}
+                  </p>
+                  {addr.isDefault && (
+                    <Badge variant="secondary" className="text-[10px] h-5">
+                      Default
+                    </Badge>
+                  )}
+                </div>
                 <p>{addr.address}</p>
                 <p>
                   {addr.city}, {addr.postalCode}
                 </p>
                 <p className="text-b6 mt-1 text-neutral-400">{addr.phone}</p>
               </address>
-              <button
-                onClick={() => handleDelete(addr.id)}
-                disabled={deletingId === addr.id}
-                aria-label="Delete address"
-                className="shrink-0 p-2 rounded-lg text-neutral-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50"
-              >
-                {deletingId === addr.id ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Trash2 className="h-4 w-4" />
+
+              <div className="flex items-center gap-2">
+                {!addr.isDefault && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleSetDefault(addr.id)}
+                    disabled={settingDefaultId === addr.id}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity text-xs h-8"
+                  >
+                    {settingDefaultId === addr.id ? (
+                      <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                    ) : null}
+                    Set Default
+                  </Button>
                 )}
-              </button>
+                <button
+                  onClick={() => handleDelete(addr.id)}
+                  disabled={deletingId === addr.id}
+                  aria-label="Delete address"
+                  className="shrink-0 p-2 rounded-lg text-neutral-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50"
+                >
+                  {deletingId === addr.id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
             </div>
           ))}
         </div>

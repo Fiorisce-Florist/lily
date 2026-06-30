@@ -3,10 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ChevronLeft,
-  ChevronRight,
   ShoppingBag,
-  Star,
   Truck,
   Minus,
   Plus,
@@ -19,7 +16,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -31,14 +27,6 @@ import { ProductCard } from "@/components/elements/product-card";
 import { cn } from "@/lib/utils";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-interface Review {
-  name: string;
-  date: string;
-  rating: number;
-  text: string;
-  initial: string;
-  color: "bg-blush-200 text-blush-700";
-}
 
 const COLOR_DOT: Record<string, string> = {
   Pink: "bg-pink-300",
@@ -62,52 +50,22 @@ function formatPrice(v: number) {
   }).format(v);
 }
 
-// Alternative Unsplash angles for the gallery
-function buildGalleryImages(baseUrl: string): string[] {
-  // Extract base without query params and build 4 variants
-  const alt1 = "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=600&q=80";
-  const alt2 = "https://images.unsplash.com/photo-1490750967868-88df5691cc64?w=600&q=80";
-  return [baseUrl, baseUrl.replace("w=600", "w=200").replace("w=600", "w=600"), alt1, alt2];
-}
-
-// ─── Star Rating ──────────────────────────────────────────────────────────────
-
-function StarRating({ rating, size = 16 }: { rating: number; size?: number }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map((i) => {
-        const filled = i <= Math.floor(rating);
-        const half = !filled && i - 0.5 <= rating;
-        return (
-          <Star
-            key={i}
-            style={{ width: size, height: size }}
-            className={
-              filled || half
-                ? "fill-camel-500 text-camel-500"
-                : "text-cornsilk-400 fill-cornsilk-300"
-            }
-          />
-        );
-      })}
-    </div>
-  );
-}
+// Removed unused StarRating component
 
 // ─── Image Gallery ────────────────────────────────────────────────────────────
 
-function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
-  const images = buildGalleryImages(bouquet.image);
-  const [activeIdx, setActiveIdx] = useState(0);
+function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedImage?: string }) {
+  const displayImage = selectedImage || bouquet.image || "/placeholder-image.png";
   const [imgLoaded, setImgLoaded] = useState(false);
   const [zoomed, setZoomed] = useState(false);
 
-  const prev = () => setActiveIdx((i) => (i - 1 + images.length) % images.length);
-  const next = () => setActiveIdx((i) => (i + 1) % images.length);
+  // We use key={displayImage} on the Image component itself below.
+  // Instead of setting state in effect, we can just rely on the onLoad handler
+  // which will fire when the new image loads. However, to hide the old image immediately,
+  // we can use a ref or just let it swap. To avoid the lint error, we remove the useEffect.
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      {/* Main image */}
+    <div className="flex flex-col w-full">
       <div
         className="relative overflow-hidden rounded-2xl bg-cornsilk-100 dark:bg-neutral-800 aspect-4/5 w-full cursor-zoom-in group"
         onMouseEnter={() => setZoomed(true)}
@@ -115,16 +73,22 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
       >
         {!imgLoaded && <Skeleton className="absolute inset-0 rounded-2xl" />}
 
-        <Image
-          key={images[activeIdx]}
-          src={images[activeIdx]}
-          alt={`${bouquet.name} — view ${activeIdx + 1}`}
-          fill
-          onLoad={() => setImgLoaded(true)}
-          className={`object-cover transition-all duration-700 ${
-            zoomed ? "scale-110" : "scale-100"
-          } ${imgLoaded ? "opacity-100" : "opacity-0"}`}
-        />
+        {displayImage && displayImage !== "/placeholder-image.png" ? (
+          <Image
+            key={displayImage}
+            src={displayImage}
+            alt={bouquet.name}
+            fill
+            onLoad={() => setImgLoaded(true)}
+            className={`object-cover transition-all duration-700 ${
+              zoomed ? "scale-110" : "scale-100"
+            } ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Package className="h-16 w-16 text-neutral-300" />
+          </div>
+        )}
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
@@ -136,63 +100,6 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
             Hover to zoom
           </span>
         </div>
-
-        {/* Prev/Next arrows */}
-        <button
-          id="gallery-prev"
-          onClick={prev}
-          aria-label="Previous image"
-          className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm shadow-md text-neutral-700 dark:text-neutral-200 hover:bg-white dark:hover:bg-neutral-800 transition-all opacity-0 group-hover:opacity-100"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-        <button
-          id="gallery-next"
-          onClick={next}
-          aria-label="Next image"
-          className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm shadow-md text-neutral-700 dark:text-neutral-200 hover:bg-white dark:hover:bg-neutral-800 transition-all opacity-0 group-hover:opacity-100"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
-
-        {/* Dot indicators */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              id={`gallery-dot-${i}`}
-              onClick={() => setActiveIdx(i)}
-              aria-label={`View image ${i + 1}`}
-              className={`rounded-full transition-all duration-300 ${
-                i === activeIdx ? "bg-white w-5 h-2" : "bg-white/60 w-2 h-2 hover:bg-white/90"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Thumbnails */}
-      <div className="grid grid-cols-4 gap-2.5">
-        {images.map((src, i) => (
-          <button
-            key={i}
-            id={`gallery-thumb-${i}`}
-            onClick={() => setActiveIdx(i)}
-            aria-label={`Thumbnail ${i + 1}`}
-            className={`relative aspect-square overflow-hidden rounded-xl transition-all duration-200 ${
-              i === activeIdx
-                ? "ring-2 ring-blush-500 ring-offset-2 ring-offset-white dark:ring-offset-neutral-900"
-                : "opacity-70 hover:opacity-100"
-            }`}
-          >
-            <Image
-              src={src}
-              alt={`${bouquet.name} thumbnail ${i + 1}`}
-              fill
-              className="object-cover"
-            />
-          </button>
-        ))}
       </div>
     </div>
   );
@@ -200,15 +107,20 @@ function ImageGallery({ bouquet }: { bouquet: Bouquet }) {
 
 // ─── Product Info ─────────────────────────────────────────────────────────────
 
-function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
+function ProductInfo({
+  bouquet,
+  selectedVariantId,
+  setSelectedVariantId,
+}: {
+  bouquet: Bouquet;
+  selectedVariantId: string;
+  setSelectedVariantId: (id: string) => void;
+}) {
   const variants = bouquet.variants || [];
   const defaultVariant = variants.length > 0 ? variants[0] : null;
 
-  const [selectedVariantId, setSelectedVariantId] = useState<string>(
-    defaultVariant ? defaultVariant.id : ""
-  );
   const [quantity, setQuantity] = useState(1);
-  const [wishlisted, setWishlisted] = useState(false);
+  const wishlisted = false;
   const { addItem } = useCart();
   const [addedToCart, setAddedToCart] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -268,12 +180,6 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
 
         {/* Rating */}
         <div className="mt-2 flex items-center gap-3">
-          <StarRating rating={0} size={16} />
-          <span className="text-b5 font-inter font-semibold text-neutral-700 dark:text-neutral-200">
-            0
-          </span>
-          <span className="text-b5 font-inter text-neutral-400">(0 reviews)</span>
-          <Separator orientation="vertical" className="h-4" />
           <span className="text-b5 font-inter text-neutral-400">
             {bouquet.soldCount.toLocaleString()} sold
           </span>
@@ -486,8 +392,6 @@ function ProductInfo({ bouquet }: { bouquet: Bouquet }) {
 
 // ─── Tabs Section ─────────────────────────────────────────────────────────────
 
-const HARDCODED_REVIEWS: Review[] = [];
-
 function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
   return (
     <div className="flex flex-col gap-8 pt-4">
@@ -505,124 +409,6 @@ function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
           to any space.
         </p>
       </div>
-
-      {/* Flower table */}
-      <div>
-        <h3 className="text-h5 font-fraunces font-semibold text-neutral-800 dark:text-cornsilk-100 mb-3">
-          Flower composition
-        </h3>
-        <div className="overflow-hidden rounded-xl border border-cornsilk-300 dark:border-neutral-700">
-          <table className="w-full text-b5 font-inter">
-            <thead>
-              <tr className="bg-cornsilk-100 dark:bg-neutral-800 border-b border-cornsilk-300 dark:border-neutral-700">
-                <th className="px-4 py-3 text-left font-semibold text-neutral-600 dark:text-neutral-300">
-                  Flower
-                </th>
-                <th className="px-4 py-3 text-left font-semibold text-neutral-600 dark:text-neutral-300">
-                  Type
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {bouquet.flowers.map((flower, i) => (
-                <tr
-                  key={flower}
-                  className={`border-b border-cornsilk-200 dark:border-neutral-800 last:border-0 ${
-                    i % 2 === 0
-                      ? "bg-white dark:bg-neutral-900"
-                      : "bg-cornsilk-50 dark:bg-neutral-800/50"
-                  }`}
-                >
-                  <td className="px-4 py-3 font-medium text-neutral-800 dark:text-neutral-200">
-                    {flower}
-                  </td>
-                  <td className="px-4 py-3 text-neutral-500 dark:text-neutral-400 capitalize">
-                    {flower.includes("Grass") || flower.includes("Eucalyptus")
-                      ? "Foliage / filler"
-                      : "Feature bloom"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ReviewsTab({ bouquet }: { bouquet: Bouquet }) {
-  return (
-    <div className="flex flex-col gap-8 pt-4">
-      {/* Overall rating */}
-      <div className="flex items-center gap-8 rounded-2xl border border-cornsilk-300 dark:border-neutral-700 bg-cornsilk-50 dark:bg-neutral-800/50 p-6">
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-[3rem] font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 leading-none">
-            0
-          </span>
-          <StarRating rating={0} size={18} />
-          <span className="text-b6 font-inter text-neutral-400 mt-1">Based on 0 reviews</span>
-        </div>
-        <Separator orientation="vertical" className="h-20" />
-        <div className="flex flex-1 flex-col gap-1.5">
-          {[5, 4, 3, 2, 1].map((stars) => {
-            const pct = 0;
-            return (
-              <div key={stars} className="flex items-center gap-2">
-                <span className="text-[11px] font-inter text-neutral-400 w-3">{stars}</span>
-                <Star className="h-3 w-3 fill-camel-400 text-camel-400" />
-                <div className="flex-1 h-1.5 rounded-full bg-cornsilk-200 dark:bg-neutral-700 overflow-hidden">
-                  <div className="h-full rounded-full bg-camel-400" style={{ width: `${pct}%` }} />
-                </div>
-                <span className="text-[11px] font-inter text-neutral-400 w-6">{pct}%</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Review cards */}
-      <div className="flex flex-col gap-4">
-        {HARDCODED_REVIEWS.length === 0 && (
-          <div className="py-8 text-center text-neutral-500 dark:text-neutral-400 font-inter">
-            No reviews yet. Be the first to review this!
-          </div>
-        )}
-        {HARDCODED_REVIEWS.map((review, i) => (
-          <article
-            key={i}
-            id={`review-card-${i}`}
-            className="rounded-2xl border border-cornsilk-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-5"
-          >
-            <div className="flex items-start gap-4">
-              <div
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-b4 font-fraunces font-semibold ${review.color}`}
-              >
-                {review.initial}
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <div>
-                    <p className="text-b4 font-inter font-semibold text-neutral-800 dark:text-neutral-100">
-                      {review.name}
-                    </p>
-                    <p className="text-b6 font-inter text-neutral-400">{review.date}</p>
-                  </div>
-                  <StarRating rating={review.rating} size={14} />
-                </div>
-                <p className="mt-3 text-b4 font-inter text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                  {review.text}
-                </p>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      {/* Write a review */}
-      <Button id="write-review-btn" variant="outline" size="md" className="self-start">
-        Write a Review
-      </Button>
     </div>
   );
 }
@@ -773,6 +559,15 @@ export function ProductDetailModule({
   bouquet: Bouquet;
   relatedBouquets?: Bouquet[];
 }) {
+  const variants = bouquet.variants || [];
+  const defaultVariant = variants.length > 0 ? variants[0] : null;
+
+  const [selectedVariantId, setSelectedVariantId] = useState<string>(
+    defaultVariant ? defaultVariant.id : ""
+  );
+
+  const selectedVariant = variants.find((v) => v.id === selectedVariantId) || defaultVariant;
+
   return (
     <TooltipProvider>
       <main className="min-h-screen bg-white dark:bg-neutral-950">
@@ -789,37 +584,26 @@ export function ProductDetailModule({
           <div className="flex flex-col gap-12 lg:flex-row lg:gap-16">
             {/* Left — Gallery */}
             <div className="w-full lg:w-[55%]">
-              <ImageGallery bouquet={bouquet} />
+              <ImageGallery bouquet={bouquet} selectedImage={selectedVariant?.imageUrl} />
             </div>
 
             {/* Right — Info */}
             <div className="w-full lg:w-[45%]">
-              <ProductInfo bouquet={bouquet} />
+              <ProductInfo
+                bouquet={bouquet}
+                selectedVariantId={selectedVariantId}
+                setSelectedVariantId={setSelectedVariantId}
+              />
             </div>
           </div>
 
           {/* Tabs */}
-          <section id="product-tabs" className="mt-16">
-            <Tabs defaultValue="details">
-              <TabsList className="w-fit justify-start gap-1 h-auto p-1.5">
-                <TabsTrigger value="details" id="tab-details" className="px-5 py-2">
-                  Details
-                </TabsTrigger>
-                <TabsTrigger value="reviews" id="tab-reviews" className="px-5 py-2">
-                  Reviews (0)
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="details">
-                <DetailsTab bouquet={bouquet} />
-              </TabsContent>
-              <TabsContent value="reviews">
-                <ReviewsTab bouquet={bouquet} />
-              </TabsContent>
-              <TabsContent value="delivery">
-                <DeliveryTab />
-              </TabsContent>
-            </Tabs>
+          {/* Details */}
+          <section id="product-details" className="mt-16">
+            <div className="w-full">
+              <DetailsTab bouquet={bouquet} />
+              <DeliveryTab />
+            </div>
           </section>
 
           {/* Related products */}

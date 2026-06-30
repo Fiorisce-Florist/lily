@@ -38,39 +38,38 @@ const DEFAULT_FILTERS: FilterState = {
   availability: "all",
 };
 
-const LANDING_OCCASIONS = [
-  "Birthday",
-  "Anniversary",
-  "Wedding",
-  "Sympathy",
-  "Congratulations",
-  "Grand Opening",
-];
-
 export default function ShopModule({
   bouquets = [],
   initialOccasion,
   initialCategory,
+  availableCategories = [],
+  availableTags = [],
 }: {
   bouquets: Bouquet[];
   initialOccasion?: string;
   initialCategory?: string;
+  availableCategories?: { id: string; name: string; slug: string }[];
+  availableTags?: { id: string; name: string; slug: string; type: string }[];
 }) {
   const options = React.useMemo<FilterOptions>(() => {
     return {
-      categories: [...new Set(bouquets.map((b) => b.category).filter(Boolean) as string[])].sort(),
-      occasions: [
-        ...LANDING_OCCASIONS,
-        ...[...new Set(bouquets.map((b) => b.occasion).filter(Boolean))]
-          .filter((o) => !LANDING_OCCASIONS.includes(o))
-          .sort(),
-      ],
-      colors: [...new Set(bouquets.flatMap((b) => b.colors))].sort(),
-      flowers: [...new Set(bouquets.flatMap((b) => b.flowers))].sort(),
+      categories: availableCategories.map((c) => c.name).sort(),
+      occasions: availableTags
+        .filter((t) => t.type === "OCCASION")
+        .map((t) => t.name)
+        .sort(),
+      colors: availableTags
+        .filter((t) => t.type === "COLOR")
+        .map((t) => t.name)
+        .sort(),
+      flowers: availableTags
+        .filter((t) => t.type === "FLOWER")
+        .map((t) => t.name)
+        .sort(),
       sizes: [...new Set(bouquets.flatMap((b) => (b.variants || []).map((v) => v.name)))],
       maxPrice: Math.max(0, ...bouquets.map((b) => Number(b.price) || 0)),
     };
-  }, [bouquets]);
+  }, [bouquets, availableCategories, availableTags]);
 
   const [query, setQuery] = React.useState("");
   const [sort, setSort] = React.useState<SortKey>("featured");

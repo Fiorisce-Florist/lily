@@ -116,9 +116,14 @@ function CartItemRow({ item }: { item: CartItemData }) {
           <span className="text-b6 font-inter text-neutral-500 dark:text-neutral-400 capitalize">
             {item.product.category.name}
           </span>
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(item as any).size && (
             <span className="text-b6 font-inter text-neutral-600 dark:text-neutral-300">
-              Size: <span className="font-medium text-neutral-700 dark:text-neutral-200">{(item as any).size}</span>
+              Size:{" "}
+              <span className="font-medium text-neutral-700 dark:text-neutral-200">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {(item as any).size}
+              </span>
             </span>
           )}
         </div>
