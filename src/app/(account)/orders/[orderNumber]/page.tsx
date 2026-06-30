@@ -3,7 +3,7 @@ import { getOrderByNumber } from "@/app/actions/orders";
 import { generateDynamicQris } from "@/lib/qr";
 
 export const metadata = {
-  title: "Order Details — Fiorisce",
+  title: "Order Details",
   description: "View the details and tracking status of your order.",
 };
 

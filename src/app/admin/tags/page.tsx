@@ -3,7 +3,7 @@ import { Plus, Edit } from "lucide-react";
 import { adminGetTags } from "@/app/actions/admin";
 
 export const metadata = {
-  title: "Tags | Admin Dashboard",
+  title: "Tags",
 };
 
 export default async function AdminTagsPage() {

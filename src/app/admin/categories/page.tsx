@@ -3,7 +3,7 @@ import { Plus, Edit } from "lucide-react";
 import { adminGetCategories } from "@/app/actions/admin";
 
 export const metadata = {
-  title: "Categories | Admin Dashboard",
+  title: "Categories",
 };
 
 export default async function AdminCategoriesPage() {

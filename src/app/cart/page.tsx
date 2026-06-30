@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { CartModule } from "@/modules/CartModule";
 
 export const metadata: Metadata = {
-  title: "Fiorisce",
+  title: "Cart",
 };
 
 export default function CartPage() {

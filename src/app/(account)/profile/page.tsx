@@ -2,7 +2,7 @@ import { ProfileModule } from "@/modules/ProfileModule";
 import { getProfile, getUserAddresses } from "@/app/actions/profile";
 
 export const metadata = {
-  title: "My Profile — Fiorisce",
+  title: "My Profile",
   description: "Manage your personal information, address, and account settings.",
 };
 

@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { product } = await getProductBySlug(slug);
   if (!product) return {};
   return {
-    title: `${product.name} — Fiorisce`,
+    title: `${product.name}`,
     description: product.description,
   };
 }

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
 export const metadata = {
-  title: "New Tag | Admin",
+  title: "New Tag",
 };
 
 export default function NewTagPage() {

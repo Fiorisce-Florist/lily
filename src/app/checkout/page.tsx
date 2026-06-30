@@ -2,7 +2,7 @@ import { CheckoutModule } from "@/modules/CheckoutModule";
 import { getProfile, getUserAddresses } from "@/app/actions/profile";
 
 export const metadata = {
-  title: "Checkout — Fiorisce",
+  title: "Checkout",
   description: "Complete your purchase securely.",
 };
 

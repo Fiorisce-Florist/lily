@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
 export const metadata = {
-  title: "New Category | Admin",
+  title: "New Category",
 };
 
 export default function NewCategoryPage() {

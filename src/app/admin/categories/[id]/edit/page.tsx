@@ -5,7 +5,7 @@ import { adminGetCategory } from "@/app/actions/admin";
 import { notFound } from "next/navigation";
 
 export const metadata = {
-  title: "Edit Category | Admin",
+  title: "Edit Category",
 };
 
 export default async function EditCategoryPage({ params }: { params: Promise<{ id: string }> }) {

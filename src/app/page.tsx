@@ -2,7 +2,7 @@ import LandingModule from "@/modules/LandingModule";
 import { getFeaturedProducts, getProductsByCategory } from "@/app/actions/landing";
 
 export const metadata = {
-  title: "Fiorisce — Handcrafted Floral Arrangements",
+  title: { absolute: "Fiorisce — Handcrafted Floral Arrangements" },
   description:
     "Discover beautifully handcrafted bouquets for every occasion. Fresh daily arrangements, artificial flowers, and papan bunga — delivered with care.",
 };

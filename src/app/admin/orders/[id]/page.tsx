@@ -3,7 +3,7 @@ import { OrderDetailView } from "@/modules/AdminModule/views/OrderDetailView";
 import { notFound } from "next/navigation";
 
 export const metadata = {
-  title: "Order Details | Admin Dashboard",
+  title: "Order Details",
 };
 
 export default async function AdminOrderDetailPage({

@@ -2,7 +2,7 @@ import { OrderModule } from "@/modules/OrderModule";
 import { getUserOrders } from "@/app/actions/orders";
 
 export const metadata = {
-  title: "My Orders — Fiorisce",
+  title: "My Orders",
   description: "View your past orders, track current shipments, and manage your purchase history.",
 };
 

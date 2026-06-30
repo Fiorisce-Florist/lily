@@ -5,7 +5,7 @@ import { adminGetTag } from "@/app/actions/admin";
 import { notFound } from "next/navigation";
 
 export const metadata = {
-  title: "Edit Tag | Admin",
+  title: "Edit Tag",
 };
 
 export default async function EditTagPage({ params }: { params: Promise<{ id: string }> }) {

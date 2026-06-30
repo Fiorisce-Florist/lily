@@ -5,7 +5,7 @@ import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 import { mapProductToBouquet } from "@/lib/product-mapper";
 
 export const metadata: Metadata = {
-  title: "Fiorisce | Shop",
+  title: "Shop",
   description:
     "Discover handcrafted bouquets for every occasion. Filter by occasion, color, and price. Fresh daily arrangements delivered.",
 };
