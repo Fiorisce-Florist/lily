@@ -602,7 +602,6 @@ export function ProductDetailModule({
           <section id="product-details" className="mt-16">
             <div className="w-full">
               <DetailsTab bouquet={bouquet} />
-              <DeliveryTab />
             </div>
           </section>
 
