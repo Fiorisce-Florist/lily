@@ -18,14 +18,25 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { PayNowButton } from "@/components/pay-now-button";
 import type { OrderData } from "@/app/actions/orders";
+import { uploadOrderReceipt } from "@/app/actions/orders";
+import { QRCodeSVG } from "qrcode.react";
+import { CldUploadWidget } from "next-cloudinary";
+import { toast } from "sonner";
 
 interface OrderDetailModuleProps {
   order: OrderData | null;
   orderNumber: string;
   error: string | null;
+  qrisString?: string;
 }
 
-export function OrderDetailModule({ order, orderNumber, error }: OrderDetailModuleProps) {
+export function OrderDetailModule({ order, orderNumber, error, qrisString }: OrderDetailModuleProps) {
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   if (error || !order) {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
@@ -247,7 +258,69 @@ export function OrderDetailModule({ order, orderNumber, error }: OrderDetailModu
                 </li>
               ))}
             </ul>
+            
           </section>
+          {/* Payment pending CTA — sidebar */}
+          {order.status === "PENDING" && order.payment?.paymentMethod === "QRIS" && (
+            <div className="rounded-2xl bg-camel-50 dark:bg-camel-900/20 border border-camel-200 dark:border-camel-800/50 p-4 text-center space-y-4">
+              <p className="text-b5 font-inter text-camel-800 dark:text-camel-300">
+                Payment is pending for this order. Please scan the QRIS below to pay.
+              </p>
+              
+              {qrisString ? (
+                <div className="flex justify-center bg-white p-4 rounded-xl mx-auto w-fit shadow-sm border border-neutral-200">
+                  <QRCodeSVG value={qrisString} size={200} />
+                </div>
+              ) : (
+                <p className="text-xs text-red-500">QRIS string is unavailable. Please contact support.</p>
+              )}
+              
+              {!order.payment?.receiptUrl ? (
+                <div className="space-y-2 pt-2 border-t border-camel-200 dark:border-camel-800/50">
+                  <p className="text-b6 font-inter text-camel-800 dark:text-camel-300">
+                    Upload your transfer receipt once you have paid.
+                  </p>
+                  {isMounted ? (
+                    <CldUploadWidget
+                      signatureEndpoint="/api/cloudinary/sign"
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      onSuccess={async (result: any) => {
+                        if (result?.info?.secure_url) {
+                          try {
+                            const res = await uploadOrderReceipt(order.id, result.info.secure_url);
+                            if (res.error) throw new Error(res.error);
+                            toast.success("Receipt uploaded successfully!");
+                          } catch (_err) {
+                            toast.error("Failed to save receipt. Please try again.");
+                          }
+                        }
+                      }}
+                      options={{
+                        multiple: false,
+                        resourceType: "image",
+                      }}
+                    >
+                      {({ open }) => (
+                        <Button variant="primary" className="w-full" onClick={() => open()}>
+                          Upload Receipt
+                        </Button>
+                      )}
+                    </CldUploadWidget>
+                  ) : (
+                    <Button variant="primary" className="w-full" disabled>
+                      Upload Receipt
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div className="bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 p-3 rounded-xl text-sm border border-green-200 dark:border-green-800/50 flex flex-col items-center">
+                  <CheckCircle2 className="w-6 h-6 mb-2" />
+                  <span className="font-medium">Receipt uploaded!</span>
+                  <span className="text-xs mt-1 opacity-80">Awaiting admin verification.</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Sidebar */}
@@ -334,6 +407,8 @@ export function OrderDetailModule({ order, orderNumber, error }: OrderDetailModu
                 <p className="text-b5 text-neutral-900 dark:text-cornsilk-100 italic">&quot;{order.messageCard}&quot;</p>
               </div>
             )}
+
+            
           </section>
 
           {/* Shipping Address */}
@@ -355,15 +430,7 @@ export function OrderDetailModule({ order, orderNumber, error }: OrderDetailModu
             </section>
           )}
 
-          {/* Payment pending CTA — sidebar */}
-          {order.status === "PENDING" && (
-            <div className="rounded-2xl bg-camel-50 dark:bg-camel-900/20 border border-camel-200 dark:border-camel-800/50 p-4 text-center space-y-3">
-              <p className="text-b5 font-inter text-camel-800 dark:text-camel-300">
-                Payment is pending for this order.
-              </p>
-              <PayNowButton orderNumber={order.orderNumber} className="w-full" />
-            </div>
-          )}
+          
         </div>
       </div>
     </div>

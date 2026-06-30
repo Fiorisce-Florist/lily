@@ -14,6 +14,7 @@ import {
   PlusCircle,
   CheckCircle2,
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,27 +39,6 @@ function formatPrice(v: number) {
     maximumFractionDigits: 0,
   }).format(v);
 }
-
-// ─── Snap loader ──────────────────────────────────────────────────────────────
-
-function loadSnapScript(): Promise<void> {
-  return new Promise((resolve) => {
-    if (document.getElementById("midtrans-snap")) {
-      resolve();
-      return;
-    }
-    const script = document.createElement("script");
-    script.id = "midtrans-snap";
-    script.src =
-      process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === "true"
-        ? "https://app.midtrans.com/snap/snap.js"
-        : "https://app.sandbox.midtrans.com/snap/snap.js";
-    script.setAttribute("data-client-key", process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? "");
-    script.onload = () => resolve();
-    document.head.appendChild(script);
-  });
-}
-
 // ─── Order Summary Panel ──────────────────────────────────────────────────────
 
 function OrderSummaryPanel({
@@ -492,37 +472,9 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
         return;
       }
 
-      if (result.snapToken) {
-        await loadSnapScript();
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).snap.pay(result.snapToken, {
-          onSuccess: () => {
-            toast.success("Payment successful! Redirecting…");
-            refetch();
-            router.push(`/orders/${result.orderNumber}`);
-          },
-          onPending: () => {
-            toast("Payment pending — we'll notify you when confirmed.");
-            refetch();
-            router.push(`/orders/${result.orderNumber}`);
-          },
-          onError: () => {
-            toast.error("Payment failed. Your order is saved — try paying again from My Orders.");
-            refetch();
-            router.push(`/orders/${result.orderNumber}`);
-          },
-          onClose: () => {
-            toast("Payment window closed. Your order is saved — complete payment from My Orders.");
-            refetch();
-            router.push(`/orders/${result.orderNumber}`);
-          },
-        });
-      } else {
-        toast.success("Order placed! Complete payment from My Orders.");
-        refetch();
-        router.push(`/orders/${result.orderNumber}`);
-      }
+      toast.success("Order placed successfully! Redirecting…");
+      refetch();
+      router.push(`/orders/${result.orderNumber}`);
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -855,8 +807,8 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               <div className="flex items-center gap-3 p-4 rounded-2xl bg-cornsilk-50 dark:bg-neutral-800 border border-cornsilk-200 dark:border-neutral-700">
                 <CreditCard className="h-5 w-5 text-camel-600 dark:text-camel-400 shrink-0" />
                 <p className="text-b5 font-inter text-neutral-700 dark:text-neutral-300">
-                  Clicking <strong>&quot;Place Order&quot;</strong> will open the Midtrans payment
-                  window. You can pay via credit card, bank transfer, e-wallet, or QRIS.
+                  Clicking <strong>&quot;Place Order & Pay&quot;</strong> will create your order.
+                  You will then be provided with a QRIS code to manually complete your payment.
                 </p>
               </div>
             </section>
@@ -878,11 +830,11 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               variant="primary"
               className="w-full py-5 text-b4 font-inter font-semibold rounded-2xl shadow-md transition-all active:scale-[0.98]"
             >
-              {isProcessing ? (
-                <span className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Processing…
-                </span>
+              {isProcessing || cartLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Processing...
+                </>
               ) : (
                 "Place Order & Pay"
               )}

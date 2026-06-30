@@ -4,7 +4,6 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { createMidtransTransaction } from "@/lib/midtrans";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -61,6 +60,7 @@ export interface OrderData {
     status: string;
     paymentMethod: string;
     transactionId: string | null;
+    receiptUrl: string | null;
   } | null;
 }
 
@@ -80,7 +80,7 @@ function calcShipping(): number {
 
 export async function createOrder(formData: CreateOrderFormData): Promise<{
   orderNumber: string | null;
-  snapToken: string | null;
+  snapToken?: string | null;
   error: string | null;
 }> {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -239,42 +239,24 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
       return { order, addressId: addressIdToUse };
     });
 
-    // 5. Create Midtrans Snap transaction
-    let snapToken: string | null = null;
+    // 5. Create Payment record for QRIS
     try {
-      snapToken = await createMidtransTransaction({
-        orderId: orderNumber,
-        amount: totalAmount,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        items: itemsToCheckout.map((item) => ({
-          id: item.productId,
-          name: item.product.name,
-          price: Number(item.price),
-          quantity: item.quantity,
-        })),
-      });
-
-      // Store the Snap token / create Payment record
       await prisma.payment.create({
         data: {
           orderId: result.order.id,
-          paymentMethod: "midtrans",
+          paymentMethod: "QRIS",
           amount: totalAmount,
           status: "PENDING",
-          transactionId: snapToken,
         },
       });
-    } catch (midtransError) {
-      console.error("Midtrans error (order still created):", midtransError);
+    } catch (paymentError) {
+      console.error("Payment error (order still created):", paymentError);
     }
 
     revalidatePath("/orders");
     revalidatePath("/cart");
 
-    return { orderNumber, snapToken, error: null };
+    return { orderNumber, error: null };
   } catch (error) {
     console.error("Error creating order:", error);
     return {
@@ -352,6 +334,7 @@ export async function getUserOrders(): Promise<{
               status: o.payment.status,
               paymentMethod: o.payment.paymentMethod,
               transactionId: o.payment.transactionId,
+              receiptUrl: o.payment.receiptUrl,
             }
           : null,
       })),
@@ -439,6 +422,7 @@ export async function getOrderByNumber(orderNumber: string): Promise<{
               status: order.payment.status,
               paymentMethod: order.payment.paymentMethod,
               transactionId: order.payment.transactionId,
+              receiptUrl: order.payment.receiptUrl,
             }
           : null,
       },
@@ -525,5 +509,38 @@ export async function getSnapToken(orderNumber: string): Promise<{
   } catch (error) {
     console.error("Error getting snap token:", error);
     return { snapToken: null, error: "Failed to initiate payment. Please try again." };
+  }
+}
+
+// ─── uploadOrderReceipt ───────────────────────────────────────────────────────
+
+export async function uploadOrderReceipt(orderId: string, receiptUrl: string) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    return { error: "Not authenticated." };
+  }
+
+  try {
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { payment: true },
+    });
+
+    if (!order || order.userId !== session.user.id) {
+      return { error: "Order not found or unauthorized." };
+    }
+
+    if (order.payment) {
+      await prisma.payment.update({
+        where: { id: order.payment.id },
+        data: { receiptUrl },
+      });
+    }
+
+    revalidatePath(`/orders/${order.orderNumber}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error uploading receipt:", error);
+    return { error: "Failed to save receipt URL." };
   }
 }
