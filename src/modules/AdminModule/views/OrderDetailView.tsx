@@ -180,7 +180,52 @@ export function OrderDetailView({ order }: { order: any }) {
                   </p>
                 </>
               ) : (
-                <p className="text-neutral-500 italic">No shipping address provided.</p>
+                  <p className="text-neutral-500 italic">No shipping address provided.</p>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm space-y-4">
+            <h2 className="font-fraunces font-medium flex items-center gap-2">
+              <Package className="h-4 w-4 text-neutral-400" />
+              Delivery Details
+            </h2>
+            <div className="text-sm font-inter space-y-3">
+              <div>
+                <p className="text-neutral-500 mb-1">Method</p>
+                <p className="font-medium text-neutral-900 dark:text-white">
+                  {order.deliveryMethod === 'GOSEND' ? 'GoSend (Self-order)' : 'Pick Up'}
+                </p>
+              </div>
+              <div>
+                <p className="text-neutral-500 mb-1">Pickup / Delivery Date</p>
+                <p className="font-medium text-neutral-900 dark:text-white">
+                  {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : 'N/A'}
+                </p>
+              </div>
+              {order.deliveryTime && (
+                <div>
+                  <p className="text-neutral-500 mb-1">Time</p>
+                  <p className="font-medium text-neutral-900 dark:text-white">
+                    {order.deliveryTime}
+                  </p>
+                </div>
+              )}
+              {order.includePaperBag && (
+                <div>
+                  <p className="text-neutral-500 mb-1">Paper Bag</p>
+                  <p className="font-medium text-neutral-900 dark:text-white">
+                    Included
+                  </p>
+                </div>
+              )}
+              {order.messageCard && (
+                <div>
+                  <p className="text-neutral-500 mb-1">Message Card</p>
+                  <p className="font-medium text-neutral-900 dark:text-white italic">
+                    &quot;{order.messageCard}&quot;
+                  </p>
+                </div>
               )}
             </div>
           </div>

@@ -18,6 +18,11 @@ export interface CreateOrderFormData {
   city: string;
   postalCode: string;
   addressId?: string | null;
+  deliveryMethod: "PICKUP" | "GOSEND";
+  deliveryDate: string;
+  deliveryTime?: string;
+  messageCard?: string;
+  includePaperBag: boolean;
 }
 
 export interface OrderItemData {
@@ -37,6 +42,11 @@ export interface OrderData {
   shippingCost: number;
   totalAmount: number;
   status: string;
+  deliveryMethod: string;
+  deliveryDate: string | null;
+  deliveryTime: string | null;
+  messageCard: string | null;
+  includePaperBag: boolean;
   createdAt: string;
   items: OrderItemData[];
   address?: {
@@ -61,11 +71,8 @@ function generateOrderNumber(): string {
   return `FIO-${timestamp}${random}`;
 }
 
-const SHIPPING_THRESHOLD = 500_000;
-const SHIPPING_FEE = 50_000;
-
 function calcShipping(subtotal: number): number {
-  return subtotal >= SHIPPING_THRESHOLD ? 0 : subtotal > 0 ? SHIPPING_FEE : 0;
+  return 0; // GoSend ordered by user, Pickup is free
 }
 
 // ─── createOrder ──────────────────────────────────────────────────────────────
@@ -126,7 +133,23 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   }
 
   // 3. Calculate totals
-  const subtotal = cart.items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+  let subtotal = cart.items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+  
+  let paperBagCost = 0;
+  if (formData.includePaperBag || formData.deliveryMethod === "GOSEND") {
+    let hasLarge = false;
+    let hasMedium = false;
+    for (const item of cart.items) {
+      const vName = item.variant?.variantName?.toLowerCase() || "";
+      if (vName === "l" || vName === "large") hasLarge = true;
+      else if (vName === "m" || vName === "medium") hasMedium = true;
+    }
+    if (hasLarge) paperBagCost = 8000;
+    else if (hasMedium) paperBagCost = 7000;
+    else paperBagCost = 5000;
+  }
+  
+  subtotal += paperBagCost;
   const shippingCost = calcShipping(subtotal);
   const totalAmount = subtotal + shippingCost;
   const orderNumber = generateOrderNumber();
@@ -136,7 +159,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
     const result = await prisma.$transaction(async (tx) => {
       let addressIdToUse = formData.addressId;
 
-      if (!addressIdToUse) {
+      if (formData.deliveryMethod === "GOSEND" && !addressIdToUse) {
         const address = await tx.checkoutAddress.create({
           data: {
             userId,
@@ -144,19 +167,19 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
             phone: formData.phone,
             address: formData.apartment
               ? `${formData.address}, ${formData.apartment}`
-              : formData.address,
-            city: formData.city,
-            postalCode: formData.postalCode,
+              : formData.address || "",
+            city: formData.city || "",
+            postalCode: formData.postalCode || "",
           },
         });
         addressIdToUse = address.id;
-      } else {
+      } else if (addressIdToUse) {
         // Verify address belongs to user
         const existing = await tx.checkoutAddress.findFirst({
           where: { id: addressIdToUse, userId },
         });
         if (!existing) {
-          throw new Error("Selected address not found or does not belong to you.");
+          addressIdToUse = null;
         }
       }
 
@@ -169,6 +192,11 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
           shippingCost,
           totalAmount,
           status: "PENDING",
+          deliveryMethod: formData.deliveryMethod,
+          deliveryDate: new Date(formData.deliveryDate),
+          deliveryTime: formData.deliveryTime || null,
+          messageCard: formData.messageCard || null,
+          includePaperBag: formData.includePaperBag || formData.deliveryMethod === "GOSEND",
           items: {
             create: cart.items.map((item) => ({
               productId: item.productId,
@@ -272,6 +300,11 @@ export async function getUserOrders(): Promise<{
         shippingCost: Number(o.shippingCost),
         totalAmount: Number(o.totalAmount),
         status: o.status,
+        deliveryMethod: o.deliveryMethod,
+        deliveryDate: o.deliveryDate ? o.deliveryDate.toISOString() : null,
+        deliveryTime: o.deliveryTime,
+        messageCard: o.messageCard,
+        includePaperBag: o.includePaperBag,
         createdAt: o.createdAt.toISOString(),
         items: o.items.map((item) => ({
           id: item.id,
@@ -354,6 +387,11 @@ export async function getOrderByNumber(orderNumber: string): Promise<{
         shippingCost: Number(order.shippingCost),
         totalAmount: Number(order.totalAmount),
         status: order.status,
+        deliveryMethod: order.deliveryMethod,
+        deliveryDate: order.deliveryDate ? order.deliveryDate.toISOString() : null,
+        deliveryTime: order.deliveryTime,
+        messageCard: order.messageCard,
+        includePaperBag: order.includePaperBag,
         createdAt: order.createdAt.toISOString(),
         items: order.items.map((item) => ({
           id: item.id,

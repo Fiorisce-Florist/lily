@@ -13,12 +13,18 @@ import {
   MapPin,
   PlusCircle,
   CheckCircle2,
+  Calendar,
+  Clock,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useCart } from "@/context/cart-context";
 import { useSession } from "@/lib/auth-client";
@@ -69,19 +75,40 @@ function OrderSummaryPanel({
   isLoading,
   subtotal,
   items,
+  deliveryMethod,
+  includePaperBag,
 }: {
   isLoading: boolean;
   subtotal: number;
-  items: {
-    id: string;
-    productId: string;
-    quantity: number;
-    price: number;
-    product: { name: string; images: { imageUrl: string; isPrimary: boolean }[] };
-  }[];
+  items: any[];
+  deliveryMethod: "PICKUP" | "GOSEND";
+  includePaperBag: boolean;
 }) {
-  const shipping = calcShipping(subtotal);
-  const total = subtotal + shipping;
+  let paperBagCost = 0;
+  let paperBagLabel = "Standard Size";
+  if (includePaperBag || deliveryMethod === "GOSEND") {
+    let hasLarge = false;
+    let hasMedium = false;
+    for (const item of items) {
+      const vName = item.variant?.variantName?.toLowerCase() || item.product?.variants?.[0]?.variantName?.toLowerCase() || "";
+      if (vName === "l" || vName === "large") hasLarge = true;
+      else if (vName === "m" || vName === "medium") hasMedium = true;
+    }
+    if (hasLarge) {
+      paperBagCost = 8000;
+      paperBagLabel = "Large (+Rp8.000)";
+    } else if (hasMedium) {
+      paperBagCost = 7000;
+      paperBagLabel = "Medium (+Rp7.000)";
+    } else {
+      paperBagCost = 5000;
+      paperBagLabel = "Small (+Rp5.000)";
+    }
+  }
+
+  const subtotalWithBag = subtotal + paperBagCost;
+  const shipping = 0;
+  const total = subtotalWithBag + shipping;
 
   if (isLoading) {
     return (
@@ -156,21 +183,18 @@ function OrderSummaryPanel({
             <span>Subtotal</span>
             <span className="font-jetbrains">{formatPrice(subtotal)}</span>
           </div>
+          {(includePaperBag || deliveryMethod === "GOSEND") && (
+            <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
+              <span>Paper Bag ({paperBagLabel})</span>
+              <span className="font-jetbrains">{formatPrice(paperBagCost)}</span>
+            </div>
+          )}
           <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
-            <span>Shipping</span>
-            <span className="font-jetbrains">
-              {shipping === 0 ? (
-                <span className="text-olive-600 dark:text-olive-400">Free</span>
-              ) : (
-                formatPrice(shipping)
-              )}
+            <span>Delivery Method</span>
+            <span className="font-jetbrains text-olive-600 dark:text-olive-400">
+              {deliveryMethod === "GOSEND" ? "GoSend (Ordered by User)" : "Pick Up (Free)"}
             </span>
           </div>
-          {shipping > 0 && (
-            <p className="text-[11px] text-neutral-400 dark:text-neutral-500">
-              Free shipping on orders over {formatPrice(SHIPPING_THRESHOLD)}
-            </p>
-          )}
         </div>
 
         <Separator />
@@ -336,6 +360,11 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
     apartment: "",
     city: "",
     postalCode: "",
+    deliveryMethod: "PICKUP",
+    deliveryDate: "",
+    deliveryTime: "",
+    messageCard: "",
+    includePaperBag: false,
   });
 
   // Track which saved address is selected (null = enter new)
@@ -403,6 +432,10 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
     e.preventDefault();
     if (items.length === 0) {
       toast.error("Your cart is empty.");
+      return;
+    }
+    if (!form.deliveryDate) {
+      toast.error("Please select a pickup/delivery date.");
       return;
     }
 
@@ -571,10 +604,104 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               </div>
             </section>
 
-            {/* 2. Shipping Address */}
+            {/* 2. Delivery Method & Customization */}
+            <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm space-y-6">
+              <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
+                2. Delivery & Customization
+              </h2>
+
+              <div className="space-y-4">
+                <Label className="text-b5">Delivery Method</Label>
+                <RadioGroup
+                  value={form.deliveryMethod}
+                  onValueChange={(val: "PICKUP" | "GOSEND") => set("deliveryMethod")(val)}
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                >
+                  <div className={`flex items-center space-x-3 border p-4 rounded-xl cursor-pointer ${form.deliveryMethod === "PICKUP" ? "border-blush-500 bg-blush-50 dark:bg-blush-900/10" : "border-neutral-200 dark:border-neutral-700"}`}>
+                    <RadioGroupItem value="PICKUP" id="delivery-pickup" />
+                    <Label htmlFor="delivery-pickup" className="cursor-pointer flex-1">
+                      Pick Up
+                      <p className="text-b6 text-neutral-500 font-normal">Pick up at our store</p>
+                    </Label>
+                  </div>
+                  <div className={`flex items-center space-x-3 border p-4 rounded-xl cursor-pointer ${form.deliveryMethod === "GOSEND" ? "border-blush-500 bg-blush-50 dark:bg-blush-900/10" : "border-neutral-200 dark:border-neutral-700"}`}>
+                    <RadioGroupItem value="GOSEND" id="delivery-gosend" />
+                    <Label htmlFor="delivery-gosend" className="cursor-pointer flex-1">
+                      GoSend
+                      <p className="text-b6 text-neutral-500 font-normal">Order courier yourself</p>
+                    </Label>
+                  </div>
+                </RadioGroup>
+
+                {form.deliveryMethod === "GOSEND" && (
+                  <div className="p-4 bg-blue-50 dark:bg-blue-950/30 text-blue-800 dark:text-blue-200 rounded-xl text-sm mt-2">
+                    <p className="font-semibold mb-1">Instruction for GoSend:</p>
+                    <p>Please order a GoSend / GrabExpress courier yourself to pick up the flowers at our store.</p>
+                    <a href="https://maps.app.goo.gl/4HAzwzqoAbfYGrbR8" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 mt-2 text-blue-600 dark:text-blue-400 hover:underline">
+                      <MapPin className="h-4 w-4" /> Open in Google Maps
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <Field
+                  id="deliveryDate"
+                  label="Pickup / Delivery Date"
+                  required
+                  type="date"
+                  value={form.deliveryDate}
+                  onChange={set("deliveryDate")}
+                />
+                <Field
+                  id="deliveryTime"
+                  label="Pickup / Delivery Time (Optional)"
+                  type="time"
+                  value={form.deliveryTime || ""}
+                  onChange={set("deliveryTime")}
+                />
+              </div>
+
+              <div className="space-y-2 pt-2">
+                <Label htmlFor="messageCard" className="flex justify-between items-end">
+                  <span>Message Card (Optional)</span>
+                  <span className={`text-xs ${(form.messageCard?.match(/\\S+/g)?.length || 0) > 30 ? "text-red-500 font-bold" : "text-neutral-400"}`}>
+                    {form.messageCard?.match(/\\S+/g)?.length || 0} / 30 words
+                  </span>
+                </Label>
+                <Textarea
+                  id="messageCard"
+                  placeholder="Write your greeting card message here..."
+                  rows={3}
+                  value={form.messageCard}
+                  onChange={(e) => set("messageCard")(e.target.value)}
+                />
+              </div>
+
+              <div className="flex items-start gap-3 pt-2">
+                <Checkbox
+                  id="includePaperBag"
+                  checked={form.deliveryMethod === "GOSEND" || form.includePaperBag}
+                  disabled={form.deliveryMethod === "GOSEND"}
+                  onCheckedChange={(c) => set("includePaperBag")(!!c)}
+                  className="mt-1"
+                />
+                <div>
+                  <Label htmlFor="includePaperBag" className="cursor-pointer font-medium text-neutral-900 dark:text-neutral-100">
+                    Include Paper Bag
+                  </Label>
+                  <p className="text-b6 text-neutral-500 mt-0.5">
+                    Required for GoSend. Size adjusts automatically.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* 3. Shipping Address */}
+            {form.deliveryMethod === "GOSEND" && (
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
               <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-6">
-                2. Shipping Address
+                3. Shipping Address
               </h2>
 
               {/* Saved address picker */}
@@ -646,10 +773,12 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               )}
             </section>
 
-            {/* 3. Payment note */}
+            )}
+
+            {/* 4. Payment note */}
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
               <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-4">
-                3. Payment
+                4. Payment
               </h2>
               <div className="flex items-center gap-3 p-4 rounded-2xl bg-cornsilk-50 dark:bg-neutral-800 border border-cornsilk-200 dark:border-neutral-700">
                 <CreditCard className="h-5 w-5 text-camel-600 dark:text-camel-400 shrink-0" />
@@ -667,6 +796,8 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               isLoading={cartLoading || status === "loading"}
               subtotal={subtotal}
               items={items}
+              deliveryMethod={form.deliveryMethod}
+              includePaperBag={form.includePaperBag}
             />
 
             <Button

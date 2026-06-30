@@ -300,6 +300,42 @@ export function OrderDetailModule({ order, orderNumber, error }: OrderDetailModu
             </div>
           </section>
 
+          {/* Delivery & Customization */}
+          <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-cornsilk-200 dark:border-neutral-800 shadow-sm mt-6">
+            <h2 className="text-h6 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-4">
+              Delivery Details
+            </h2>
+            <div className="space-y-3 text-b5 font-inter text-neutral-600 dark:text-neutral-400">
+              <div className="flex justify-between">
+                <span>Method</span>
+                <span className="font-medium text-neutral-900 dark:text-cornsilk-100">{order.deliveryMethod === 'GOSEND' ? 'GoSend (Self-order)' : 'Pick Up'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Date</span>
+                <span className="font-medium text-neutral-900 dark:text-cornsilk-100">{order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : 'N/A'}</span>
+              </div>
+              {order.deliveryTime && (
+                <div className="flex justify-between">
+                  <span>Time</span>
+                  <span className="font-medium text-neutral-900 dark:text-cornsilk-100">{order.deliveryTime}</span>
+                </div>
+              )}
+              {order.includePaperBag && (
+                <div className="flex justify-between">
+                  <span>Paper Bag</span>
+                  <span className="font-medium text-neutral-900 dark:text-cornsilk-100">Included</span>
+                </div>
+              )}
+            </div>
+            
+            {order.messageCard && (
+              <div className="mt-4 pt-4 border-t border-cornsilk-200 dark:border-neutral-800">
+                <span className="block text-b6 text-neutral-500 mb-1">Message Card</span>
+                <p className="text-b5 text-neutral-900 dark:text-cornsilk-100 italic">&quot;{order.messageCard}&quot;</p>
+              </div>
+            )}
+          </section>
+
           {/* Shipping Address */}
           {order.address && (
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">

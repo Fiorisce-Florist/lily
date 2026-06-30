@@ -232,17 +232,22 @@ model PaymentLog {
 model Order {
   id              String               @id @default(uuid())
   userId          String               @map("user_id")
-  addressId       String               @map("address_id")
+  addressId       String?              @map("address_id")
   orderNumber     String               @unique @map("order_number") @db.VarChar(50)
   subtotal        Decimal              @db.Decimal(12, 2)
   shippingCost    Decimal              @map("shipping_cost") @db.Decimal(12, 2)
   totalAmount     Decimal              @map("total_amount") @db.Decimal(12, 2)
   status          OrderStatus          @default(PENDING)
+  deliveryMethod  DeliveryMethod       @default(PICKUP) @map("delivery_method")
+  deliveryDate    DateTime?            @map("delivery_date")
+  deliveryTime    String?              @map("delivery_time")
+  messageCard     String?              @db.Text @map("message_card")
+  includePaperBag Boolean              @default(false) @map("include_paper_bag")
   createdAt       DateTime             @default(now()) @map("created_at")
   updatedAt       DateTime             @default(now()) @updatedAt @map("updated_at")
   items           OrderItem[]
   statusHistories OrderStatusHistory[]
-  address         CheckoutAddress      @relation(fields: [addressId], references: [id])
+  address         CheckoutAddress?     @relation(fields: [addressId], references: [id])
   user            User                 @relation(fields: [userId], references: [id])
   payment         Payment?
 
@@ -333,4 +338,11 @@ enum OrderStatus {
   CANCELLED
 
   @@map("order_status")
+}
+
+enum DeliveryMethod {
+  PICKUP
+  GOSEND
+
+  @@map("delivery_method")
 }

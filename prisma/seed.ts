@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -420,7 +421,7 @@ async function main() {
     });
   }
 
-  console.log("Seed complete! 🌱");
+  console.log("Seed complete! 🌱 (Admin account created)");
 }
 
 main()
