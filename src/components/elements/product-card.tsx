@@ -137,7 +137,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
       )}
     >
       {/* Image */}
-      <div className="relative block aspect-4/5 sm:aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800">
+      <div className="relative block aspect-4/5 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800">
         {product.image ? (
           <>
             {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}

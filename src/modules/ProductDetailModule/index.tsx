@@ -453,8 +453,15 @@ export function ProductDetailModule({
   const [selectedVariantId, setSelectedVariantId] = useState<string>(
     defaultVariant ? defaultVariant.id : ""
   );
+  const [userHasSelectedVariant, setUserHasSelectedVariant] = useState(false);
+
+  const handleVariantSelect = (id: string) => {
+    setSelectedVariantId(id);
+    setUserHasSelectedVariant(true);
+  };
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId) || defaultVariant;
+  const imageToDisplay = userHasSelectedVariant && selectedVariant?.imageUrl ? selectedVariant.imageUrl : bouquet.image;
 
   return (
     <TooltipProvider>
@@ -472,7 +479,7 @@ export function ProductDetailModule({
           <div className="flex flex-col gap-12 lg:flex-row lg:gap-16">
             {/* Left — Gallery */}
             <div className="w-full lg:w-[55%]">
-              <ImageGallery bouquet={bouquet} selectedImage={selectedVariant?.imageUrl} />
+              <ImageGallery bouquet={bouquet} selectedImage={imageToDisplay} />
             </div>
 
             {/* Right — Info */}
@@ -480,7 +487,7 @@ export function ProductDetailModule({
               <ProductInfo
                 bouquet={bouquet}
                 selectedVariantId={selectedVariantId}
-                setSelectedVariantId={setSelectedVariantId}
+                setSelectedVariantId={handleVariantSelect}
               />
             </div>
           </div>

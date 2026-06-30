@@ -61,7 +61,7 @@ export function FeaturedSection({ products }: FeaturedSectionProps) {
                   href={`/shop/${product.slug}`}
                   className="group/card block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
                 >
-                  <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
+                  <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-4/5 overflow-hidden rounded-lg">
                     {product.image ? (
                       <Image
                         src={product.image}
