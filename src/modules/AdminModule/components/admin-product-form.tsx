@@ -69,7 +69,13 @@ export function AdminProductForm({
     if (!newCategoryName.trim()) return;
     setIsSubmittingCategory(true);
     try {
-      const res = await adminCreateCategory(newCategoryName);
+      const slug = newCategoryName
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .trim();
+      const res = await adminCreateCategory({ name: newCategoryName, slug });
       if (res.error) {
         toast.error(res.error);
       } else if (res.category) {
