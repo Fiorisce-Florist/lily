@@ -13,16 +13,17 @@ export interface CreateOrderFormData {
   lastName: string;
   email: string;
   phone: string;
-  address: string;
+  address?: string;
   apartment?: string;
-  city: string;
-  postalCode: string;
+  city?: string;
+  postalCode?: string;
   addressId?: string | null;
-  deliveryMethod: "PICKUP" | "GOSEND";
+  deliveryMethod: "PICKUP" | "GOSEND" | "FIORISCE_DELIVERY";
   deliveryDate: string;
   deliveryTime?: string;
   messageCard?: string;
   includePaperBag: boolean;
+  selectedItemIds?: string[];
 }
 
 export interface OrderItemData {
@@ -121,8 +122,17 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
     return { orderNumber: null, snapToken: null, error: "Your cart is empty." };
   }
 
+  // Filter items if selectedItemIds is provided
+  const itemsToCheckout = formData.selectedItemIds && formData.selectedItemIds.length > 0 
+    ? cart.items.filter(item => formData.selectedItemIds!.includes(item.id))
+    : cart.items;
+
+  if (itemsToCheckout.length === 0) {
+    return { orderNumber: null, snapToken: null, error: "No items selected for checkout." };
+  }
+
   // 2. Validate all items are still available
-  for (const item of cart.items) {
+  for (const item of itemsToCheckout) {
     if (!item.product.isAvailable || item.product.status !== "ACTIVE") {
       return {
         orderNumber: null,
@@ -133,13 +143,13 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   }
 
   // 3. Calculate totals
-  let subtotal = cart.items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+  let subtotal = itemsToCheckout.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
   
   let paperBagCost = 0;
   if (formData.includePaperBag || formData.deliveryMethod === "GOSEND") {
     let hasLarge = false;
     let hasMedium = false;
-    for (const item of cart.items) {
+    for (const item of itemsToCheckout) {
       const vName = item.variant?.variantName?.toLowerCase() || "";
       if (vName === "l" || vName === "large") hasLarge = true;
       else if (vName === "m" || vName === "medium") hasMedium = true;
@@ -154,25 +164,33 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   const totalAmount = subtotal + shippingCost;
   const orderNumber = generateOrderNumber();
 
+  if (formData.deliveryMethod === "FIORISCE_DELIVERY") {
+    if (!formData.address || !formData.city || !formData.postalCode) {
+      return { orderNumber: null, snapToken: null, error: "Address, city, and postal code are required for Fiorisce delivery." };
+    }
+  }
+
   // 4. Run Prisma transaction: use existing address or create new + order + items + clear cart
   try {
     const result = await prisma.$transaction(async (tx) => {
       let addressIdToUse = formData.addressId;
 
-      if (formData.deliveryMethod === "GOSEND" && !addressIdToUse) {
-        const address = await tx.checkoutAddress.create({
-          data: {
-            userId,
-            recipientName: `${formData.firstName} ${formData.lastName}`.trim(),
-            phone: formData.phone,
-            address: formData.apartment
-              ? `${formData.address}, ${formData.apartment}`
-              : formData.address || "",
-            city: formData.city || "",
-            postalCode: formData.postalCode || "",
-          },
-        });
-        addressIdToUse = address.id;
+      if (formData.deliveryMethod === "FIORISCE_DELIVERY" && formData.address) {
+        if (!addressIdToUse) {
+          const address = await tx.checkoutAddress.create({
+            data: {
+              userId,
+              recipientName: `${formData.firstName} ${formData.lastName}`.trim(),
+              phone: formData.phone,
+              address: formData.apartment
+                ? `${formData.address}, ${formData.apartment}`
+                : formData.address || "",
+              city: formData.city || "",
+              postalCode: formData.postalCode || "",
+            },
+          });
+          addressIdToUse = address.id;
+        }
       } else if (addressIdToUse) {
         // Verify address belongs to user
         const existing = await tx.checkoutAddress.findFirst({
@@ -198,7 +216,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
           messageCard: formData.messageCard || null,
           includePaperBag: formData.includePaperBag || formData.deliveryMethod === "GOSEND",
           items: {
-            create: cart.items.map((item) => ({
+            create: itemsToCheckout.map((item) => ({
               productId: item.productId,
               productName: item.product.name,
               variantId: item.variant?.id,
@@ -210,8 +228,13 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
         },
       });
 
-      // Clear the cart
-      await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
+      // Clear the selected items from the cart
+      await tx.cartItem.deleteMany({ 
+        where: { 
+          cartId: cart.id,
+          id: { in: itemsToCheckout.map(i => i.id) }
+        } 
+      });
 
       return { order, addressId: addressIdToUse };
     });
@@ -226,7 +249,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
         lastName: formData.lastName,
         email: formData.email,
         phone: formData.phone,
-        items: cart.items.map((item) => ({
+        items: itemsToCheckout.map((item) => ({
           id: item.productId,
           name: item.product.name,
           price: Number(item.price),

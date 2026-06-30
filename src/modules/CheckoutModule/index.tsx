@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   CreditCard,
   ChevronLeft,
@@ -38,8 +38,6 @@ function formatPrice(v: number) {
     maximumFractionDigits: 0,
   }).format(v);
 }
-
-
 
 // ─── Snap loader ──────────────────────────────────────────────────────────────
 
@@ -78,13 +76,14 @@ function OrderSummaryPanel({
     quantity: number;
     price: number;
     variant?: { variantName: string } | null;
-    product: { 
-      name: string; 
+    product: {
+      name: string;
       images: { imageUrl: string; isPrimary: boolean }[];
-      variants?: { variantName: string }[] 
+      variants?: { variantName: string }[];
+      category?: { slug: string } | null;
     };
   }[];
-  deliveryMethod: "PICKUP" | "GOSEND";
+  deliveryMethod: "PICKUP" | "GOSEND" | "FIORISCE_DELIVERY";
   includePaperBag: boolean;
 }) {
   let paperBagCost = 0;
@@ -93,7 +92,10 @@ function OrderSummaryPanel({
     let hasLarge = false;
     let hasMedium = false;
     for (const item of items) {
-      const vName = item.variant?.variantName?.toLowerCase() || item.product?.variants?.[0]?.variantName?.toLowerCase() || "";
+      const vName =
+        item.variant?.variantName?.toLowerCase() ||
+        item.product?.variants?.[0]?.variantName?.toLowerCase() ||
+        "";
       if (vName === "l" || vName === "large") hasLarge = true;
       else if (vName === "m" || vName === "medium") hasMedium = true;
     }
@@ -341,9 +343,28 @@ interface CheckoutModuleProps {
 
 export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: session, isPending } = useSession();
   const status = isPending ? "loading" : session ? "authenticated" : "unauthenticated";
-  const { items, subtotal, isLoading: cartLoading, refetch } = useCart();
+
+  const { items: allItems, isLoading: cartLoading, refetch } = useCart();
+
+  // Filter items based on URL query parameter `?items=id1,id2`
+  const selectedItemIdsParam = searchParams.get("items");
+  const selectedItemIds = React.useMemo(() => {
+    return selectedItemIdsParam ? selectedItemIdsParam.split(",") : [];
+  }, [selectedItemIdsParam]);
+
+  const items = React.useMemo(() => {
+    if (selectedItemIds.length === 0) return allItems;
+    return allItems.filter((item) => selectedItemIds.includes(item.id));
+  }, [allItems, selectedItemIds]);
+
+  // Recalculate subtotal for selected items
+  const subtotal = React.useMemo(() => {
+    return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  }, [items]);
+
   const [isProcessing, setIsProcessing] = React.useState(false);
 
   // ── Derive initial contact from profile ──────────────────────────────────
@@ -420,8 +441,22 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const set = <K extends keyof CreateOrderFormData>(key: K) => (v: CreateOrderFormData[K]) =>
-    setForm((prev) => ({ ...prev, [key]: v }));
+  const isPapanBungaOnly =
+    items.length > 0 && items.every((i) => i.product.category?.slug === "papan-bunga");
+
+  React.useEffect(() => {
+    if (isPapanBungaOnly && form.deliveryMethod !== "FIORISCE_DELIVERY") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setForm((prev) => ({ ...prev, deliveryMethod: "FIORISCE_DELIVERY" }));
+    } else if (!isPapanBungaOnly && form.deliveryMethod === "FIORISCE_DELIVERY") {
+      setForm((prev) => ({ ...prev, deliveryMethod: "PICKUP" }));
+    }
+  }, [isPapanBungaOnly, form.deliveryMethod]);
+
+  const set =
+    <K extends keyof CreateOrderFormData>(key: K) =>
+    (v: CreateOrderFormData[K]) =>
+      setForm((prev) => ({ ...prev, [key]: v }));
 
   const handleSelectAddress = (addr: AddressData) => {
     setSelectedAddressId(addr.id);
@@ -448,6 +483,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
       const payload = {
         ...form,
         addressId: selectedAddressId,
+        selectedItemIds: items.map((i) => i.id),
       };
       const result = await createOrder(payload);
 
@@ -615,35 +651,62 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
 
               <div className="space-y-4">
                 <Label className="text-b5">Delivery Method</Label>
-                <RadioGroup
-                  value={form.deliveryMethod}
-                  onValueChange={(val: "PICKUP" | "GOSEND") => set("deliveryMethod")(val)}
-                  className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-                >
-                  <div className={`flex items-center space-x-3 border p-4 rounded-xl cursor-pointer ${form.deliveryMethod === "PICKUP" ? "border-blush-500 bg-blush-50 dark:bg-blush-900/10" : "border-neutral-200 dark:border-neutral-700"}`}>
-                    <RadioGroupItem value="PICKUP" id="delivery-pickup" />
-                    <Label htmlFor="delivery-pickup" className="cursor-pointer flex-1">
-                      Pick Up
-                      <p className="text-b6 text-neutral-500 font-normal">Pick up at our store</p>
-                    </Label>
+                {isPapanBungaOnly ? (
+                  <div className="p-4 bg-blush-50 dark:bg-blush-950/30 text-blush-800 dark:text-blush-200 rounded-xl border border-blush-200 dark:border-blush-900">
+                    <p className="font-semibold mb-1">Free Delivery by Fiorisce</p>
+                    <p className="text-sm">
+                      Papan Bunga includes free delivery. Please provide the delivery address below.
+                    </p>
                   </div>
-                  <div className={`flex items-center space-x-3 border p-4 rounded-xl cursor-pointer ${form.deliveryMethod === "GOSEND" ? "border-blush-500 bg-blush-50 dark:bg-blush-900/10" : "border-neutral-200 dark:border-neutral-700"}`}>
-                    <RadioGroupItem value="GOSEND" id="delivery-gosend" />
-                    <Label htmlFor="delivery-gosend" className="cursor-pointer flex-1">
-                      GoSend
-                      <p className="text-b6 text-neutral-500 font-normal">Order courier yourself</p>
-                    </Label>
-                  </div>
-                </RadioGroup>
+                ) : (
+                  <>
+                    <RadioGroup
+                      value={form.deliveryMethod}
+                      onValueChange={(val: "PICKUP" | "GOSEND") => set("deliveryMethod")(val)}
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                    >
+                      <div
+                        className={`flex items-center space-x-3 border p-4 rounded-xl cursor-pointer ${form.deliveryMethod === "PICKUP" ? "border-blush-500 bg-blush-50 dark:bg-blush-900/10" : "border-neutral-200 dark:border-neutral-700"}`}
+                      >
+                        <RadioGroupItem value="PICKUP" id="delivery-pickup" />
+                        <Label htmlFor="delivery-pickup" className="cursor-pointer flex-1">
+                          Pick Up
+                          <p className="text-b6 text-neutral-500 font-normal">
+                            Pick up at our store
+                          </p>
+                        </Label>
+                      </div>
+                      <div
+                        className={`flex items-center space-x-3 border p-4 rounded-xl cursor-pointer ${form.deliveryMethod === "GOSEND" ? "border-blush-500 bg-blush-50 dark:bg-blush-900/10" : "border-neutral-200 dark:border-neutral-700"}`}
+                      >
+                        <RadioGroupItem value="GOSEND" id="delivery-gosend" />
+                        <Label htmlFor="delivery-gosend" className="cursor-pointer flex-1">
+                          GoSend
+                          <p className="text-b6 text-neutral-500 font-normal">
+                            Order courier yourself
+                          </p>
+                        </Label>
+                      </div>
+                    </RadioGroup>
 
-                {form.deliveryMethod === "GOSEND" && (
-                  <div className="p-4 bg-blue-50 dark:bg-blue-950/30 text-blue-800 dark:text-blue-200 rounded-xl text-sm mt-2">
-                    <p className="font-semibold mb-1">Instruction for GoSend:</p>
-                    <p>Please order a GoSend / GrabExpress courier yourself to pick up the flowers at our store.</p>
-                    <a href="https://maps.app.goo.gl/4HAzwzqoAbfYGrbR8" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 mt-2 text-blue-600 dark:text-blue-400 hover:underline">
-                      <MapPin className="h-4 w-4" /> Open in Google Maps
-                    </a>
-                  </div>
+                    {form.deliveryMethod === "GOSEND" && (
+                      <div className="p-4 bg-blue-50 dark:bg-blue-950/30 text-blue-800 dark:text-blue-200 rounded-xl text-sm mt-2">
+                        <p className="font-semibold mb-1">Instruction for GoSend:</p>
+                        <p>
+                          Please order a GoSend / GrabExpress courier yourself to pick up the
+                          flowers at our store.
+                        </p>
+                        <a
+                          href="https://maps.app.goo.gl/4HAzwzqoAbfYGrbR8"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 mt-2 text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                          <MapPin className="h-4 w-4" /> Open in Google Maps
+                        </a>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -668,7 +731,9 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               <div className="space-y-2 pt-2">
                 <Label htmlFor="messageCard" className="flex justify-between items-end">
                   <span>Message Card (Optional)</span>
-                  <span className={`text-xs ${(form.messageCard?.match(/\\S+/g)?.length || 0) > 30 ? "text-red-500 font-bold" : "text-neutral-400"}`}>
+                  <span
+                    className={`text-xs ${(form.messageCard?.match(/\\S+/g)?.length || 0) > 30 ? "text-red-500 font-bold" : "text-neutral-400"}`}
+                  >
                     {form.messageCard?.match(/\\S+/g)?.length || 0} / 30 words
                   </span>
                 </Label>
@@ -681,101 +746,105 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                 />
               </div>
 
-              <div className="flex items-start gap-3 pt-2">
-                <Checkbox
-                  id="includePaperBag"
-                  checked={form.deliveryMethod === "GOSEND" || form.includePaperBag}
-                  disabled={form.deliveryMethod === "GOSEND"}
-                  onCheckedChange={(c) => set("includePaperBag")(!!c)}
-                  className="mt-1"
-                />
-                <div>
-                  <Label htmlFor="includePaperBag" className="cursor-pointer font-medium text-neutral-900 dark:text-neutral-100">
-                    Include Paper Bag
-                  </Label>
-                  <p className="text-b6 text-neutral-500 mt-0.5">
-                    Required for GoSend. Size adjusts automatically.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* 3. Shipping Address */}
-            {form.deliveryMethod === "GOSEND" && (
-            <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
-              <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-6">
-                3. Shipping Address
-              </h2>
-
-              {/* Saved address picker */}
-              <SavedAddressPicker
-                addresses={addresses}
-                selectedId={selectedAddressId}
-                onSelect={handleSelectAddress}
-                onUseNew={handleUseNew}
-              />
-
-              {/* Manual address form — shown when "new address" or no saved addresses */}
-              {isAddressFormVisible && (
-                <div
-                  className={`space-y-4 ${addresses.length > 0 ? "mt-6 pt-6 border-t border-neutral-100 dark:border-neutral-800" : ""}`}
-                >
-                  {addresses.length > 0 && (
-                    <p className="text-b6 font-inter font-semibold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                      New address details
+              {!isPapanBungaOnly && (
+                <div className="flex items-start gap-3 pt-2">
+                  <Checkbox
+                    id="includePaperBag"
+                    checked={form.deliveryMethod === "GOSEND" || form.includePaperBag}
+                    disabled={form.deliveryMethod === "GOSEND"}
+                    onCheckedChange={(c) => set("includePaperBag")(!!c)}
+                    className="mt-1"
+                  />
+                  <div>
+                    <Label
+                      htmlFor="includePaperBag"
+                      className="cursor-pointer font-medium text-neutral-900 dark:text-neutral-100"
+                    >
+                      Include Paper Bag
+                    </Label>
+                    <p className="text-b6 text-neutral-500 mt-0.5">
+                      Required for GoSend. Size adjusts automatically.
                     </p>
-                  )}
-                  <Field
-                    id="address"
-                    label="Street Address"
-                    required
-                    value={form.address}
-                    onChange={set("address")}
-                    placeholder="Jl. Sudirman No. 1"
-                  />
-                  <Field
-                    id="apartment"
-                    label="Apartment, suite, etc. (optional)"
-                    value={form.apartment ?? ""}
-                    onChange={set("apartment")}
-                    placeholder="Tower A, Unit 12"
-                  />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Field
-                      id="city"
-                      label="City"
-                      required
-                      value={form.city}
-                      onChange={set("city")}
-                      placeholder="Jakarta Selatan"
-                    />
-                    <Field
-                      id="postalCode"
-                      label="Postal Code"
-                      required
-                      value={form.postalCode}
-                      onChange={set("postalCode")}
-                      placeholder="12190"
-                    />
                   </div>
                 </div>
               )}
-
-              {/* When saved address is selected — show read-only preview with edit hint */}
-              {!isAddressFormVisible && selectedAddressId && (
-                <div className="mt-6 pt-6 border-t border-neutral-100 dark:border-neutral-800 space-y-4">
-                  {/* Still allow editing address + apartment for this order */}
-                  <Field
-                    id="apartment"
-                    label="Apartment, suite, etc. (optional)"
-                    value={form.apartment ?? ""}
-                    onChange={set("apartment")}
-                    placeholder="Tower A, Unit 12"
-                  />
-                </div>
-              )}
             </section>
 
+            {/* 3. Shipping Address */}
+            {isPapanBungaOnly && (
+              <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
+                <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-6">
+                  3. Shipping Address
+                </h2>
+
+                {/* Saved address picker */}
+                <SavedAddressPicker
+                  addresses={addresses}
+                  selectedId={selectedAddressId}
+                  onSelect={handleSelectAddress}
+                  onUseNew={handleUseNew}
+                />
+
+                {/* Manual address form — shown when "new address" or no saved addresses */}
+                {isAddressFormVisible && (
+                  <div
+                    className={`space-y-4 ${addresses.length > 0 ? "mt-6 pt-6 border-t border-neutral-100 dark:border-neutral-800" : ""}`}
+                  >
+                    {addresses.length > 0 && (
+                      <p className="text-b6 font-inter font-semibold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                        New address details
+                      </p>
+                    )}
+                    <Field
+                      id="address"
+                      label="Street Address"
+                      required
+                      value={form.address || ""}
+                      onChange={set("address")}
+                      placeholder="Jl. Sudirman No. 1"
+                    />
+                    <Field
+                      id="apartment"
+                      label="Apartment, suite, etc. (optional)"
+                      value={form.apartment ?? ""}
+                      onChange={set("apartment")}
+                      placeholder="Tower A, Unit 12"
+                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Field
+                        id="city"
+                        label="City"
+                        required
+                        value={form.city || ""}
+                        onChange={set("city")}
+                        placeholder="Jakarta Selatan"
+                      />
+                      <Field
+                        id="postalCode"
+                        label="Postal Code"
+                        required
+                        value={form.postalCode || ""}
+                        onChange={set("postalCode")}
+                        placeholder="12190"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* When saved address is selected — show read-only preview with edit hint */}
+                {!isAddressFormVisible && selectedAddressId && (
+                  <div className="mt-6 pt-6 border-t border-neutral-100 dark:border-neutral-800 space-y-4">
+                    {/* Still allow editing address + apartment for this order */}
+                    <Field
+                      id="apartment"
+                      label="Apartment, suite, etc. (optional)"
+                      value={form.apartment ?? ""}
+                      onChange={set("apartment")}
+                      placeholder="Tower A, Unit 12"
+                    />
+                  </div>
+                )}
+              </section>
             )}
 
             {/* 4. Payment note */}

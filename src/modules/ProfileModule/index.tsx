@@ -15,14 +15,11 @@ import {
   Loader2,
   Trash2,
   MapPin,
-  KeyRound,
   User,
   AlertCircle,
-  ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 import { updateProfile, deleteAddress, setDefaultAddress } from "@/app/actions/profile";
-import { authClient } from "@/lib/auth-client";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
 
 // ─── Personal Info Section ────────────────────────────────────────────────────
@@ -183,147 +180,6 @@ function PersonalInfoSection({ profile }: { profile: ProfileData }) {
           </div>
         )}
       </form>
-    </section>
-  );
-}
-
-// ─── Password Section ─────────────────────────────────────────────────────────
-
-function PasswordSection({ hasPassword }: { hasPassword: boolean }) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [isSaving, setIsSaving] = React.useState(false);
-  const [current, setCurrent] = React.useState("");
-  const [next, setNext] = React.useState("");
-  const [confirm, setConfirm] = React.useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (next !== confirm) {
-      toast.error("New passwords do not match.");
-      return;
-    }
-    if (next.length < 8) {
-      toast.error("Password must be at least 8 characters.");
-      return;
-    }
-    setIsSaving(true);
-    const { error } = await authClient.changePassword({
-      newPassword: next,
-      currentPassword: current,
-      revokeOtherSessions: true,
-    });
-    setIsSaving(false);
-    if (error) {
-      toast.error(error.message || "Failed to update password.");
-    } else {
-      toast.success(hasPassword ? "Password updated!" : "Password set!");
-      setCurrent("");
-      setNext("");
-      setConfirm("");
-      setIsOpen(false);
-    }
-  };
-
-  return (
-    <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-neutral-200 dark:border-neutral-800 shadow-sm">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="h-9 w-9 flex items-center justify-center rounded-xl bg-camel-100 dark:bg-camel-900/30">
-            <KeyRound className="h-4 w-4 text-camel-600 dark:text-camel-400" />
-          </div>
-          <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-            {hasPassword ? "Change Password" : "Set Password"}
-          </h2>
-        </div>
-        {!isOpen && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsOpen(true)}
-            className="flex items-center gap-1.5"
-          >
-            <Edit className="h-3.5 w-3.5" />
-            {hasPassword ? "Change" : "Set"}
-          </Button>
-        )}
-      </div>
-
-      {!isOpen ? (
-        <p className="text-b5 font-inter text-neutral-500 dark:text-neutral-400">
-          {hasPassword
-            ? "Your password is set. Click to change it."
-            : "You signed up with Google. You can optionally set a password to also log in with email."}
-        </p>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {hasPassword && (
-            <div className="space-y-2">
-              <Label htmlFor="currentPassword">Current Password</Label>
-              <Input
-                id="currentPassword"
-                type="password"
-                value={current}
-                onChange={(e) => setCurrent(e.target.value)}
-                required={hasPassword}
-                autoComplete="current-password"
-                placeholder="••••••••"
-              />
-            </div>
-          )}
-          <div className="space-y-2">
-            <Label htmlFor="newPassword">New Password</Label>
-            <Input
-              id="newPassword"
-              type="password"
-              value={next}
-              onChange={(e) => setNext(e.target.value)}
-              required
-              autoComplete="new-password"
-              placeholder="At least 8 characters"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm New Password</Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              required
-              autoComplete="new-password"
-              placeholder="Re-enter new password"
-            />
-          </div>
-          <div className="flex items-center gap-3 pt-2">
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={isSaving}
-              className="flex items-center gap-2"
-            >
-              {isSaving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <ShieldCheck className="h-4 w-4" />
-              )}
-              {isSaving ? "Saving…" : hasPassword ? "Update Password" : "Set Password"}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                setIsOpen(false);
-                setCurrent("");
-                setNext("");
-                setConfirm("");
-              }}
-              disabled={isSaving}
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
-      )}
     </section>
   );
 }
@@ -502,11 +358,6 @@ export function ProfileModule({ profile, addresses, error }: ProfileModuleProps)
     );
   }
 
-  // Check if this user has a password set (we can't know directly, but email-only users
-  // from OAuth won't have passwordHash — we pass a hint by checking if email provider was used)
-  // We approximate: if profile.role is set we just default to showing the set password option
-  const hasPassword = true; // Will be handled gracefully in the server action
-
   return (
     <div className="space-y-8">
       {/* Header & Breadcrumb */}
@@ -546,7 +397,6 @@ export function ProfileModule({ profile, addresses, error }: ProfileModuleProps)
         {/* Left — main forms */}
         <div className="lg:col-span-2 space-y-6">
           <PersonalInfoSection profile={profile} />
-          <PasswordSection hasPassword={hasPassword} />
           <AddressesSection addresses={addresses} />
         </div>
 

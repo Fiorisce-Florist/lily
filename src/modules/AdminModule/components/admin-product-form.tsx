@@ -43,12 +43,10 @@ export function AdminProductForm({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const [localCategories, setLocalCategories] = React.useState(categories);
-
   const [form, setForm] = React.useState<AdminProductFormData>({
     name: defaultValues?.name ?? "",
     slug: defaultValues?.slug ?? "",
-    categoryId: defaultValues?.categoryId ?? localCategories[0]?.id ?? "",
+    categoryId: defaultValues?.categoryId ?? categories[0]?.id ?? "",
     price: defaultValues?.price ?? 0,
     description: defaultValues?.description ?? "",
     isAvailable: defaultValues?.isAvailable ?? true,

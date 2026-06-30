@@ -9,6 +9,7 @@ import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/context/cart-context";
 import { useSession } from "@/lib/auth-client";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { CartItemData } from "@/app/actions/cart";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -69,12 +70,17 @@ function UnauthenticatedCart() {
 
 // ─── Cart Item Row ─────────────────────────────────────────────────────────────
 
-function CartItemRow({ item }: { item: CartItemData }) {
+function CartItemRow({ item, isSelected, onToggle }: { item: CartItemData, isSelected: boolean, onToggle: (checked: boolean) => void }) {
   const { updateItem, removeItem } = useCart();
   const image = item.product.images[0]?.imageUrl ?? "";
 
   return (
-    <div className="flex gap-4 py-5 first:pt-0 border-b border-cornsilk-200 dark:border-neutral-800 last:border-b-0">
+    <div className="flex items-center gap-4 py-5 first:pt-0 border-b border-cornsilk-200 dark:border-neutral-800 last:border-b-0">
+      <Checkbox
+        checked={isSelected}
+        onCheckedChange={(checked) => onToggle(!!checked)}
+        className="shrink-0"
+      />
       {/* Image */}
       <Link href={`/shop/${item.product.slug}`} className="shrink-0">
         <div className="relative h-24 w-24 sm:h-28 sm:w-28 overflow-hidden rounded-xl bg-cornsilk-100 dark:bg-neutral-800">
@@ -164,7 +170,17 @@ function CartItemRow({ item }: { item: CartItemData }) {
 
 // ─── Cart Summary ──────────────────────────────────────────────────────────────
 
-function CartSummaryPanel({ subtotal, onClear }: { subtotal: number; onClear: () => void }) {
+function CartSummaryPanel({ 
+  subtotal, 
+  onClear,
+  isMixedCart,
+  selectedIds
+}: { 
+  subtotal: number; 
+  onClear: () => void;
+  isMixedCart?: boolean;
+  selectedIds: string[];
+}) {
   const shipping = subtotal >= 500000 ? 0 : subtotal > 0 ? 50000 : 0;
   const total = subtotal + shipping;
 
@@ -200,8 +216,21 @@ function CartSummaryPanel({ subtotal, onClear }: { subtotal: number; onClear: ()
         </div>
       </div>
 
-      <Button variant="primary" size="md" className="w-full" asChild>
-        <Link href="/checkout">Proceed to Checkout</Link>
+      {isMixedCart && (
+        <div className="rounded-lg bg-blush-50 dark:bg-blush-950/30 p-3 mb-2 flex items-start gap-2 border border-blush-200 dark:border-blush-900">
+          <AlertCircle className="h-5 w-5 text-blush-600 dark:text-blush-400 shrink-0 mt-0.5" />
+          <p className="text-b5 font-inter text-blush-800 dark:text-blush-300">
+            Papan Bunga includes free delivery and must be checked out separately from other products.
+          </p>
+        </div>
+      )}
+
+      <Button variant="primary" size="md" className="w-full" disabled={isMixedCart || selectedIds.length === 0} asChild={!isMixedCart && selectedIds.length > 0}>
+        {isMixedCart || selectedIds.length === 0 ? (
+          <span>Proceed to Checkout</span>
+        ) : (
+          <Link href={`/checkout?items=${selectedIds.join(",")}`}>Proceed to Checkout</Link>
+        )}
       </Button>
 
       <Button
@@ -249,7 +278,33 @@ function CartSkeleton() {
 export function CartModule() {
   const { data: session, isPending } = useSession();
   const status = isPending ? "loading" : session ? "authenticated" : "unauthenticated";
-  const { items, subtotal, isLoading, clearCart } = useCart();
+  const { items, isLoading, clearCart } = useCart();
+  const [selectedIds, setSelectedIds] = React.useState<string[]>([]);
+
+  // Initially select all items when loaded
+  React.useEffect(() => {
+    if (items.length > 0 && selectedIds.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedIds(items.map(i => i.id));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
+
+  const toggleAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(items.map(i => i.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const toggleItem = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedIds(prev => [...prev, id]);
+    } else {
+      setSelectedIds(prev => prev.filter(i => i !== id));
+    }
+  };
 
   if (status === "loading" || isLoading) {
     return (
@@ -307,25 +362,52 @@ export function CartModule() {
           <EmptyCart />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-            {/* Items */}
-            <div className="lg:col-span-7 xl:col-span-8">
-              <div className="rounded-2xl border border-cornsilk-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 shadow-sm">
-                {items.map((item) => (
-                  <CartItemRow key={item.id} item={item} />
-                ))}
-              </div>
+            {(() => {
+              const selectedItems = items.filter(i => selectedIds.includes(i.id));
+              const hasPapanBunga = selectedItems.some((i) => i.product.category?.slug === "papan-bunga");
+              const hasOther = selectedItems.some((i) => i.product.category?.slug !== "papan-bunga");
+              const isMixedCart = hasPapanBunga && hasOther;
+              const subtotal = selectedItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+              
+              return (
+                <>
+                  {/* Items */}
+                  <div className="lg:col-span-7 xl:col-span-8">
+                    <div className="rounded-2xl border border-cornsilk-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 shadow-sm">
+                      <div className="flex items-center gap-4 pb-4 mb-4 border-b border-cornsilk-200 dark:border-neutral-800">
+                        <Checkbox 
+                          checked={items.length > 0 && selectedIds.length === items.length}
+                          onCheckedChange={(c) => toggleAll(!!c)}
+                          id="select-all"
+                        />
+                        <label htmlFor="select-all" className="text-b5 font-semibold cursor-pointer">
+                          Select All Items
+                        </label>
+                      </div>
+                      {items.map((item) => (
+                        <CartItemRow 
+                          key={item.id} 
+                          item={item} 
+                          isSelected={selectedIds.includes(item.id)}
+                          onToggle={(checked) => toggleItem(item.id, checked)}
+                        />
+                      ))}
+                    </div>
 
-              <div className="mt-4 flex items-center gap-4">
-                <Button variant="link" size="sm" asChild>
-                  <Link href="/shop">← Continue Shopping</Link>
-                </Button>
-              </div>
-            </div>
+                    <div className="mt-4 flex items-center gap-4">
+                      <Button variant="link" size="sm" asChild>
+                        <Link href="/shop">← Continue Shopping</Link>
+                      </Button>
+                    </div>
+                  </div>
 
-            {/* Summary */}
-            <div className="lg:col-span-5 xl:col-span-4">
-              <CartSummaryPanel subtotal={subtotal} onClear={clearCart} />
-            </div>
+                  {/* Summary */}
+                  <div className="lg:col-span-5 xl:col-span-4">
+                    <CartSummaryPanel subtotal={subtotal} onClear={clearCart} isMixedCart={isMixedCart} selectedIds={selectedIds} />
+                  </div>
+                </>
+              );
+            })()}
           </div>
         )}
       </div>

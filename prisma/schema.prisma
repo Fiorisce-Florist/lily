@@ -343,6 +343,7 @@ enum OrderStatus {
 enum DeliveryMethod {
   PICKUP
   GOSEND
+  FIORISCE_DELIVERY
 
   @@map("delivery_method")
 }
