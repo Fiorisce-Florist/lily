@@ -180,7 +180,7 @@ export function OrderDetailView({ order }: { order: any }) {
                   </p>
                 </>
               ) : (
-                  <p className="text-neutral-500 italic">No shipping address provided.</p>
+                <p className="text-neutral-500 italic">No shipping address provided.</p>
               )}
             </div>
           </div>
@@ -194,13 +194,13 @@ export function OrderDetailView({ order }: { order: any }) {
               <div>
                 <p className="text-neutral-500 mb-1">Method</p>
                 <p className="font-medium text-neutral-900 dark:text-white">
-                  {order.deliveryMethod === 'GOSEND' ? 'GoSend (Self-order)' : 'Pick Up'}
+                  {order.deliveryMethod === "GOSEND" ? "GoSend (Self-order)" : "Pick Up"}
                 </p>
               </div>
               <div>
                 <p className="text-neutral-500 mb-1">Pickup / Delivery Date</p>
                 <p className="font-medium text-neutral-900 dark:text-white">
-                  {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : 'N/A'}
+                  {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : "N/A"}
                 </p>
               </div>
               {order.deliveryTime && (
@@ -214,9 +214,7 @@ export function OrderDetailView({ order }: { order: any }) {
               {order.includePaperBag && (
                 <div>
                   <p className="text-neutral-500 mb-1">Paper Bag</p>
-                  <p className="font-medium text-neutral-900 dark:text-white">
-                    Included
-                  </p>
+                  <p className="font-medium text-neutral-900 dark:text-white">Included</p>
                 </div>
               )}
               {order.messageCard && (

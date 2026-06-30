@@ -21,8 +21,49 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fiorisce",
-  description: "Where Every Bloom Tells a Story",
+  title: {
+    default: "Fiorisce | Premium Florist & Floral Arrangements",
+    template: "%s | Fiorisce",
+  },
+  description:
+    "Where Every Bloom Tells a Story. Discover premium, handcrafted floral arrangements for weddings, events, and everyday gifting.",
+  keywords: [
+    "florist",
+    "flowers",
+    "floral arrangements",
+    "boutique florist",
+    "flower delivery",
+    "premium flowers",
+    "Fiorisce",
+  ],
+  authors: [{ name: "Fiorisce" }],
+  creator: "Fiorisce",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    title: "Fiorisce | Premium Florist",
+    description:
+      "Where Every Bloom Tells a Story. Discover premium, handcrafted floral arrangements.",
+    siteName: "Fiorisce",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fiorisce | Premium Florist",
+    description:
+      "Where Every Bloom Tells a Story. Discover premium, handcrafted floral arrangements.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 import { TooltipProvider } from "@/components/ui/tooltip";

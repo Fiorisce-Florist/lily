@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   CreditCard,
   ChevronLeft,
-  ShieldCheck,
   Loader2,
   Package,
   MapPin,
@@ -177,7 +176,11 @@ function OrderSummaryPanel({
           <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
             <span>Delivery Method</span>
             <span className="font-jetbrains text-olive-600 dark:text-olive-400">
-              {deliveryMethod === "GOSEND" ? "GoSend (Ordered by User)" : deliveryMethod === "FIORISCE_DELIVERY" ? "Fiorisce Delivery" : "Pick Up (Free)"}
+              {deliveryMethod === "GOSEND"
+                ? "GoSend (Ordered by User)"
+                : deliveryMethod === "FIORISCE_DELIVERY"
+                  ? "Fiorisce Delivery"
+                  : "Pick Up (Free)"}
             </span>
           </div>
         </div>
@@ -839,11 +842,6 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                 "Place Order & Pay"
               )}
             </Button>
-
-            <p className="text-center text-b6 font-inter text-neutral-400 dark:text-neutral-500 flex items-center justify-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              Payments secured by Midtrans
-            </p>
           </div>
         </form>
       </div>

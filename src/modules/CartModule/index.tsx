@@ -70,7 +70,15 @@ function UnauthenticatedCart() {
 
 // ─── Cart Item Row ─────────────────────────────────────────────────────────────
 
-function CartItemRow({ item, isSelected, onToggle }: { item: CartItemData, isSelected: boolean, onToggle: (checked: boolean) => void }) {
+function CartItemRow({
+  item,
+  isSelected,
+  onToggle,
+}: {
+  item: CartItemData;
+  isSelected: boolean;
+  onToggle: (checked: boolean) => void;
+}) {
   const { updateItem, removeItem } = useCart();
   const image = item.product.images[0]?.imageUrl ?? "";
 
@@ -170,13 +178,13 @@ function CartItemRow({ item, isSelected, onToggle }: { item: CartItemData, isSel
 
 // ─── Cart Summary ──────────────────────────────────────────────────────────────
 
-function CartSummaryPanel({ 
-  subtotal, 
+function CartSummaryPanel({
+  subtotal,
   onClear,
   isMixedCart,
-  selectedIds
-}: { 
-  subtotal: number; 
+  selectedIds,
+}: {
+  subtotal: number;
   onClear: () => void;
   isMixedCart?: boolean;
   selectedIds: string[];
@@ -220,12 +228,19 @@ function CartSummaryPanel({
         <div className="rounded-lg bg-blush-50 dark:bg-blush-950/30 p-3 mb-2 flex items-start gap-2 border border-blush-200 dark:border-blush-900">
           <AlertCircle className="h-5 w-5 text-blush-600 dark:text-blush-400 shrink-0 mt-0.5" />
           <p className="text-b5 font-inter text-blush-800 dark:text-blush-300">
-            Papan Bunga includes free delivery and must be checked out separately from other products.
+            Papan Bunga includes free delivery and must be checked out separately from other
+            products.
           </p>
         </div>
       )}
 
-      <Button variant="primary" size="md" className="w-full" disabled={isMixedCart || selectedIds.length === 0} asChild={!isMixedCart && selectedIds.length > 0}>
+      <Button
+        variant="primary"
+        size="md"
+        className="w-full"
+        disabled={isMixedCart || selectedIds.length === 0}
+        asChild={!isMixedCart && selectedIds.length > 0}
+      >
         {isMixedCart || selectedIds.length === 0 ? (
           <span>Proceed to Checkout</span>
         ) : (
@@ -285,14 +300,14 @@ export function CartModule() {
   React.useEffect(() => {
     if (items.length > 0 && selectedIds.length === 0) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSelectedIds(items.map(i => i.id));
+      setSelectedIds(items.map((i) => i.id));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
   const toggleAll = (checked: boolean) => {
     if (checked) {
-      setSelectedIds(items.map(i => i.id));
+      setSelectedIds(items.map((i) => i.id));
     } else {
       setSelectedIds([]);
     }
@@ -300,9 +315,9 @@ export function CartModule() {
 
   const toggleItem = (id: string, checked: boolean) => {
     if (checked) {
-      setSelectedIds(prev => [...prev, id]);
+      setSelectedIds((prev) => [...prev, id]);
     } else {
-      setSelectedIds(prev => prev.filter(i => i !== id));
+      setSelectedIds((prev) => prev.filter((i) => i !== id));
     }
   };
 
@@ -363,31 +378,41 @@ export function CartModule() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {(() => {
-              const selectedItems = items.filter(i => selectedIds.includes(i.id));
-              const hasPapanBunga = selectedItems.some((i) => i.product.category?.slug === "papan-bunga");
-              const hasOther = selectedItems.some((i) => i.product.category?.slug !== "papan-bunga");
+              const selectedItems = items.filter((i) => selectedIds.includes(i.id));
+              const hasPapanBunga = selectedItems.some(
+                (i) => i.product.category?.slug === "papan-bunga"
+              );
+              const hasOther = selectedItems.some(
+                (i) => i.product.category?.slug !== "papan-bunga"
+              );
               const isMixedCart = hasPapanBunga && hasOther;
-              const subtotal = selectedItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-              
+              const subtotal = selectedItems.reduce(
+                (acc, item) => acc + item.price * item.quantity,
+                0
+              );
+
               return (
                 <>
                   {/* Items */}
                   <div className="lg:col-span-7 xl:col-span-8">
                     <div className="rounded-2xl border border-cornsilk-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 shadow-sm">
                       <div className="flex items-center gap-4 pb-4 mb-4 border-b border-cornsilk-200 dark:border-neutral-800">
-                        <Checkbox 
+                        <Checkbox
                           checked={items.length > 0 && selectedIds.length === items.length}
                           onCheckedChange={(c) => toggleAll(!!c)}
                           id="select-all"
                         />
-                        <label htmlFor="select-all" className="text-b5 font-semibold cursor-pointer">
+                        <label
+                          htmlFor="select-all"
+                          className="text-b5 font-semibold cursor-pointer"
+                        >
                           Select All Items
                         </label>
                       </div>
                       {items.map((item) => (
-                        <CartItemRow 
-                          key={item.id} 
-                          item={item} 
+                        <CartItemRow
+                          key={item.id}
+                          item={item}
                           isSelected={selectedIds.includes(item.id)}
                           onToggle={(checked) => toggleItem(item.id, checked)}
                         />
@@ -403,7 +428,12 @@ export function CartModule() {
 
                   {/* Summary */}
                   <div className="lg:col-span-5 xl:col-span-4">
-                    <CartSummaryPanel subtotal={subtotal} onClear={clearCart} isMixedCart={isMixedCart} selectedIds={selectedIds} />
+                    <CartSummaryPanel
+                      subtotal={subtotal}
+                      onClear={clearCart}
+                      isMixedCart={isMixedCart}
+                      selectedIds={selectedIds}
+                    />
                   </div>
                 </>
               );

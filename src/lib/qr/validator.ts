@@ -16,9 +16,7 @@ export function validateQRIS(qrisString: string): ValidationResult {
 
   // Must start with payload format indicator "000201"
   if (!str.startsWith("000201")) {
-    errors.push(
-      'QRIS must start with Payload Format Indicator "000201"'
-    );
+    errors.push('QRIS must start with Payload Format Indicator "000201"');
   }
 
   // Minimum length check (header + CRC = at least 20 chars)
@@ -33,9 +31,7 @@ export function validateQRIS(qrisString: string): ValidationResult {
   const calculatedCRC = calculateCRC16(dataWithoutCRC);
 
   if (declaredCRC.toUpperCase() !== calculatedCRC) {
-    errors.push(
-      `CRC mismatch: expected ${calculatedCRC}, got ${declaredCRC.toUpperCase()}`
-    );
+    errors.push(`CRC mismatch: expected ${calculatedCRC}, got ${declaredCRC.toUpperCase()}`);
   }
 
   // Try to parse TLV structure
@@ -69,9 +65,7 @@ export function validateQRIS(qrisString: string): ValidationResult {
   // Check Point of Initiation Method value
   const method = elements.find((e) => e.tag === "01");
   if (method && method.value !== "11" && method.value !== "12") {
-    errors.push(
-      `Invalid Point of Initiation Method: "${method.value}" (must be "11" or "12")`
-    );
+    errors.push(`Invalid Point of Initiation Method: "${method.value}" (must be "11" or "12")`);
   }
 
   // Check at least one merchant account info exists (tags 26-51)

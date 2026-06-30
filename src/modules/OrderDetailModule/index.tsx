@@ -16,7 +16,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { PayNowButton } from "@/components/pay-now-button";
 import type { OrderData } from "@/app/actions/orders";
 import { uploadOrderReceipt } from "@/app/actions/orders";
 import { QRCodeCanvas } from "qrcode.react";
@@ -30,7 +29,12 @@ interface OrderDetailModuleProps {
   qrisString?: string;
 }
 
-export function OrderDetailModule({ order, orderNumber, error, qrisString }: OrderDetailModuleProps) {
+export function OrderDetailModule({
+  order,
+  orderNumber,
+  error,
+  qrisString,
+}: OrderDetailModuleProps) {
   const [isMounted, setIsMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -169,10 +173,6 @@ export function OrderDetailModule({ order, orderNumber, error, qrisString }: Ord
                     </p>
                   </div>
                 </div>
-                <PayNowButton
-                  orderNumber={order.orderNumber}
-                  className="w-full sm:w-auto shrink-0"
-                />
               </div>
             </section>
           )}
@@ -270,7 +270,6 @@ export function OrderDetailModule({ order, orderNumber, error, qrisString }: Ord
                 </li>
               ))}
             </ul>
-            
           </section>
           {/* Payment pending CTA — sidebar */}
           {order.status === "PENDING" && order.payment?.paymentMethod === "QRIS" && (
@@ -278,7 +277,7 @@ export function OrderDetailModule({ order, orderNumber, error, qrisString }: Ord
               <p className="text-b5 font-inter text-camel-800 dark:text-camel-300">
                 Payment is pending for this order. Please scan the QRIS below to pay.
               </p>
-              
+
               {qrisString ? (
                 <div className="space-y-4">
                   <div className="flex justify-center bg-white p-4 rounded-xl mx-auto w-fit shadow-sm border border-neutral-200">
@@ -289,9 +288,11 @@ export function OrderDetailModule({ order, orderNumber, error, qrisString }: Ord
                   </Button>
                 </div>
               ) : (
-                <p className="text-xs text-red-500">QRIS string is unavailable. Please contact support.</p>
+                <p className="text-xs text-red-500">
+                  QRIS string is unavailable. Please contact support.
+                </p>
               )}
-              
+
               {!order.payment?.receiptUrl ? (
                 <div className="space-y-2 pt-2 border-t border-camel-200 dark:border-camel-800/50">
                   <p className="text-b6 font-inter text-camel-800 dark:text-camel-300">
@@ -398,34 +399,42 @@ export function OrderDetailModule({ order, orderNumber, error, qrisString }: Ord
             <div className="space-y-3 text-b5 font-inter text-neutral-600 dark:text-neutral-400">
               <div className="flex justify-between">
                 <span>Method</span>
-                <span className="font-medium text-neutral-900 dark:text-cornsilk-100">{order.deliveryMethod === 'GOSEND' ? 'GoSend (Self-order)' : 'Pick Up'}</span>
+                <span className="font-medium text-neutral-900 dark:text-cornsilk-100">
+                  {order.deliveryMethod === "GOSEND" ? "GoSend (Self-order)" : "Pick Up"}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>Date</span>
-                <span className="font-medium text-neutral-900 dark:text-cornsilk-100">{order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : 'N/A'}</span>
+                <span className="font-medium text-neutral-900 dark:text-cornsilk-100">
+                  {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : "N/A"}
+                </span>
               </div>
               {order.deliveryTime && (
                 <div className="flex justify-between">
                   <span>Time</span>
-                  <span className="font-medium text-neutral-900 dark:text-cornsilk-100">{order.deliveryTime}</span>
+                  <span className="font-medium text-neutral-900 dark:text-cornsilk-100">
+                    {order.deliveryTime}
+                  </span>
                 </div>
               )}
               {order.includePaperBag && (
                 <div className="flex justify-between">
                   <span>Paper Bag</span>
-                  <span className="font-medium text-neutral-900 dark:text-cornsilk-100">Included</span>
+                  <span className="font-medium text-neutral-900 dark:text-cornsilk-100">
+                    Included
+                  </span>
                 </div>
               )}
             </div>
-            
+
             {order.messageCard && (
               <div className="mt-4 pt-4 border-t border-cornsilk-200 dark:border-neutral-800">
                 <span className="block text-b6 text-neutral-500 mb-1">Message Card</span>
-                <p className="text-b5 text-neutral-900 dark:text-cornsilk-100 italic">&quot;{order.messageCard}&quot;</p>
+                <p className="text-b5 text-neutral-900 dark:text-cornsilk-100 italic">
+                  &quot;{order.messageCard}&quot;
+                </p>
               </div>
             )}
-
-            
           </section>
 
           {/* Shipping Address */}
@@ -446,8 +455,6 @@ export function OrderDetailModule({ order, orderNumber, error, qrisString }: Ord
               </address>
             </section>
           )}
-
-          
         </div>
       </div>
     </div>

@@ -123,9 +123,10 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   }
 
   // Filter items if selectedItemIds is provided
-  const itemsToCheckout = formData.selectedItemIds && formData.selectedItemIds.length > 0 
-    ? cart.items.filter(item => formData.selectedItemIds!.includes(item.id))
-    : cart.items;
+  const itemsToCheckout =
+    formData.selectedItemIds && formData.selectedItemIds.length > 0
+      ? cart.items.filter((item) => formData.selectedItemIds!.includes(item.id))
+      : cart.items;
 
   if (itemsToCheckout.length === 0) {
     return { orderNumber: null, snapToken: null, error: "No items selected for checkout." };
@@ -144,7 +145,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
 
   // 3. Calculate totals
   let subtotal = itemsToCheckout.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
-  
+
   let paperBagCost = 0;
   if (formData.includePaperBag || formData.deliveryMethod === "GOSEND") {
     let hasLarge = false;
@@ -158,7 +159,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
     else if (hasMedium) paperBagCost = 7000;
     else paperBagCost = 5000;
   }
-  
+
   subtotal += paperBagCost;
   const shippingCost = calcShipping();
   const totalAmount = subtotal + shippingCost;
@@ -166,7 +167,11 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
 
   if (formData.deliveryMethod === "FIORISCE_DELIVERY") {
     if (!formData.address || !formData.city || !formData.postalCode) {
-      return { orderNumber: null, snapToken: null, error: "Address, city, and postal code are required for Fiorisce delivery." };
+      return {
+        orderNumber: null,
+        snapToken: null,
+        error: "Address, city, and postal code are required for Fiorisce delivery.",
+      };
     }
   }
 
@@ -229,11 +234,11 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
       });
 
       // Clear the selected items from the cart
-      await tx.cartItem.deleteMany({ 
-        where: { 
+      await tx.cartItem.deleteMany({
+        where: {
           cartId: cart.id,
-          id: { in: itemsToCheckout.map(i => i.id) }
-        } 
+          id: { in: itemsToCheckout.map((i) => i.id) },
+        },
       });
 
       return { order, addressId: addressIdToUse };

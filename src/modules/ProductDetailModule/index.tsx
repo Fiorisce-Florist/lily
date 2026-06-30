@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import {
-  ShoppingBag,
-  Minus,
-  Plus,
-  Package,
-  ZoomIn,
-  Loader2,
-} from "lucide-react";
+import { ShoppingBag, Minus, Plus, Package, ZoomIn, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -408,8 +401,6 @@ function DetailsTab({ bouquet }: { bouquet: Bouquet }) {
     </div>
   );
 }
-
-
 
 // ─── Related Products ─────────────────────────────────────────────────────────
 

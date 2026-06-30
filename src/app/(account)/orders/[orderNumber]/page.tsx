@@ -14,7 +14,7 @@ interface OrderDetailsPageProps {
 export default async function OrderDetailsPage({ params }: OrderDetailsPageProps) {
   const { orderNumber } = await params;
   const { order, error } = await getOrderByNumber(orderNumber);
-  
+
   let qrisString = "";
   if (order && order.status === "PENDING" && order.payment?.paymentMethod === "QRIS") {
     const baseQris = process.env.QR_STRING || "";
@@ -23,5 +23,12 @@ export default async function OrderDetailsPage({ params }: OrderDetailsPageProps
     }
   }
 
-  return <OrderDetailModule order={order} orderNumber={orderNumber} error={error} qrisString={qrisString} />;
+  return (
+    <OrderDetailModule
+      order={order}
+      orderNumber={orderNumber}
+      error={error}
+      qrisString={qrisString}
+    />
+  );
 }

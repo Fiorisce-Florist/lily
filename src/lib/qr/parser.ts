@@ -110,8 +110,7 @@ export function parseQRIS(qrisString: string): QRISData {
     })
     .map((t) => {
       const children = t.children ?? [];
-      const findChild = (childTag: string) =>
-        children.find((c) => c.tag === childTag);
+      const findChild = (childTag: string) => children.find((c) => c.tag === childTag);
 
       return {
         tag: t.tag,

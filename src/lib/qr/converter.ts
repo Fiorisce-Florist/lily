@@ -32,10 +32,7 @@ function makeTLV(tag: string, value: string, name = ""): TLV {
  * 4. Optionally insert Tip Indicator (tag 55) and fee value (tag 56/57)
  * 5. Recalculate CRC16 checksum
  */
-export function convertQRIS(
-  qrisString: string,
-  options: ConvertOptions
-): string {
+export function convertQRIS(qrisString: string, options: ConvertOptions): string {
   const elements = parseTLV(qrisString);
 
   // Build the new TLV array preserving order, injecting/replacing as needed
@@ -63,21 +60,11 @@ export function convertQRIS(
         if (options.fee.type === "fixed") {
           result.push(makeTLV("55", "02", "Tip or Convenience Indicator"));
           result.push(
-            makeTLV(
-              "56",
-              options.fee.value.toString(),
-              "Value of Convenience Fee (Fixed)"
-            )
+            makeTLV("56", options.fee.value.toString(), "Value of Convenience Fee (Fixed)")
           );
         } else {
           result.push(makeTLV("55", "03", "Tip or Convenience Indicator"));
-          result.push(
-            makeTLV(
-              "57",
-              options.fee.value.toString(),
-              "Value of Convenience Fee (%)"
-            )
-          );
+          result.push(makeTLV("57", options.fee.value.toString(), "Value of Convenience Fee (%)"));
         }
       }
 

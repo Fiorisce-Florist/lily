@@ -8,16 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import {
-  Save,
-  Edit,
-  X,
-  Loader2,
-  Trash2,
-  MapPin,
-  User,
-  AlertCircle,
-} from "lucide-react";
+import { Save, Edit, X, Loader2, Trash2, MapPin, User, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { updateProfile, deleteAddress, setDefaultAddress } from "@/app/actions/profile";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
