@@ -116,7 +116,7 @@ export function ProductsView({
                         <div className="min-w-0">
                           <Link
                             href={`/shop/${product.slug}`}
-                            className="font-inter font-medium text-neutral-900 dark:text-cornsilk-100 truncate max-w-50"
+                            className="font-inter font-medium text-neutral-900 dark:text-cornsilk-100 truncate max-w-50 hover:text-rose-300 dark:hover:text-rose-300"
                           >
                             {product.name}
                           </Link>
