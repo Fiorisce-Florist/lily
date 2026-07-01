@@ -463,7 +463,8 @@ export function ProductDetailModule({
   };
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId) || defaultVariant;
-  const imageToDisplay = userHasSelectedVariant && selectedVariant?.imageUrl ? selectedVariant.imageUrl : bouquet.image;
+  const imageToDisplay =
+    userHasSelectedVariant && selectedVariant?.imageUrl ? selectedVariant.imageUrl : bouquet.image;
 
   return (
     <TooltipProvider>

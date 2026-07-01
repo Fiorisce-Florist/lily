@@ -148,46 +148,46 @@ export function DashboardView({ stats }: { stats: DashboardStats }) {
                   </td>
                 </tr>
               ) : (
-                stats.recentOrders.map((order) => (
-                  <tr
-                    key={order.id}
-                    className="hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <Link
-                        href={`/admin/orders`}
-                        className="font-jetbrains font-medium text-blush-600 dark:text-blush-400 hover:underline"
-                      >
-                        {order.orderNumber}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 font-inter text-neutral-700 dark:text-neutral-300 max-w-[150px] truncate">
-                      {order.customerName}
-                    </td>
-                    <td className="px-6 py-4 font-inter text-neutral-600 dark:text-neutral-400">
-                      {order.itemCount}
-                    </td>
-                    <td className="px-6 py-4 font-jetbrains font-medium text-neutral-900 dark:text-cornsilk-100">
-                      {new Intl.NumberFormat("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                        maximumFractionDigits: 0,
-                      }).format(order.totalAmount)}
-                    </td>
-                    <td className="px-6 py-4 font-inter text-neutral-500 dark:text-neutral-400 whitespace-nowrap">
-                      {formatDate(order.createdAt)}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-inter font-medium ${
-                          STATUS_COLORS[order.status] ?? "text-neutral-600 bg-neutral-100"
-                        }`}
-                      >
-                        {order.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))
+                stats.recentOrders.map((order) => {
+                  return (
+                    <tr
+                      key={order.id}
+                      className="hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        <Link
+                          href={`/admin/orders`}
+                          className="font-jetbrains font-medium text-blush-600 dark:text-blush-400 hover:underline"
+                        >
+                          {order.orderNumber}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4 font-inter text-neutral-700 dark:text-neutral-300 max-w-37.5 truncate">
+                        {order.customerName}
+                      </td>
+                      <td className="px-6 py-4 font-inter text-neutral-600 dark:text-neutral-400">
+                        {order.itemCount}
+                      </td>
+                      <td className="px-6 py-4 font-jetbrains font-medium text-neutral-900 dark:text-cornsilk-100">
+                        {new Intl.NumberFormat("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                          maximumFractionDigits: 0,
+                        }).format(order.totalAmount)}
+                      </td>
+                      <td className="px-6 py-4 font-inter text-neutral-500 dark:text-neutral-400 whitespace-nowrap">
+                        {formatDate(order.createdAt)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-inter font-medium ${STATUS_COLORS[order.status] ?? "text-neutral-600 bg-neutral-100"}`}
+                        >
+                          {order.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

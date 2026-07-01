@@ -65,12 +65,12 @@ export function AdminSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:sticky top-0 z-50 h-screen flex flex-col bg-white dark:bg-neutral-950 border-r border-neutral-200 dark:border-neutral-800 transition-transform duration-300 md:transition-all ${
+        className={`fixed md:sticky top-0 z-40 h-screen flex flex-col bg-white dark:bg-neutral-950 border-r border-neutral-200 dark:border-neutral-800 transition-transform duration-300 md:transition-all ${
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         } ${collapsed ? "w-17.5" : "w-60"}`}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-4 py-5 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-neutral-200 dark:border-neutral-800">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blush-600 shadow-lg shadow-blush-900/30">
             <ShieldCheck className="h-5 w-5 text-white" />
           </div>

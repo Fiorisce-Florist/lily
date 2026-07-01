@@ -114,10 +114,13 @@ export function ProductsView({
                           )}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-inter font-medium text-neutral-900 dark:text-cornsilk-100 truncate max-w-[200px]">
+                          <Link
+                            href={`/shop/${product.slug}`}
+                            className="font-inter font-medium text-neutral-900 dark:text-cornsilk-100 truncate max-w-50"
+                          >
                             {product.name}
-                          </p>
-                          <p className="text-b6 font-inter text-neutral-400 truncate max-w-[200px]">
+                          </Link>
+                          <p className="text-b6 font-inter text-neutral-400 truncate max-w-50">
                             /{product.slug}
                           </p>
                         </div>
