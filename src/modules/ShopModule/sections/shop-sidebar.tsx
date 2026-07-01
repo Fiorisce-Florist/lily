@@ -7,6 +7,8 @@ import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { FilterState, FilterOptions } from "../index";
+import { formatPrice } from "@/lib/formatters";
+
 
 interface ShopSidebarProps {
   filters: FilterState;
@@ -54,13 +56,7 @@ const COLOR_DOT: Record<string, string> = {
   Custom: "bg-neutral-600"
 };
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
+
 
 // ── Section wrapper ──────────────────────────────────────────────────────────
 

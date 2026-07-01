@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatShortDate } from "@/lib/formatters";
+
 interface UserRow {
   id: string;
   name: string | null;
@@ -25,7 +27,7 @@ interface UserRow {
   orderCount: number;
 }
 
-function formatDate(iso: string) {
+function formatShortDate(iso: string) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
@@ -176,7 +178,7 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
                     {user.orderCount}
                   </td>
                   <td className="px-6 py-4 font-inter text-neutral-500 dark:text-neutral-400 whitespace-nowrap">
-                    {formatDate(user.createdAt)}
+                    {formatShortDate(user.createdAt)}
                   </td>
                   <td className="px-6 py-4">
                     <RoleToggleButton userId={user.id} currentRole={user.role} />

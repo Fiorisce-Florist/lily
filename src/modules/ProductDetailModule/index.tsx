@@ -14,6 +14,8 @@ import { useCart } from "@/context/cart-context";
 import { useState } from "react";
 import { ProductCard } from "@/components/elements/product-card";
 import { cn } from "@/lib/utils";
+import { formatPrice } from "@/lib/formatters";
+
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -35,13 +37,7 @@ const COLOR_DOT: Record<string, string> = {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
+
 
 // Removed unused StarRating component
 

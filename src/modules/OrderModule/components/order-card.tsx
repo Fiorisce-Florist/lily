@@ -4,6 +4,8 @@ import { Package } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { OrderData } from "@/app/actions/orders";
+import { formatShortDate } from "@/lib/formatters";
+
 
 type OrderStatus = string;
 
@@ -21,14 +23,6 @@ export function OrderCard({ order }: OrderCardProps) {
     }).format(amount);
   };
 
-  // Format date
-  const formatDate = (isoString: string) => {
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }).format(new Date(isoString));
-  };
 
   // Status badge styling logic
   const getStatusBadge = (status: OrderStatus) => {
@@ -80,7 +74,7 @@ export function OrderCard({ order }: OrderCardProps) {
             {getStatusBadge(order.status)}
           </div>
           <p className="text-b5 font-inter text-neutral-500 dark:text-neutral-400">
-            Placed on {formatDate(order.createdAt)}
+            Placed on {formatShortDate(order.createdAt)}
           </p>
         </div>
         <div className="text-left sm:text-right">

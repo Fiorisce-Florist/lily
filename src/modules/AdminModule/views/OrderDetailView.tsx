@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { formatLongDate, formatPrice } from "@/lib/formatters";
+
 
 const ORDER_STATUSES = [
   "PENDING",
@@ -24,15 +26,9 @@ const ORDER_STATUSES = [
   "CANCELLED",
 ] as const;
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
 
-function formatDate(iso: string) {
+
+function formatLongDate(iso: string) {
   return new Intl.DateTimeFormat("en-US", {
     month: "long",
     day: "numeric",
@@ -78,7 +74,7 @@ export function OrderDetailView({ order }: { order: any }) {
               Order {order.orderNumber}
             </h1>
             <p className="text-sm font-inter text-neutral-500">
-              Placed on {formatDate(order.createdAt)}
+              Placed on {formatLongDate(order.createdAt)}
             </p>
           </div>
         </div>

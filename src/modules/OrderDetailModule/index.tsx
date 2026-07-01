@@ -21,6 +21,8 @@ import { uploadOrderReceipt } from "@/app/actions/orders";
 import { QRCodeCanvas } from "qrcode.react";
 import { CldUploadWidget } from "next-cloudinary";
 import { toast } from "sonner";
+import { formatLongDate, formatPrice, getStatusColor } from "@/lib/formatters";
+
 
 interface OrderDetailModuleProps {
   order: OrderData | null;
@@ -74,41 +76,10 @@ export function OrderDetailModule({
     );
   }
 
-  const formatPrice = (v: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      maximumFractionDigits: 0,
-    }).format(v);
-  };
+  
 
-  const formatDate = (isoString: string) => {
-    return new Intl.DateTimeFormat("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    }).format(new Date(isoString));
-  };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "PENDING":
-      case "PROCESSING":
-        return "bg-camel-100 text-camel-800 dark:bg-camel-900/40 dark:text-camel-400 border-camel-200 dark:border-camel-800/50";
-      case "PAID":
-      case "SHIPPED":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-400 border-blue-200 dark:border-blue-800/50";
-      case "COMPLETED":
-        return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400 border-green-200 dark:border-green-800/50";
-      case "CANCELLED":
-        return "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-400 border-red-200 dark:border-red-800/50";
-      default:
-        return "";
-    }
-  };
-
+  
   // Timeline steps based on status
   const steps = [
     { label: "Order Placed", active: true, icon: CheckCircle2 },
@@ -150,7 +121,7 @@ export function OrderDetailModule({
               </Badge>
             </div>
             <p className="text-b4 font-inter text-neutral-600 dark:text-neutral-400">
-              Placed on {formatDate(order.createdAt)}
+              Placed on {formatLongDate(order.createdAt)}
             </p>
           </div>
         </div>

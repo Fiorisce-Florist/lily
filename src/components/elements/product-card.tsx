@@ -4,6 +4,8 @@ import { ShoppingBag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { formatPrice } from "@/lib/formatters";
+
 
 export interface ProductCardProps {
   product: {
@@ -25,14 +27,7 @@ export interface ProductCardProps {
   className?: string;
 }
 
-function formatPrice(v: number | string) {
-  if (typeof v === "string") return v;
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
+
 
 export function ProductCard({ product, list, className }: ProductCardProps) {
   const [imgLoaded, setImgLoaded] = React.useState(false);

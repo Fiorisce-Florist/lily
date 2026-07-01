@@ -11,16 +11,12 @@ import { useCart } from "@/context/cart-context";
 import { useSession } from "@/lib/auth-client";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { CartItemData } from "@/app/actions/cart";
+import { formatPrice } from "@/lib/formatters";
+
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
+
 
 // ─── Empty Cart ────────────────────────────────────────────────────────────────
 

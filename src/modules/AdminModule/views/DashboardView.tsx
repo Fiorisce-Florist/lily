@@ -1,35 +1,13 @@
 import Link from "next/link";
 import { Package, ShoppingCart, Users, TrendingUp, ArrowUpRight, ArrowRight } from "lucide-react";
 import type { adminGetDashboardStats } from "@/app/actions/admin";
+import { formatPrice, formatLongDate } from "@/lib/formatters";
+
 
 type DashboardStats = Awaited<ReturnType<typeof adminGetDashboardStats>>;
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(v);
-}
 
-function formatDate(iso: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(iso));
-}
 
-const STATUS_COLORS: Record<string, string> = {
-  PENDING: "text-camel-700 bg-camel-100 dark:text-camel-300 dark:bg-camel-900/30",
-  PAID: "text-blue-700 bg-blue-100 dark:text-blue-300 dark:bg-blue-900/30",
-  PROCESSING: "text-violet-700 bg-violet-100 dark:text-violet-300 dark:bg-violet-900/30",
-  SHIPPED: "text-indigo-700 bg-indigo-100 dark:text-indigo-300 dark:bg-indigo-900/30",
-  COMPLETED: "text-green-700 bg-green-100 dark:text-green-300 dark:bg-green-900/30",
-  CANCELLED: "text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-900/30",
-};
 
 export function DashboardView({ stats }: { stats: DashboardStats }) {
   const statCards = [
@@ -176,7 +154,7 @@ export function DashboardView({ stats }: { stats: DashboardStats }) {
                         }).format(order.totalAmount)}
                       </td>
                       <td className="px-6 py-4 font-inter text-neutral-500 dark:text-neutral-400 whitespace-nowrap">
-                        {formatDate(order.createdAt)}
+                        {formatLongDate(order.createdAt)}
                       </td>
                       <td className="px-6 py-4">
                         <span

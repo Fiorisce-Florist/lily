@@ -28,16 +28,12 @@ import { useSession } from "@/lib/auth-client";
 import { createOrder } from "@/app/actions/orders";
 import type { CreateOrderFormData } from "@/app/actions/orders";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
+import { formatPrice } from "@/lib/formatters";
+
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
+
 // ─── Order Summary Panel ──────────────────────────────────────────────────────
 
 function OrderSummaryPanel({

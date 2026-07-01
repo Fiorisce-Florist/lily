@@ -23,24 +23,10 @@ const ORDER_STATUSES = [
   "CANCELLED",
 ] as const;
 
-const STATUS_COLORS: Record<string, string> = {
-  PENDING: "text-camel-700 bg-camel-100 dark:text-camel-300 dark:bg-camel-900/30",
-  PAID: "text-blue-700 bg-blue-100 dark:text-blue-300 dark:bg-blue-900/30",
-  PROCESSING: "text-violet-700 bg-violet-100 dark:text-violet-300 dark:bg-violet-900/30",
-  SHIPPED: "text-indigo-700 bg-indigo-100 dark:text-indigo-300 dark:bg-indigo-900/30",
-  COMPLETED: "text-green-700 bg-green-100 dark:text-green-300 dark:bg-green-900/30",
-  CANCELLED: "text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-900/30",
-};
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
 
-function formatDate(iso: string) {
+
+function formatShortDate(iso: string) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
@@ -98,6 +84,8 @@ function StatusUpdater({ orderId, currentStatus }: { orderId: string; currentSta
 
 import { AdminSearch } from "@/modules/AdminModule/components/admin-search";
 import { useSearchParams, usePathname } from "next/navigation";
+import { formatPrice, formatShortDate, getStatusColor } from "@/lib/formatters";
+
 
 export function AdminOrdersTable({
   orders,
@@ -204,7 +192,7 @@ export function AdminOrdersTable({
                     {order.paymentStatus ? (
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-inter font-medium ${
-                          STATUS_COLORS[order.paymentStatus] ?? ""
+                          getStatusColor(order.paymentStatus)
                         }`}
                       >
                         {order.paymentStatus}
@@ -214,7 +202,7 @@ export function AdminOrdersTable({
                     )}
                   </td>
                   <td className="px-6 py-4 font-inter text-neutral-500 dark:text-neutral-400 whitespace-nowrap">
-                    {formatDate(order.createdAt)}
+                    {formatShortDate(order.createdAt)}
                   </td>
                   <td className="px-6 py-4">
                     <StatusUpdater orderId={order.id} currentStatus={order.status} />

@@ -6,21 +6,13 @@ import { Button } from "@/components/ui/button";
 import { AdminProductActions } from "@/modules/AdminModule/components/admin-product-actions";
 import { AdminPagination } from "@/modules/AdminModule/components/admin-pagination";
 import { AdminSearch } from "@/modules/AdminModule/components/admin-search";
+import { formatPrice } from "@/lib/formatters";
+
 
 type ProductsList = Awaited<ReturnType<typeof adminGetAllProducts>>;
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
 
-const STATUS_COLORS: Record<string, string> = {
-  ACTIVE: "text-green-700 bg-green-100 dark:text-green-300 dark:bg-green-900/30",
-  INACTIVE: "text-neutral-600 bg-neutral-100 dark:text-neutral-400 dark:bg-neutral-800",
-};
+
 
 export function ProductsView({
   data,

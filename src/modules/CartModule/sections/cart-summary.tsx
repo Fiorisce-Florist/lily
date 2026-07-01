@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { formatPrice } from "@/lib/formatters";
+
 
 interface CartSummaryProps {
   subtotal: number;
@@ -16,13 +18,7 @@ interface CartSummaryProps {
 
 const FREE_SHIPPING_THRESHOLD = 500000;
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
+
 
 export function CartSummary({
   subtotal,

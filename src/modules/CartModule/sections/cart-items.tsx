@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
+import { formatPrice } from "@/lib/formatters";
+
 
 export interface CartItemType {
   bouquet: Bouquet;
@@ -17,13 +19,7 @@ export interface CartItemType {
   size: string;
 }
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
+
 
 interface CartItemsProps {
   items: CartItemType[];
