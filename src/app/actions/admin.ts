@@ -498,7 +498,8 @@ export async function adminUpdateOrderStatus(orderId: string, newStatus: string)
   const order = await prisma.order.findUnique({ where: { id: orderId }, select: { status: true } });
   if (!order) return { error: "Order not found." };
 
-  await prisma.$transaction([
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const queries: any[] = [
     prisma.order.update({
       where: { id: orderId },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -512,7 +513,18 @@ export async function adminUpdateOrderStatus(orderId: string, newStatus: string)
         changedBy: session.user.id,
       },
     }),
-  ]);
+  ];
+
+  if (newStatus === "PAID" || newStatus === "PROCESSING") {
+    queries.push(
+      prisma.payment.updateMany({
+        where: { orderId },
+        data: { status: "PAID", paidAt: new Date() },
+      })
+    );
+  }
+
+  await prisma.$transaction(queries);
 
   revalidatePath("/admin/orders");
   return { error: null };

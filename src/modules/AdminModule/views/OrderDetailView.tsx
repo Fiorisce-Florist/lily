@@ -248,6 +248,18 @@ export function OrderDetailView({ order }: { order: any }) {
                     {order.payment.paymentMethod}
                   </p>
                   <p className="text-neutral-500 text-xs">Status: {order.payment.status}</p>
+                  {order.payment.receiptUrl && (
+                    <div className="mt-2">
+                      <a 
+                        href={order.payment.receiptUrl} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        className="text-blush-500 hover:text-blush-600 text-sm font-medium underline"
+                      >
+                        View Transfer Receipt
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
