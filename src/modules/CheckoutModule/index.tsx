@@ -91,8 +91,7 @@ function OrderSummaryPanel({
   }
 
   const subtotalWithBag = subtotal + paperBagCost;
-  const shipping = 0;
-  const total = subtotalWithBag + shipping;
+  const total = subtotalWithBag;
 
   if (isLoading) {
     return (

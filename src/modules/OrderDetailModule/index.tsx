@@ -308,7 +308,7 @@ export function OrderDetailModule({
                             const res = await uploadOrderReceipt(order.id, result.info.secure_url);
                             if (res.error) throw new Error(res.error);
                             toast.success("Receipt uploaded successfully!");
-                          } catch (_err) {
+                          } catch {
                             toast.error("Failed to save receipt. Please try again.");
                           }
                         }
@@ -353,16 +353,6 @@ export function OrderDetailModule({
                 <span>Subtotal</span>
                 <span className="font-jetbrains font-medium text-neutral-800 dark:text-cornsilk-100">
                   {formatPrice(order.subtotal)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-b5 font-inter text-neutral-600 dark:text-neutral-400">
-                <span>Shipping</span>
-                <span className="font-jetbrains font-medium text-neutral-800 dark:text-cornsilk-100">
-                  {order.shippingCost === 0 ? (
-                    <span className="text-olive-600 dark:text-olive-400">Free</span>
-                  ) : (
-                    formatPrice(order.shippingCost)
-                  )}
                 </span>
               </div>
               {order.payment && (
