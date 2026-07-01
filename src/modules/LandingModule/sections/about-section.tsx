@@ -13,8 +13,8 @@ export function AboutSection() {
           </p>
 
           <div className="space-y-8">
-            <div className="bg-cornsilk-100/60 dark:bg-olive-1000/60 backdrop-blur-sm border border-olive-200 dark:border-olive-700 p-8 md:p-12 rounded-2xl shadow-sm dark:shadow-none transition-colors duration-300">
-              <p className="font-inter text-b3 max-md:text-b5 leading-relaxed text-olive-800 dark:text-cornsilk-200">
+            <div className="bg-cornsilk-100/60 dark:bg-olive-1000/60 backdrop-blur-sm border border-olive-200 dark:border-olive-700 p-8 md:p-12 rounded-4xl shadow-sm dark:shadow-none transition-colors duration-300">
+              <p className="font-inter text-b3 max-md:text-b5 leading-relaxed font-light text-olive-800 dark:text-cornsilk-200">
                 At Fiorisce Floristry, we believe flowers do more than look beautiful. They carry
                 feelings, mark special moments, and say things words sometimes cannot. Every
                 arrangement is carefully made by hand, with flowers chosen to feel personal, warm,

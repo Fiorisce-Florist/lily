@@ -109,7 +109,13 @@ function ProductInfo({
   selectedVariantId: string;
   setSelectedVariantId: (id: string) => void;
 }) {
-  const variants = bouquet.variants || [];
+  const sizeOrder: Record<string, number> = { s: 1, m: 2, l: 3 };
+  const variants = [...(bouquet.variants || [])].sort((a, b) => {
+    const aOrder = sizeOrder[a.name.toLowerCase()] ?? 99;
+    const bOrder = sizeOrder[b.name.toLowerCase()] ?? 99;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return (a.stemsQuantity || 0) - (b.stemsQuantity || 0);
+  });
   const defaultVariant = variants.length > 0 ? variants[0] : null;
 
   const [quantity, setQuantity] = useState(1);
@@ -259,6 +265,7 @@ function ProductInfo({
               Selected:{" "}
               <strong className="text-neutral-700 dark:text-neutral-200 uppercase">
                 {selectedVariant?.name || "Standard"}
+                {selectedVariant?.stemsQuantity ? ` (${selectedVariant.stemsQuantity} stems)` : ""}
               </strong>
             </span>
           </div>
@@ -278,7 +285,7 @@ function ProductInfo({
                 <span
                   className={`text-b5 font-inter font-semibold uppercase ${selectedVariantId === opt.id ? "text-blush-600 dark:text-blush-400" : "text-neutral-700 dark:text-neutral-200"}`}
                 >
-                  {opt.name}
+                  {opt.name} {opt.stemsQuantity ? `(${opt.stemsQuantity} stems)` : ""}
                 </span>
                 <span
                   className={`text-[11px] font-jetbrains ${selectedVariantId === opt.id ? "text-blush-500" : "text-neutral-400"}`}
@@ -451,7 +458,13 @@ export function ProductDetailModule({
   bouquet: Bouquet;
   relatedBouquets?: Bouquet[];
 }) {
-  const variants = bouquet.variants || [];
+  const sizeOrder: Record<string, number> = { s: 1, m: 2, l: 3 };
+  const variants = [...(bouquet.variants || [])].sort((a, b) => {
+    const aOrder = sizeOrder[a.name.toLowerCase()] ?? 99;
+    const bOrder = sizeOrder[b.name.toLowerCase()] ?? 99;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return (a.stemsQuantity || 0) - (b.stemsQuantity || 0);
+  });
   const defaultVariant = variants.length > 0 ? variants[0] : null;
 
   const [selectedVariantId, setSelectedVariantId] = useState<string>(

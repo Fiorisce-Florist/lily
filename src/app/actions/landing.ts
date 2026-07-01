@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 const productInclude = {
   images: { where: { isPrimary: true }, take: 1 },
   category: { select: { name: true, slug: true } },
+  variants: { select: { additionalPrice: true } },
 } as const;
 
 // ─── Product card shape returned to the landing page ─────────────────────────
@@ -37,14 +38,21 @@ function toCard(p: {
   price: { toString(): string };
   images: { imageUrl: string }[];
   category: { name: string; slug: string };
+  variants?: { additionalPrice: { toString(): string } }[];
 }): LandingProduct {
-  const price = Number(p.price.toString());
+  let price = Number(p.price.toString());
+  const hasVariants = p.variants && p.variants.length > 0;
+  
+  if (hasVariants) {
+    price = Math.min(...p.variants!.map((v) => Number(v.additionalPrice.toString())));
+  }
+
   return {
     id: p.id,
     name: p.name,
     slug: p.slug,
     price,
-    formattedPrice: formatPrice(price),
+    formattedPrice: (hasVariants ? "From " : "") + formatPrice(price),
     image: p.images[0]?.imageUrl ?? "",
     category: p.category.name,
     categorySlug: p.category.slug,

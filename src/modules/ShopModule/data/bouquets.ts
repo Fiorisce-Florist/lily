@@ -24,6 +24,7 @@ export interface Bouquet {
     price: number;
     isAvailable: boolean;
     imageUrl?: string;
+    stemsQuantity?: number;
   }[];
 }
 

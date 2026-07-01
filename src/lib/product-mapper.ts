@@ -34,6 +34,7 @@ export function mapProductToBouquet(p: any): Bouquet {
         price: (Number(p.price) || 0) + (Number(v.additionalPrice) || 0),
         isAvailable: v.isAvailable,
         imageUrl: v.imageUrl ?? undefined,
+        stemsQuantity: v.stemsQuantity ?? undefined,
       })) || [],
   };
 }

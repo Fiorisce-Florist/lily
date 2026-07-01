@@ -119,6 +119,7 @@ export interface AdminProductVariantData {
   additionalPrice: number;
   isAvailable?: boolean;
   imageUrl?: string;
+  stemsQuantity?: number | null;
 }
 
 export interface AdminProductFormData {
@@ -163,6 +164,7 @@ export async function adminCreateProduct(data: AdminProductFormData) {
                   additionalPrice: v.additionalPrice,
                   isAvailable: v.isAvailable ?? true,
                   imageUrl: v.imageUrl,
+                  stemsQuantity: v.stemsQuantity,
                 })),
               }
             : undefined,
@@ -221,6 +223,7 @@ export async function adminGetProduct(id: string) {
         additionalPrice: Number(v.additionalPrice),
         isAvailable: v.isAvailable,
         imageUrl: v.imageUrl ?? undefined,
+        stemsQuantity: v.stemsQuantity,
       })),
       tagIds: product.tags.map((t) => t.tagId),
     },
@@ -294,6 +297,7 @@ export async function adminUpdateProduct(id: string, data: Partial<AdminProductF
                 additionalPrice: v.additionalPrice,
                 isAvailable: v.isAvailable ?? true,
                 imageUrl: v.imageUrl,
+                stemsQuantity: v.stemsQuantity,
               },
             });
           } else {
@@ -304,6 +308,7 @@ export async function adminUpdateProduct(id: string, data: Partial<AdminProductF
                 additionalPrice: v.additionalPrice,
                 isAvailable: v.isAvailable ?? true,
                 imageUrl: v.imageUrl,
+                stemsQuantity: v.stemsQuantity,
               },
             });
           }

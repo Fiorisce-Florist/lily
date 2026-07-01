@@ -19,6 +19,7 @@ export interface ProductCardProps {
     occasion?: string;
     description?: string;
     tags?: string[];
+    variants?: { price: number | string }[];
   };
   list?: boolean;
   className?: string;
@@ -37,6 +38,12 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
   const [imgLoaded, setImgLoaded] = React.useState(false);
 
   const inStock = product.inStock !== false;
+
+  let displayPrice = formatPrice(product.price);
+  if (product.variants && product.variants.length > 0) {
+    const minVariantPrice = Math.min(...product.variants.map((v) => Number(v.price)));
+    displayPrice = `From ${formatPrice(minVariantPrice)}`;
+  }
 
   if (list) {
     return (
@@ -114,7 +121,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
           <div className="flex items-center justify-between mt-1">
             <div className="flex items-baseline gap-2">
               <span className="text-h5 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100">
-                {formatPrice(product.price)}
+                {displayPrice}
               </span>
               {product.originalPrice && (
                 <span className="text-b6 font-inter text-neutral-400 line-through">
@@ -217,7 +224,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
         <div className="mt-2 flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-h5 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100">
-              {formatPrice(product.price)}
+              {displayPrice}
             </span>
             {product.originalPrice && (
               <span className="text-b6 font-inter text-neutral-400 line-through">

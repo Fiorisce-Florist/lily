@@ -23,7 +23,7 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section className="relative flex h-[80vh] min-h-150 w-full items-center justify-center overflow-hidden">
+    <section className="relative flex h-[80vh] lg:h-screen min-h-150 w-full items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0 bg-neutral-900">
         {heroImages.map((src, index) => (
           <Image

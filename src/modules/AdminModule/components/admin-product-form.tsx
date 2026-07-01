@@ -79,7 +79,7 @@ export function AdminProductForm({
       ...prev,
       variants: [
         ...(prev.variants ?? []),
-        { variantName: "", additionalPrice: 0, isAvailable: true, imageUrl: "" },
+        { variantName: "", additionalPrice: 0, isAvailable: true, imageUrl: "", stemsQuantity: null },
       ],
     }));
   };
@@ -94,7 +94,7 @@ export function AdminProductForm({
   const updateVariant = (
     index: number,
     field: keyof AdminProductVariantData,
-    value: string | number | boolean
+    value: string | number | boolean | null
   ) => {
     setForm((prev) => ({
       ...prev,
@@ -284,7 +284,7 @@ export function AdminProductForm({
               min={0}
               step={1000}
               placeholder="e.g., 750000"
-              value={form.price || ""}
+              value={form.price ?? ""}
               onChange={(e) => set("price")(Number(e.target.value))}
               className="text-lg font-medium"
             />
@@ -430,13 +430,19 @@ export function AdminProductForm({
                     <Label htmlFor={`variant-name-${index}`} className="text-b6">
                       Size / Variant Name <span className="text-blush-500">*</span>
                     </Label>
-                    <Input
-                      id={`variant-name-${index}`}
-                      required
-                      placeholder="e.g., Small, Medium, Large"
+                    <Select
                       value={variant.variantName}
-                      onChange={(e) => updateVariant(index, "variantName", e.target.value)}
-                    />
+                      onValueChange={(value) => updateVariant(index, "variantName", value)}
+                    >
+                      <SelectTrigger id={`variant-name-${index}`} className="w-full">
+                        <SelectValue placeholder="Select size" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="s">S</SelectItem>
+                        <SelectItem value="m">M</SelectItem>
+                        <SelectItem value="l">L</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-1.5">
@@ -449,7 +455,7 @@ export function AdminProductForm({
                       min={0}
                       step={1000}
                       placeholder="e.g., 50000"
-                      value={variant.additionalPrice || ""}
+                      value={variant.additionalPrice ?? ""}
                       onChange={(e) =>
                         updateVariant(index, "additionalPrice", Number(e.target.value))
                       }
@@ -464,13 +470,87 @@ export function AdminProductForm({
                     </p>
                   </div>
 
-                  <div className="flex flex-col md:items-end gap-2 pt-6 md:pt-0">
+                  
+                </div>
+
+                {/* Variant Bottom Row: Image and Stems */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mt-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor={`variant-image-${index}`} className="text-b6">
+                      Variant-Specific Image URL
+                    </Label>
+                    <div className="flex gap-3 items-center">
+                      <CldUploadWidget
+                        signatureEndpoint="/api/cloudinary/sign"
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        onSuccess={(result: any) => {
+                          if (result?.info?.secure_url) {
+                            updateVariant(index, "imageUrl", result.info.secure_url);
+                          }
+                        }}
+                        options={{
+                          multiple: false,
+                          resourceType: "image",
+                        }}
+                      >
+                        {({ open }) => {
+                          return (
+                            <Button type="button" variant="outline" onClick={() => open()} size="sm">
+                              Upload
+                            </Button>
+                          );
+                        }}
+                      </CldUploadWidget>
+                      <Input
+                        id={`variant-image-${index}`}
+                        type="url"
+                        placeholder="Or paste URL..."
+                        value={variant.imageUrl ?? ""}
+                        onChange={(e) => updateVariant(index, "imageUrl", e.target.value)}
+                        className="flex-1"
+                      />
+                      {variant.imageUrl && (
+                        <div className="relative h-10 w-10 overflow-hidden rounded-md bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shrink-0">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={variant.imageUrl}
+                            alt="Preview"
+                            className="h-full w-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor={`variant-stems-${index}`} className="text-b6">
+                      Stems Quantity (Optional)
+                    </Label>
+                    <Input
+                      id={`variant-stems-${index}`}
+                      type="number"
+                      min={0}
+                      placeholder="e.g., 10"
+                      value={variant.stemsQuantity ?? ""}
+                      onChange={(e) =>
+                        updateVariant(
+                          index,
+                          "stemsQuantity",
+                          e.target.value ? Number(e.target.value) : null
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 pt-6 md:pt-0">
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
                       onClick={() => removeVariant(index)}
-                      className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 p-2 h-9 w-9 md:w-auto md:px-3 self-end"
                     >
                       <Trash2 className="h-4 w-4 md:mr-1.5" />
                       <span className="hidden md:inline">Remove</span>
@@ -491,58 +571,6 @@ export function AdminProductForm({
                       </Label>
                     </div>
                   </div>
-                </div>
-
-                {/* Variant Bottom Row: Image */}
-                <div className="space-y-1.5">
-                  <Label htmlFor={`variant-image-${index}`} className="text-b6">
-                    Variant-Specific Image URL
-                  </Label>
-                  <div className="flex gap-3 items-center">
-                    <CldUploadWidget
-                      signatureEndpoint="/api/cloudinary/sign"
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      onSuccess={(result: any) => {
-                        if (result?.info?.secure_url) {
-                          updateVariant(index, "imageUrl", result.info.secure_url);
-                        }
-                      }}
-                      options={{
-                        multiple: false,
-                        resourceType: "image",
-                      }}
-                    >
-                      {({ open }) => {
-                        return (
-                          <Button type="button" variant="outline" onClick={() => open()} size="sm">
-                            Upload
-                          </Button>
-                        );
-                      }}
-                    </CldUploadWidget>
-                    <Input
-                      id={`variant-image-${index}`}
-                      type="url"
-                      placeholder="Or paste URL..."
-                      value={variant.imageUrl ?? ""}
-                      onChange={(e) => updateVariant(index, "imageUrl", e.target.value)}
-                      className="flex-1"
-                    />
-                    {variant.imageUrl && (
-                      <div className="relative h-10 w-10 overflow-hidden rounded-md bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shrink-0">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={variant.imageUrl}
-                          alt="Preview"
-                          className="h-full w-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = "none";
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
               </div>
             ))}
           </div>
