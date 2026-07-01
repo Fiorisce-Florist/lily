@@ -1,6 +1,14 @@
 import { AccountSidebar } from "@/components/elements/AccountSidebar";
 
-export default function AccountLayout({ children }: { children: React.ReactNode }) {
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+
+export default async function AccountLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    redirect("/?auth=login");
+  }
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 pb-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl pt-8 sm:pt-12">

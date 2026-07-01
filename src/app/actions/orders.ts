@@ -111,7 +111,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
             },
           },
           variant: {
-            select: { id: true, variantName: true },
+            select: { id: true, variantName: true, additionalPrice: true, stemsQuantity: true, isAvailable: true },
           },
         },
       },
@@ -132,15 +132,28 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
     return { orderNumber: null, snapToken: null, error: "No items selected for checkout." };
   }
 
-  // 2. Validate all items are still available
+  // 2. Validate all items are still available and price matches
   for (const item of itemsToCheckout) {
-    if (!item.product.isAvailable || item.product.status !== "ACTIVE") {
+    const isVariantUnavailable = item.variant ? !item.variant.isAvailable : false;
+    
+    if (!item.product.isAvailable || item.product.status !== "ACTIVE" || isVariantUnavailable) {
       return {
         orderNumber: null,
         snapToken: null,
-        error: `"${item.product.name}" is no longer available.`,
+        error: `"${item.product.name}${item.variant ? ` (${item.variant.variantName})` : ''}" is no longer available.`,
       };
     }
+    
+    // Check for stale pricing
+    const livePrice = Number(item.product.price) + (item.variant ? Number(item.variant.additionalPrice) : 0);
+    if (Number(item.price) !== livePrice) {
+      return {
+        orderNumber: null,
+        snapToken: null,
+        error: `The price of "${item.product.name}" has changed. Please refresh your cart.`,
+      };
+    }
+    
   }
 
   // 3. Calculate totals
@@ -177,7 +190,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
 
   // 4. Run Prisma transaction: use existing address or create new + order + items + clear cart
   try {
-    const result = await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx) => {
       let addressIdToUse = formData.addressId;
 
       if (formData.deliveryMethod === "FIORISCE_DELIVERY" && formData.address) {
@@ -240,23 +253,20 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
           id: { in: itemsToCheckout.map((i) => i.id) },
         },
       });
+      
 
-      return { order, addressId: addressIdToUse };
-    });
-
-    // 5. Create Payment record for QRIS
-    try {
-      await prisma.payment.create({
+      // Create Payment record for QRIS
+      await tx.payment.create({
         data: {
-          orderId: result.order.id,
+          orderId: order.id,
           paymentMethod: "QRIS",
           amount: totalAmount,
           status: "PENDING",
         },
       });
-    } catch (paymentError) {
-      console.error("Payment error (order still created):", paymentError);
-    }
+
+      return { order, addressId: addressIdToUse };
+    });
 
     revalidatePath("/orders");
     revalidatePath("/cart");

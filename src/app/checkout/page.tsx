@@ -6,7 +6,16 @@ export const metadata = {
   description: "Complete your purchase securely.",
 };
 
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+
 export default async function CheckoutPage() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    redirect("/?auth=login");
+  }
+
   const [{ profile }, { addresses }] = await Promise.all([getProfile(), getUserAddresses()]);
 
   return <CheckoutModule profile={profile} addresses={addresses} />;

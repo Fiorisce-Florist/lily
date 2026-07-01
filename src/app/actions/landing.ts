@@ -25,13 +25,7 @@ export interface LandingProduct {
   categorySlug: string;
 }
 
-function formatPrice(v: number): string {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(v);
-}
+
 
 function toCard(p: {
   id: string;
@@ -46,7 +40,7 @@ function toCard(p: {
   const hasVariants = p.variants && p.variants.length > 0;
   
   if (hasVariants) {
-    price = Math.min(...p.variants!.map((v) => Number(v.additionalPrice.toString())));
+    price = price + Math.min(...p.variants!.map((v) => Number(v.additionalPrice.toString())));
   }
 
   return {

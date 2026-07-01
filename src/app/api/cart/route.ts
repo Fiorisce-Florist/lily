@@ -116,12 +116,14 @@ export async function POST(request: Request) {
     const variant = await prisma.productVariant.findFirst({
       where: { id: variantId, productId, isAvailable: true },
     });
-    if (variant) {
-      finalPrice = Number(product.price) + Number(variant.additionalPrice);
+    if (!variant) {
+      return NextResponse.json({ error: "Variant not found or unavailable" }, { status: 404 });
     }
+    finalPrice = Number(product.price) + Number(variant.additionalPrice);
   }
 
   const cartId = await getOrCreateCart(session.user.id);
+  const safeQuantity = Math.max(1, Math.min(10, quantity));
 
   const existingItem = await prisma.cartItem.findFirst({
     where: { cartId, productId, price: finalPrice },
@@ -130,14 +132,14 @@ export async function POST(request: Request) {
   if (existingItem) {
     await prisma.cartItem.update({
       where: { id: existingItem.id },
-      data: { quantity: Math.min(10, existingItem.quantity + quantity) },
+      data: { quantity: Math.min(10, existingItem.quantity + safeQuantity) },
     });
   } else {
     await prisma.cartItem.create({
       data: {
         cartId,
         productId,
-        quantity: Math.min(10, quantity),
+        quantity: safeQuantity,
         price: finalPrice,
       },
     });

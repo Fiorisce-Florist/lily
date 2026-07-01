@@ -137,12 +137,14 @@ export async function addToCart(productId: string, quantity: number = 1, variant
     const variant = await prisma.productVariant.findFirst({
       where: { id: variantId, productId, isAvailable: true },
     });
-    if (variant) {
-      finalPrice = Number(product.price) + Number(variant.additionalPrice);
+    if (!variant) {
+      return { error: "The selected variant is no longer available." };
     }
+    finalPrice = Number(product.price) + Number(variant.additionalPrice);
   }
 
   const cartId = await getOrCreateCart(session.user.id);
+  const safeQuantity = Math.max(1, Math.min(10, quantity));
 
   // Check if the product is already in the cart with the SAME variant
   const existingItem = await prisma.cartItem.findFirst({
@@ -156,7 +158,7 @@ export async function addToCart(productId: string, quantity: number = 1, variant
   if (existingItem) {
     await prisma.cartItem.update({
       where: { id: existingItem.id },
-      data: { quantity: Math.min(10, existingItem.quantity + quantity) },
+      data: { quantity: Math.min(10, existingItem.quantity + safeQuantity) },
     });
   } else {
     await prisma.cartItem.create({
@@ -164,7 +166,7 @@ export async function addToCart(productId: string, quantity: number = 1, variant
         cartId,
         productId,
         variantId: variantId || null,
-        quantity: Math.min(10, quantity),
+        quantity: safeQuantity,
         price: finalPrice,
       },
     });
@@ -306,49 +308,59 @@ export async function syncLocalCart(
 
   const cartId = await getOrCreateCart(session.user.id);
 
-  for (const item of localItems) {
-    const product = await prisma.product.findUnique({
-      where: { id: item.productId, status: "ACTIVE", isAvailable: true },
-      select: { price: true },
-    });
-    if (!product) continue;
+  try {
+    await prisma.$transaction(async (tx) => {
+      for (const item of localItems) {
+        const product = await tx.product.findUnique({
+          where: { id: item.productId, status: "ACTIVE", isAvailable: true },
+          select: { price: true },
+        });
+        if (!product) continue;
 
-    let finalPrice = Number(product.price);
-    if (item.variantId) {
-      const variant = await prisma.productVariant.findFirst({
-        where: { id: item.variantId, productId: item.productId, isAvailable: true },
-      });
-      if (variant) {
-        finalPrice = Number(product.price) + Number(variant.additionalPrice);
+        let finalPrice = Number(product.price);
+        if (item.variantId) {
+          const variant = await tx.productVariant.findFirst({
+            where: { id: item.variantId, productId: item.productId, isAvailable: true },
+          });
+          if (!variant) {
+            continue; // Skip this item if variant is unavailable
+          }
+          finalPrice = Number(product.price) + Number(variant.additionalPrice);
+        }
+
+        const existingItem = await tx.cartItem.findFirst({
+          where: {
+            cartId,
+            productId: item.productId,
+            variantId: item.variantId || null,
+          },
+        });
+
+        const safeItemQuantity = Math.max(1, Math.min(10, item.quantity));
+
+        if (existingItem) {
+          await tx.cartItem.update({
+            where: { id: existingItem.id },
+            data: { quantity: Math.min(10, existingItem.quantity + safeItemQuantity) },
+          });
+        } else {
+          await tx.cartItem.create({
+            data: {
+              cartId,
+              productId: item.productId,
+              variantId: item.variantId || null,
+              quantity: safeItemQuantity,
+              price: finalPrice,
+            },
+          });
+        }
       }
-    }
-
-    const existingItem = await prisma.cartItem.findFirst({
-      where: {
-        cartId,
-        productId: item.productId,
-        variantId: item.variantId || null,
-      },
     });
 
-    if (existingItem) {
-      await prisma.cartItem.update({
-        where: { id: existingItem.id },
-        data: { quantity: Math.min(10, existingItem.quantity + item.quantity) },
-      });
-    } else {
-      await prisma.cartItem.create({
-        data: {
-          cartId,
-          productId: item.productId,
-          variantId: item.variantId || null,
-          quantity: Math.min(10, item.quantity),
-          price: finalPrice,
-        },
-      });
-    }
+    revalidatePath("/cart");
+    return { error: null };
+  } catch (error) {
+    console.error("Cart sync error:", error);
+    return { error: "Failed to sync cart" };
   }
-
-  revalidatePath("/cart");
-  return { error: null };
 }
