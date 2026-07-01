@@ -88,6 +88,7 @@ export async function adminGetAllProducts(
       include: {
         category: { select: { id: true, name: true } },
         images: { where: { isPrimary: true }, take: 1 },
+        variants: { select: { additionalPrice: true } },
         _count: { select: { orderItems: true } },
       },
     }),
@@ -95,19 +96,27 @@ export async function adminGetAllProducts(
   ]);
 
   return {
-    products: products.map((p) => ({
-      id: p.id,
-      name: p.name,
-      slug: p.slug,
-      price: Number(p.price),
-      status: p.status,
-      isAvailable: p.isAvailable,
-      categoryName: p.category.name,
-      categoryId: p.category.id,
-      image: p.images[0]?.imageUrl ?? null,
-      soldCount: p._count.orderItems,
-      createdAt: p.createdAt.toISOString(),
-    })),
+    products: products.map((p) => {
+      let minPrice = Number(p.price);
+      if (p.variants.length > 0) {
+        minPrice += Math.min(...p.variants.map((v) => Number(v.additionalPrice)));
+      }
+      return {
+        id: p.id,
+        name: p.name,
+        slug: p.slug,
+        price: Number(p.price),
+        minPrice,
+        hasVariants: p.variants.length > 0,
+        status: p.status,
+        isAvailable: p.isAvailable,
+        categoryName: p.category.name,
+        categoryId: p.category.id,
+        image: p.images[0]?.imageUrl ?? null,
+        soldCount: p._count.orderItems,
+        createdAt: p.createdAt.toISOString(),
+      };
+    }),
     totalPages: Math.ceil(totalCount / limit),
     totalCount,
   };

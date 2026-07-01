@@ -130,7 +130,11 @@ export function ProductsView({
                       {product.categoryName}
                     </td>
                     <td className="px-6 py-4 font-jetbrains font-medium text-neutral-900 dark:text-cornsilk-100">
-                      {formatPrice(product.price)}
+                      {product.hasVariants ? (
+                        <span className="text-neutral-500">From {formatPrice(product.minPrice)}</span>
+                      ) : (
+                        formatPrice(product.price)
+                      )}
                     </td>
                     <td className="px-6 py-4 font-inter text-neutral-600 dark:text-neutral-400">
                       {product.soldCount}
