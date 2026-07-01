@@ -28,15 +28,6 @@ const ORDER_STATUSES = [
 
 
 
-function formatLongDate(iso: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  }).format(new Date(iso));
-}
 
 // Minimal types for the view based on adminGetOrder
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

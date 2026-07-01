@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { Prisma, ProductStatus, TagType } from "@prisma/client";
 
 // ─── Auth guard ───────────────────────────────────────────────────────────────
@@ -188,6 +188,7 @@ export async function adminCreateProduct(data: AdminProductFormData) {
 
     revalidatePath("/admin/products");
     revalidatePath("/shop");
+    revalidateTag("products", "max");
     return { product, error: null };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -343,7 +344,9 @@ export async function adminUpdateProduct(id: string, data: Partial<AdminProductF
     });
 
     revalidatePath("/admin/products");
-    revalidatePath(`/shop`);
+    revalidatePath("/shop");
+    revalidateTag("products", "max");
+
     return { error: null };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -374,6 +377,7 @@ export async function adminToggleProductStatus(id: string) {
 
   revalidatePath("/admin/products");
   revalidatePath("/shop");
+  revalidateTag("products", "max");
   return { error: null, newStatus };
 }
 
@@ -388,6 +392,8 @@ export async function adminDeleteProduct(id: string) {
 
   revalidatePath("/admin/products");
   revalidatePath("/shop");
+  revalidateTag("products", "max");
+
   return { error: null };
 }
 
@@ -556,6 +562,7 @@ export async function adminCreateCategory(data: {
   try {
     const category = await prisma.category.create({ data });
     revalidatePath("/admin/categories");
+    revalidateTag("categories", "max");
     return { category, error: null };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
@@ -570,9 +577,10 @@ export async function adminUpdateCategory(
   await requireAdmin();
 
   try {
-    const category = await prisma.category.update({ where: { id }, data });
+    const updated = await prisma.category.update({ where: { id }, data });
     revalidatePath("/admin/categories");
-    return { category, error: null };
+    revalidateTag("categories", "max");
+    return { category: updated, error: null };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     return { category: null, error: e.message || "Failed to update category" };
@@ -619,6 +627,7 @@ export async function adminCreateTag(data: {
   try {
     const tag = await prisma.tag.create({ data });
     revalidatePath("/admin/tags");
+    revalidateTag("tags", "max");
     return { tag, error: null };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
@@ -633,9 +642,10 @@ export async function adminUpdateTag(
   await requireAdmin();
 
   try {
-    const tag = await prisma.tag.update({ where: { id }, data });
+    const updated = await prisma.tag.update({ where: { id }, data });
     revalidatePath("/admin/tags");
-    return { tag, error: null };
+    revalidateTag("tags", "max");
+    return { tag: updated, error: null };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     return { tag: null, error: e.message || "Failed to update tag" };

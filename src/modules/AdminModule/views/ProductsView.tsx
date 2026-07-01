@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { AdminProductActions } from "@/modules/AdminModule/components/admin-product-actions";
 import { AdminPagination } from "@/modules/AdminModule/components/admin-pagination";
 import { AdminSearch } from "@/modules/AdminModule/components/admin-search";
-import { formatPrice } from "@/lib/formatters";
+import { formatPrice, getStatusColor } from "@/lib/formatters";
 
 
 type ProductsList = Awaited<ReturnType<typeof adminGetAllProducts>>;
@@ -133,9 +133,7 @@ export function ProductsView({
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-inter font-medium ${
-                          STATUS_COLORS[product.status] ?? ""
-                        }`}
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-inter font-medium ${getStatusColor(product.status)}`}
                       >
                         {product.status}
                       </span>

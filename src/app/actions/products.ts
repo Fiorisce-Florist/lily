@@ -11,137 +11,170 @@ export interface GetProductsParams {
   inStockOnly?: boolean;
 }
 
-export async function getProducts(params?: GetProductsParams) {
-  try {
-    const where: Prisma.ProductWhereInput = {
-      status: "ACTIVE",
-    };
+import { unstable_cache } from "next/cache";
 
-    if (params?.inStockOnly) {
-      where.isAvailable = true;
-    }
-
-    if (params?.categorySlug) {
-      where.category = {
-        slug: params.categorySlug,
+const getProductsCached = unstable_cache(
+  async (params?: GetProductsParams) => {
+    try {
+      const where: Prisma.ProductWhereInput = {
+        status: "ACTIVE",
       };
-    }
 
-    if (params?.tagSlugs && params.tagSlugs.length > 0) {
-      // Must have ALL specified tags (AND condition)
-      where.AND = params.tagSlugs.map((slug) => ({
-        tags: {
-          some: {
-            tag: { slug },
+      if (params?.inStockOnly) {
+        where.isAvailable = true;
+      }
+
+      if (params?.categorySlug) {
+        where.category = {
+          slug: params.categorySlug,
+        };
+      }
+
+      if (params?.tagSlugs && params.tagSlugs.length > 0) {
+        where.AND = params.tagSlugs.map((slug) => ({
+          tags: {
+            some: {
+              tag: { slug },
+            },
+          },
+        }));
+      }
+
+      if (params?.search) {
+        where.OR = [
+          { name: { contains: params.search } },
+          { description: { contains: params.search } },
+        ];
+      }
+
+      let orderBy: Prisma.ProductOrderByWithRelationInput = {
+        createdAt: "desc", // Default to newest
+      };
+
+      if (params?.sortBy === "price-asc") {
+        orderBy = { price: "asc" };
+      } else if (params?.sortBy === "price-desc") {
+        orderBy = { price: "desc" };
+      }
+
+      const products = await prisma.product.findMany({
+        where,
+        orderBy,
+        include: {
+          category: {
+            select: { name: true, slug: true },
+          },
+          images: {
+            where: { isPrimary: true },
+            take: 1,
+          },
+          variants: true,
+          tags: {
+            include: {
+              tag: { select: { name: true, slug: true, type: true } },
+            },
           },
         },
-      }));
+      });
+
+      return { products, error: null };
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return { products: [], error: "Failed to fetch products." };
     }
+  },
+  ["products-list"],
+  { tags: ["products"] }
+);
 
-    if (params?.search) {
-      where.OR = [
-        { name: { contains: params.search } },
-        { description: { contains: params.search } },
-      ];
-    }
-
-    let orderBy: Prisma.ProductOrderByWithRelationInput = {
-      createdAt: "desc", // Default to newest
-    };
-
-    if (params?.sortBy === "price-asc") {
-      orderBy = { price: "asc" };
-    } else if (params?.sortBy === "price-desc") {
-      orderBy = { price: "desc" };
-    }
-
-    const products = await prisma.product.findMany({
-      where,
-      orderBy,
-      include: {
-        category: {
-          select: { name: true, slug: true },
-        },
-        images: {
-          where: { isPrimary: true },
-          take: 1,
-        },
-        variants: true,
-        tags: {
-          include: {
-            tag: { select: { name: true, slug: true, type: true } },
-          },
-        },
-      },
-    });
-
-    return { products, error: null };
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    return { products: [], error: "Failed to fetch products." };
-  }
+export async function getProducts(params?: GetProductsParams) {
+  return getProductsCached(params);
 }
+
+const getProductBySlugCached = unstable_cache(
+  async (slug: string) => {
+    try {
+      const product = await prisma.product.findUnique({
+        where: { slug, status: "ACTIVE" },
+        include: {
+          category: true,
+          images: {
+            orderBy: { isPrimary: "desc" },
+          },
+          variants: true,
+          tags: {
+            include: {
+              tag: true,
+            },
+          },
+        },
+      });
+
+      if (!product) {
+        return { product: null, error: "Product not found." };
+      }
+
+      return { product, error: null };
+    } catch (error) {
+      console.error(`Error fetching product by slug (${slug}):`, error);
+      return { product: null, error: "Failed to fetch product details." };
+    }
+  },
+  ["product-by-slug"],
+  { tags: ["products"] }
+);
 
 export async function getProductBySlug(slug: string) {
-  try {
-    const product = await prisma.product.findUnique({
-      where: { slug, status: "ACTIVE" },
-      include: {
-        category: true,
-        images: {
-          orderBy: { isPrimary: "desc" },
-        },
-        variants: true,
-        tags: {
-          include: {
-            tag: true,
+  return getProductBySlugCached(slug);
+}
+
+const getCategoriesCached = unstable_cache(
+  async () => {
+    try {
+      const categories = await prisma.category.findMany({
+        orderBy: { name: "asc" },
+        include: {
+          _count: {
+            select: { products: { where: { status: "ACTIVE" } } },
           },
         },
-      },
-    });
-
-    if (!product) {
-      return { product: null, error: "Product not found." };
+      });
+      return { categories, error: null };
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      return { categories: [], error: "Failed to fetch categories." };
     }
-
-    return { product, error: null };
-  } catch (error) {
-    console.error(`Error fetching product by slug (${slug}):`, error);
-    return { product: null, error: "Failed to fetch product details." };
-  }
-}
+  },
+  ["categories-list"],
+  { tags: ["categories"] }
+);
 
 export async function getCategories() {
-  try {
-    const categories = await prisma.category.findMany({
-      orderBy: { name: "asc" },
-      include: {
-        _count: {
-          select: { products: { where: { status: "ACTIVE" } } },
-        },
-      },
-    });
-    return { categories, error: null };
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    return { categories: [], error: "Failed to fetch categories." };
-  }
+  return getCategoriesCached();
 }
 
-export async function getTags(type?: TagType) {
-  try {
-    const tags = await prisma.tag.findMany({
-      where: type ? { type } : undefined,
-      orderBy: { name: "asc" },
-      include: {
-        _count: {
-          select: { products: true },
+const getTagsCached = unstable_cache(
+  async (type?: TagType) => {
+    try {
+      const tags = await prisma.tag.findMany({
+        where: type ? { type } : undefined,
+        orderBy: { name: "asc" },
+        include: {
+          _count: {
+            select: { products: true },
+          },
         },
-      },
-    });
-    return { tags, error: null };
-  } catch (error) {
-    console.error("Error fetching tags:", error);
-    return { tags: [], error: "Failed to fetch tags." };
-  }
+      });
+      return { tags, error: null };
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+      return { tags: [], error: "Failed to fetch tags." };
+    }
+  },
+  ["tags-list"],
+  { tags: ["tags"] }
+);
+
+export async function getTags(type?: TagType) {
+  return getTagsCached(type);
 }

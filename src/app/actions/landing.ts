@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/formatters";
+import { unstable_cache } from "next/cache";
 
 
 // ─── Shared include shape ─────────────────────────────────────────────────────
@@ -58,72 +59,77 @@ function toCard(p: {
 // ─── getFeaturedProducts ──────────────────────────────────────────────────────
 // Returns up to `limit` bestseller-tagged products, falling back to newest.
 
-export async function getFeaturedProducts(limit = 8): Promise<LandingProduct[]> {
-  try {
-    // Try bestseller tag first
-    const bestsellers = await prisma.product.findMany({
-      where: {
-        status: "ACTIVE",
-        isAvailable: true,
-        tags: {
-          some: {
-            tag: {
-              OR: [
-                { slug: "best-seller" },
-                { slug: "bestseller" },
-                { name: { contains: "Best Seller" } },
-              ],
+export const getFeaturedProducts = unstable_cache(
+  async (limit = 8): Promise<LandingProduct[]> => {
+    try {
+      // Try bestseller tag first
+      const bestsellers = await prisma.product.findMany({
+        where: {
+          status: "ACTIVE",
+          isAvailable: true,
+          tags: {
+            some: {
+              tag: {
+                OR: [
+                  { slug: "best-seller" },
+                  { slug: "bestseller" },
+                  { name: { contains: "Best Seller" } },
+                ],
+              },
             },
           },
         },
-      },
-      take: limit,
-      orderBy: { createdAt: "desc" },
-      include: productInclude,
-    });
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: productInclude,
+      });
 
-    // If we have enough, return them
-    if (bestsellers.length >= 2) {
-      return bestsellers.map(toCard);
+      // If we have enough, return them
+      if (bestsellers.length >= 2) {
+        return bestsellers.map(toCard);
+      }
+
+      // Fallback: newest active products
+      const newest = await prisma.product.findMany({
+        where: { status: "ACTIVE", isAvailable: true },
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: productInclude,
+      });
+
+      return newest.map(toCard);
+    } catch (error) {
+      console.error("Error fetching featured products:", error);
+      return [];
     }
-
-    // Fallback: newest active products
-    const newest = await prisma.product.findMany({
-      where: { status: "ACTIVE", isAvailable: true },
-      take: limit,
-      orderBy: { createdAt: "desc" },
-      include: productInclude,
-    });
-
-    return newest.map(toCard);
-  } catch (error) {
-    console.error("Error fetching featured products:", error);
-    return [];
-  }
-}
+  },
+  ["featured-products"],
+  { tags: ["products"] }
+);
 
 // ─── getProductsByCategory ────────────────────────────────────────────────────
 // Returns up to `limit` active products by category slug.
 
-export async function getProductsByCategory(
-  categorySlug: string,
-  limit = 4
-): Promise<LandingProduct[]> {
-  try {
-    const products = await prisma.product.findMany({
-      where: {
-        status: "ACTIVE",
-        isAvailable: true,
-        category: { slug: categorySlug },
-      },
-      take: limit,
-      orderBy: { createdAt: "desc" },
-      include: productInclude,
-    });
+export const getProductsByCategory = unstable_cache(
+  async (categorySlug: string, limit = 4): Promise<LandingProduct[]> => {
+    try {
+      const products = await prisma.product.findMany({
+        where: {
+          status: "ACTIVE",
+          isAvailable: true,
+          category: { slug: categorySlug },
+        },
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: productInclude,
+      });
 
-    return products.map(toCard);
-  } catch (error) {
-    console.error(`Error fetching products for category "${categorySlug}":`, error);
-    return [];
-  }
-}
+      return products.map(toCard);
+    } catch (error) {
+      console.error(`Error fetching products for category "${categorySlug}":`, error);
+      return [];
+    }
+  },
+  ["products-by-category"],
+  { tags: ["products", "categories"] }
+);

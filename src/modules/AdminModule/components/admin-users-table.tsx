@@ -27,13 +27,6 @@ interface UserRow {
   orderCount: number;
 }
 
-function formatShortDate(iso: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(iso));
-}
 
 function RoleToggleButton({ userId, currentRole }: { userId: string; currentRole: string }) {
   const router = useRouter();

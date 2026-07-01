@@ -26,13 +26,6 @@ const ORDER_STATUSES = [
 
 
 
-function formatShortDate(iso: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(iso));
-}
 
 interface Order {
   id: string;

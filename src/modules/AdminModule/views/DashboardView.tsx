@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Package, ShoppingCart, Users, TrendingUp, ArrowUpRight, ArrowRight } from "lucide-react";
 import type { adminGetDashboardStats } from "@/app/actions/admin";
-import { formatPrice, formatLongDate } from "@/lib/formatters";
+import { formatPrice, formatLongDate, getStatusColor } from "@/lib/formatters";
 
 
 type DashboardStats = Awaited<ReturnType<typeof adminGetDashboardStats>>;
@@ -158,7 +158,7 @@ export function DashboardView({ stats }: { stats: DashboardStats }) {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-inter font-medium ${STATUS_COLORS[order.status] ?? "text-neutral-600 bg-neutral-100"}`}
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-inter font-medium ${getStatusColor(order.status)}`}
                         >
                           {order.status}
                         </span>
