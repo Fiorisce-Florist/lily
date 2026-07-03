@@ -41,29 +41,6 @@ function EmptyCart() {
   );
 }
 
-// ─── Unauthenticated State ─────────────────────────────────────────────────────
-
-function UnauthenticatedCart() {
-  return (
-    <div className="flex flex-col items-center justify-center gap-6 py-24 text-center">
-      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-cornsilk-200 dark:bg-neutral-800">
-        <AlertCircle className="h-10 w-10 text-blush-400 dark:text-blush-500" />
-      </div>
-      <div>
-        <h2 className="text-h4 font-fraunces text-neutral-900 dark:text-cornsilk-100">
-          Sign in to view your cart
-        </h2>
-        <p className="mt-2 text-b5 font-inter text-neutral-500 dark:text-neutral-400">
-          Your cart is saved to your account.
-        </p>
-      </div>
-      <Button variant="primary" size="lg" asChild>
-        <Link href="/login">Sign In</Link>
-      </Button>
-    </div>
-  );
-}
-
 // ─── Cart Item Row ─────────────────────────────────────────────────────────────
 
 function CartItemRow({
@@ -324,16 +301,6 @@ export function CartModule() {
           <Skeleton className="h-5 w-48 rounded mb-6" />
           <Skeleton className="h-8 w-40 rounded mb-8" />
           <CartSkeleton />
-        </div>
-      </div>
-    );
-  }
-
-  if (status === "unauthenticated" || !session) {
-    return (
-      <div className="min-h-screen bg-cornsilk-100 dark:bg-neutral-950">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <UnauthenticatedCart />
         </div>
       </div>
     );
