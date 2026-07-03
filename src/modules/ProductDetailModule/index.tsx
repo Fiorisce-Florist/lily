@@ -31,7 +31,9 @@ const COLOR_DOT: Record<string, string> = {
   Peach: "bg-orange-200",
   Blue: "bg-blue-400",
   Black: "bg-neutral-950",
-  HotPink: "bg-pink-600",
+  "Hot Pink": "bg-pink-600",
+  Gold: "bg-amber-300",
+  Chocolate: "bg-orange-900",
   Custom: "bg-neutral-600"
 };
 
