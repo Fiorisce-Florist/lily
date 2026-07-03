@@ -35,6 +35,9 @@ const FLOWER_META: Record<string, { label: string }> = {
   Foxglove: { label: "Foxglove" },
   Scabiosa: { label: "Scabiosa" },
   "Dried Grass": { label: "Dried Grass" },
+  Tulip: { label: "Tulip" },
+  Hydrangea: { label: "Hydrangea" },
+  Other: {label: "Other"}
 };
 
 // ── Color dot config ─────────────────────────────────────────────────────────
