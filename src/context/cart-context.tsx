@@ -69,7 +69,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const localCart = JSON.parse(localCartStr) as CartItemData[];
         if (localCart.length > 0) {
           await syncLocalCart(
-            localCart.map((i) => ({ productId: i.productId, quantity: i.quantity }))
+            localCart.map((i) => ({
+              productId: i.productId,
+              quantity: i.quantity,
+              // @ts-expect-error variantId not in CartItemData type but present at runtime
+              variantId: i.variantId,
+            }))
           );
         }
         localStorage.removeItem("guest_cart");
@@ -120,11 +125,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           const { product, error } = await getProductForCart(productId);
           if (error || !product) throw new Error(error ?? "Product not found");
 
+          const variantPrice = variantId
+            ? product.variants.find((v) => v.id === variantId)?.additionalPrice ?? 0
+            : 0;
+
           const newItem: CartItemData = {
-            id: crypto.randomUUID(), // Local ID
+            id: crypto.randomUUID(),
             productId,
             quantity: Math.min(10, quantity),
-            price: product.price,
+            price: product.price + variantPrice,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             product: product as any, // Cast to match exactly
             // @ts-expect-error variantId not in CartItem type but needed for cart logic

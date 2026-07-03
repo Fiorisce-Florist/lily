@@ -19,6 +19,7 @@ function cartInclude() {
             },
           },
         },
+        variant: true,
       },
       orderBy: { id: "asc" as const },
     },
@@ -74,10 +75,7 @@ export async function GET() {
         })),
         category: item.product.category,
       },
-      size:
-        item.product.variants.find(
-          (v) => Number(item.price) === Number(item.product.price) + Number(v.additionalPrice)
-        )?.variantName || "Standard",
+      size: item.variant?.variantName || "Standard",
     })),
   };
 
@@ -139,6 +137,7 @@ export async function POST(request: Request) {
       data: {
         cartId,
         productId,
+        variantId: variantId || null,
         quantity: safeQuantity,
         price: finalPrice,
       },
