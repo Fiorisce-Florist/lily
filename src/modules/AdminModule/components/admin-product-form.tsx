@@ -228,7 +228,17 @@ export function AdminProductForm({
           <div className="space-y-3 md:col-span-2 mt-2">
             <Label className="text-b6">Tags</Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 border rounded-xl p-5 bg-neutral-50/50 dark:bg-neutral-800/20 border-neutral-200 dark:border-neutral-800">
-              {Object.entries(tagsByType).map(([type, typeTags]) => (
+              {Object.entries(tagsByType)
+                .sort(([typeA], [typeB]) => {
+                  const order = ["GENERAL", "OCCASION", "COLOR", "FLOWER"];
+                  const indexA = order.indexOf(typeA.toUpperCase());
+                  const indexB = order.indexOf(typeB.toUpperCase());
+                  if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                  if (indexA !== -1) return -1;
+                  if (indexB !== -1) return 1;
+                  return typeA.localeCompare(typeB);
+                })
+                .map(([type, typeTags]) => (
                 <div key={type} className="space-y-3">
                   <h4 className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider flex items-center gap-2">
                     {type}
@@ -282,10 +292,17 @@ export function AdminProductForm({
               type="number"
               required
               min={0}
-              step={1000}
               placeholder="e.g., 750000"
               value={form.price ?? ""}
-              onChange={(e) => set("price")(Number(e.target.value))}
+              onChange={(e) => {
+                let val = e.target.value;
+                if (/^0+(?=\d)/.test(val)) {
+                  val = val.replace(/^0+(?=\d)/, "");
+                  e.target.value = val;
+                }
+                set("price")(val === "" ? 0 : Number(val));
+              }}
+              onWheel={(e) => (e.target as HTMLInputElement).blur()}
               className="text-lg font-medium"
             />
           </div>
@@ -454,12 +471,17 @@ export function AdminProductForm({
                       id={`variant-price-${index}`}
                       type="number"
                       min={0}
-                      step={1000}
                       placeholder="e.g., 50000"
                       value={variant.additionalPrice ?? ""}
-                      onChange={(e) =>
-                        updateVariant(index, "additionalPrice", Number(e.target.value))
-                      }
+                      onChange={(e) => {
+                        let val = e.target.value;
+                        if (/^0+(?=\d)/.test(val)) {
+                          val = val.replace(/^0+(?=\d)/, "");
+                          e.target.value = val;
+                        }
+                        updateVariant(index, "additionalPrice", val === "" ? 0 : Number(val));
+                      }}
+                      onWheel={(e) => (e.target as HTMLInputElement).blur()}
                     />
                     <p className="text-[11px] font-inter text-neutral-500">
                       Final Price: IDR{" "}
@@ -533,16 +555,22 @@ export function AdminProductForm({
                     <Input
                       id={`variant-stems-${index}`}
                       type="number"
-                      min={0}
+                      min={1}
                       placeholder="e.g., 10"
                       value={variant.stemsQuantity ?? ""}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        let val = e.target.value;
+                        if (/^0+(?=\d)/.test(val)) {
+                          val = val.replace(/^0+(?=\d)/, "");
+                          e.target.value = val;
+                        }
                         updateVariant(
                           index,
                           "stemsQuantity",
-                          e.target.value ? Number(e.target.value) : null
-                        )
-                      }
+                          val ? Number(val) : null
+                        );
+                      }}
+                      onWheel={(e) => (e.target as HTMLInputElement).blur()}
                     />
                   </div>
                 </div>
