@@ -8,11 +8,7 @@ import { AdminPagination } from "@/modules/AdminModule/components/admin-paginati
 import { AdminSearch } from "@/modules/AdminModule/components/admin-search";
 import { formatPrice, getStatusColor } from "@/lib/formatters";
 
-
 type ProductsList = Awaited<ReturnType<typeof adminGetAllProducts>>;
-
-
-
 
 export function ProductsView({
   data,
@@ -123,7 +119,9 @@ export function ProductsView({
                     </td>
                     <td className="px-6 py-4 font-jetbrains font-medium text-neutral-900 dark:text-cornsilk-100">
                       {product.hasVariants ? (
-                        <span className="text-neutral-500">From {formatPrice(product.minPrice)}</span>
+                        <span className="text-neutral-500">
+                          From {formatPrice(product.minPrice)}
+                        </span>
                       ) : (
                         formatPrice(product.price)
                       )}

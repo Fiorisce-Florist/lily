@@ -6,7 +6,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/formatters";
 
-
 export interface ProductCardProps {
   product: {
     id?: string | number;
@@ -26,8 +25,6 @@ export interface ProductCardProps {
   list?: boolean;
   className?: string;
 }
-
-
 
 export function ProductCard({ product, list, className }: ProductCardProps) {
   const [imgLoaded, setImgLoaded] = React.useState(false);

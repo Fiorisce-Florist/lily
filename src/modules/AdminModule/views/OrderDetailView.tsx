@@ -16,7 +16,6 @@ import {
 import { Loader2 } from "lucide-react";
 import { formatLongDate, formatPrice } from "@/lib/formatters";
 
-
 const ORDER_STATUSES = [
   "PENDING",
   "PAID",
@@ -25,9 +24,6 @@ const ORDER_STATUSES = [
   "COMPLETED",
   "CANCELLED",
 ] as const;
-
-
-
 
 // Minimal types for the view based on adminGetOrder
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -237,9 +233,9 @@ export function OrderDetailView({ order }: { order: any }) {
                   <p className="text-neutral-500 text-xs">Status: {order.payment.status}</p>
                   {order.payment.receiptUrl && (
                     <div className="mt-2">
-                      <a 
-                        href={order.payment.receiptUrl} 
-                        target="_blank" 
+                      <a
+                        href={order.payment.receiptUrl}
+                        target="_blank"
                         rel="noreferrer"
                         className="text-blush-500 hover:text-blush-600 text-sm font-medium underline"
                       >

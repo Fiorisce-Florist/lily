@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { formatPrice } from "@/lib/formatters";
 
-
 interface CartSummaryProps {
   subtotal: number;
   shipping: number;
@@ -15,10 +14,6 @@ interface CartSummaryProps {
   itemCount: number;
   selectedCount: number;
 }
-
-const FREE_SHIPPING_THRESHOLD = 500000;
-
-
 
 export function CartSummary({
   subtotal,
@@ -32,6 +27,7 @@ export function CartSummary({
   const [promoApplied, setPromoApplied] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_promoError, setPromoError] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function _handleApplyPromo() {
     if (promoCode.toUpperCase() === "FIORISCE") {
       setPromoApplied(true);

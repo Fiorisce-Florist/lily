@@ -79,7 +79,13 @@ export function AdminProductForm({
       ...prev,
       variants: [
         ...(prev.variants ?? []),
-        { variantName: "", additionalPrice: 0, isAvailable: true, imageUrl: "", stemsQuantity: null },
+        {
+          variantName: "",
+          additionalPrice: 0,
+          isAvailable: true,
+          imageUrl: "",
+          stemsQuantity: null,
+        },
       ],
     }));
   };
@@ -239,38 +245,38 @@ export function AdminProductForm({
                   return typeA.localeCompare(typeB);
                 })
                 .map(([type, typeTags]) => (
-                <div key={type} className="space-y-3">
-                  <h4 className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider flex items-center gap-2">
-                    {type}
-                    <span className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700"></span>
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {typeTags.map((tag) => (
-                      <label
-                        key={tag.id}
-                        className={`flex items-center gap-2 border rounded-lg px-3 py-1.5 cursor-pointer transition-all ${
-                          form.tagIds?.includes(tag.id)
-                            ? "bg-blush-50 border-blush-300 text-blush-900 dark:bg-blush-900/30 dark:border-blush-700 dark:text-blush-100 shadow-sm"
-                            : "bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          className="sr-only"
-                          checked={form.tagIds?.includes(tag.id) || false}
-                          onChange={(e) => {
-                            const newIds = e.target.checked
-                              ? [...(form.tagIds || []), tag.id]
-                              : (form.tagIds || []).filter((id) => id !== tag.id);
-                            set("tagIds")(newIds);
-                          }}
-                        />
-                        <span className="text-xs font-medium leading-none">{tag.name}</span>
-                      </label>
-                    ))}
+                  <div key={type} className="space-y-3">
+                    <h4 className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider flex items-center gap-2">
+                      {type}
+                      <span className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700"></span>
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {typeTags.map((tag) => (
+                        <label
+                          key={tag.id}
+                          className={`flex items-center gap-2 border rounded-lg px-3 py-1.5 cursor-pointer transition-all ${
+                            form.tagIds?.includes(tag.id)
+                              ? "bg-blush-50 border-blush-300 text-blush-900 dark:bg-blush-900/30 dark:border-blush-700 dark:text-blush-100 shadow-sm"
+                              : "bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            checked={form.tagIds?.includes(tag.id) || false}
+                            onChange={(e) => {
+                              const newIds = e.target.checked
+                                ? [...(form.tagIds || []), tag.id]
+                                : (form.tagIds || []).filter((id) => id !== tag.id);
+                              set("tagIds")(newIds);
+                            }}
+                          />
+                          <span className="text-xs font-medium leading-none">{tag.name}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>
@@ -492,8 +498,6 @@ export function AdminProductForm({
                       </span>
                     </p>
                   </div>
-
-                  
                 </div>
 
                 {/* Variant Bottom Row: Image and Stems */}
@@ -518,7 +522,12 @@ export function AdminProductForm({
                       >
                         {({ open }) => {
                           return (
-                            <Button type="button" variant="outline" onClick={() => open()} size="sm">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => open()}
+                              size="sm"
+                            >
                               Upload
                             </Button>
                           );
@@ -564,42 +573,36 @@ export function AdminProductForm({
                           val = val.replace(/^0+(?=\d)/, "");
                           e.target.value = val;
                         }
-                        updateVariant(
-                          index,
-                          "stemsQuantity",
-                          val ? Number(val) : null
-                        );
+                        updateVariant(index, "stemsQuantity", val ? Number(val) : null);
                       }}
                       onWheel={(e) => (e.target as HTMLInputElement).blur()}
                     />
                   </div>
                 </div>
                 <div className="flex items-center gap-2 pt-6 md:pt-0">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeVariant(index)}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeVariant(index)}
+                  >
+                    <Trash2 className="h-4 w-4 md:mr-1.5" />
+                    <span className="hidden md:inline">Remove</span>
+                  </Button>
+                  <div className="flex items-center gap-1.5">
+                    <Checkbox
+                      id={`variant-available-${index}`}
+                      checked={variant.isAvailable ?? true}
+                      onCheckedChange={(checked) => updateVariant(index, "isAvailable", !!checked)}
+                    />
+                    <Label
+                      htmlFor={`variant-available-${index}`}
+                      className="text-xs font-inter text-neutral-500 dark:text-neutral-400 cursor-pointer"
                     >
-                      <Trash2 className="h-4 w-4 md:mr-1.5" />
-                      <span className="hidden md:inline">Remove</span>
-                    </Button>
-                    <div className="flex items-center gap-1.5">
-                      <Checkbox
-                        id={`variant-available-${index}`}
-                        checked={variant.isAvailable ?? true}
-                        onCheckedChange={(checked) =>
-                          updateVariant(index, "isAvailable", !!checked)
-                        }
-                      />
-                      <Label
-                        htmlFor={`variant-available-${index}`}
-                        className="text-xs font-inter text-neutral-500 dark:text-neutral-400 cursor-pointer"
-                      >
-                        In Stock
-                      </Label>
-                    </div>
+                      In Stock
+                    </Label>
                   </div>
+                </div>
               </div>
             ))}
           </div>

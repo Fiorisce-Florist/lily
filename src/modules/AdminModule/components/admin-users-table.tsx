@@ -27,7 +27,6 @@ interface UserRow {
   orderCount: number;
 }
 
-
 function RoleToggleButton({ userId, currentRole }: { userId: string; currentRole: string }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);

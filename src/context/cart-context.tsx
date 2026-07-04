@@ -126,7 +126,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           if (error || !product) throw new Error(error ?? "Product not found");
 
           const variantPrice = variantId
-            ? product.variants.find((v) => v.id === variantId)?.additionalPrice ?? 0
+            ? (product.variants.find((v) => v.id === variantId)?.additionalPrice ?? 0)
             : 0;
 
           const newItem: CartItemData = {

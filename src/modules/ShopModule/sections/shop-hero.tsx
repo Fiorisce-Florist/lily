@@ -9,7 +9,7 @@ interface ShopHeroProps {
   onQueryChange: (q: string) => void;
 }
 
-const SUGGESTIONS = ["Roses", "Wedding", "Birthday", "Sunflower", "Lavender", "Peony"];
+const SUGGESTIONS = ["Roses", "Wedding", "Birthday", "Sunflower", "Peony"];
 
 export function ShopHero({ query, onQueryChange }: ShopHeroProps) {
   return (

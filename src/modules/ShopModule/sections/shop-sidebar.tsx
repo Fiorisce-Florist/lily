@@ -37,7 +37,7 @@ const FLOWER_META: Record<string, { label: string }> = {
   "Dried Grass": { label: "Dried Grass" },
   Tulip: { label: "Tulip" },
   Hydrangea: { label: "Hydrangea" },
-  Other: {label: "Other"}
+  Other: { label: "Other" },
 };
 
 // ── Color dot config ─────────────────────────────────────────────────────────

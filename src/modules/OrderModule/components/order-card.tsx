@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import type { OrderData } from "@/app/actions/orders";
 import { formatShortDate } from "@/lib/formatters";
 
-
 type OrderStatus = string;
 
 interface OrderCardProps {
@@ -22,7 +21,6 @@ export function OrderCard({ order }: OrderCardProps) {
       maximumFractionDigits: 0,
     }).format(amount);
   };
-
 
   // Status badge styling logic
   const getStatusBadge = (status: OrderStatus) => {

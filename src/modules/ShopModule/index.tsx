@@ -119,9 +119,18 @@ export default function ShopModule({
     return hasInit ? initFilters : DEFAULT_FILTERS;
   });
 
-  React.useEffect(() => {
+  const handleQueryChange = React.useCallback((q: string) => {
+    setQuery(q);
     setCurrentPage(1);
-  }, [query, sort, filters]);
+  }, []);
+  const handleSortChange = React.useCallback((s: SortKey) => {
+    setSort(s);
+    setCurrentPage(1);
+  }, []);
+  const handleFiltersChange = React.useCallback((f: FilterState) => {
+    setFilters(f);
+    setCurrentPage(1);
+  }, []);
 
   const [viewMode, setViewMode] = React.useState<"grid" | "list">("grid");
 
@@ -211,25 +220,29 @@ export default function ShopModule({
 
   return (
     <div className="min-h-screen bg-cornsilk-100 dark:bg-neutral-950">
-      <ShopHero query={query} onQueryChange={setQuery} />
+      <ShopHero query={query} onQueryChange={handleQueryChange} />
 
       <div className="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
         <ShopToolbar
           resultCount={filtered.length}
           sort={sort}
-          onSortChange={setSort}
+          onSortChange={handleSortChange}
           viewMode={viewMode}
           onViewModeChange={setViewMode}
           activeFilterCount={activeFilterCount}
           filters={filters}
-          onFiltersChange={setFilters}
+          onFiltersChange={handleFiltersChange}
           options={options}
         />
 
         <div className="mt-6 flex gap-8">
           {/* Sidebar — desktop only */}
           <aside className="hidden w-64 shrink-0 lg:block">
-            <ShopSidebar filters={filters} onFiltersChange={setFilters} options={options} />
+            <ShopSidebar
+              filters={filters}
+              onFiltersChange={handleFiltersChange}
+              options={options}
+            />
           </aside>
 
           {/* Product grid */}

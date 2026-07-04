@@ -111,7 +111,13 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
             },
           },
           variant: {
-            select: { id: true, variantName: true, additionalPrice: true, stemsQuantity: true, isAvailable: true },
+            select: {
+              id: true,
+              variantName: true,
+              additionalPrice: true,
+              stemsQuantity: true,
+              isAvailable: true,
+            },
           },
         },
       },
@@ -135,17 +141,18 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   // 2. Validate all items are still available and price matches
   for (const item of itemsToCheckout) {
     const isVariantUnavailable = item.variant ? !item.variant.isAvailable : false;
-    
+
     if (!item.product.isAvailable || item.product.status !== "ACTIVE" || isVariantUnavailable) {
       return {
         orderNumber: null,
         snapToken: null,
-        error: `"${item.product.name}${item.variant ? ` (${item.variant.variantName})` : ''}" is no longer available.`,
+        error: `"${item.product.name}${item.variant ? ` (${item.variant.variantName})` : ""}" is no longer available.`,
       };
     }
-    
+
     // Check for stale pricing
-    const livePrice = Number(item.product.price) + (item.variant ? Number(item.variant.additionalPrice) : 0);
+    const livePrice =
+      Number(item.product.price) + (item.variant ? Number(item.variant.additionalPrice) : 0);
     if (Number(item.price) !== livePrice) {
       return {
         orderNumber: null,
@@ -153,7 +160,6 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
         error: `The price of "${item.product.name}" has changed. Please refresh your cart.`,
       };
     }
-    
   }
 
   // 3. Calculate totals
@@ -253,7 +259,6 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
           id: { in: itemsToCheckout.map((i) => i.id) },
         },
       });
-      
 
       // Create Payment record for QRIS
       await tx.payment.create({
@@ -448,7 +453,6 @@ export async function getOrderByNumber(orderNumber: string): Promise<{
     return { order: null, error: "Failed to fetch order." };
   }
 }
-
 
 // ─── uploadOrderReceipt ───────────────────────────────────────────────────────
 

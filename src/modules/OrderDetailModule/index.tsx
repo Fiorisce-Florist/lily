@@ -23,7 +23,6 @@ import { CldUploadWidget } from "next-cloudinary";
 import { toast } from "sonner";
 import { formatLongDate, formatPrice, getStatusColor } from "@/lib/formatters";
 
-
 interface OrderDetailModuleProps {
   order: OrderData | null;
   orderNumber: string;
@@ -76,10 +75,6 @@ export function OrderDetailModule({
     );
   }
 
-  
-
-
-  
   // Timeline steps based on status
   const steps = [
     { label: "Order Placed", active: true, icon: CheckCircle2 },

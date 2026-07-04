@@ -3,11 +3,7 @@ import { Package, ShoppingCart, Users, TrendingUp, ArrowUpRight, ArrowRight } fr
 import type { adminGetDashboardStats } from "@/app/actions/admin";
 import { formatPrice, formatLongDate, getStatusColor } from "@/lib/formatters";
 
-
 type DashboardStats = Awaited<ReturnType<typeof adminGetDashboardStats>>;
-
-
-
 
 export function DashboardView({ stats }: { stats: DashboardStats }) {
   const statCards = [

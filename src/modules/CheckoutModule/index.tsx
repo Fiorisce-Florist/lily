@@ -30,9 +30,7 @@ import type { CreateOrderFormData } from "@/app/actions/orders";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
 import { formatPrice } from "@/lib/formatters";
 
-
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
 
 // ─── Order Summary Panel ──────────────────────────────────────────────────────
 

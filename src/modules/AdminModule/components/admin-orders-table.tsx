@@ -23,10 +23,6 @@ const ORDER_STATUSES = [
   "CANCELLED",
 ] as const;
 
-
-
-
-
 interface Order {
   id: string;
   orderNumber: string;
@@ -78,7 +74,6 @@ function StatusUpdater({ orderId, currentStatus }: { orderId: string; currentSta
 import { AdminSearch } from "@/modules/AdminModule/components/admin-search";
 import { useSearchParams, usePathname } from "next/navigation";
 import { formatPrice, formatShortDate, getStatusColor } from "@/lib/formatters";
-
 
 export function AdminOrdersTable({
   orders,
@@ -184,9 +179,9 @@ export function AdminOrdersTable({
                   <td className="px-6 py-4">
                     {order.paymentStatus ? (
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-inter font-medium ${
-                          getStatusColor(order.paymentStatus)
-                        }`}
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-inter font-medium ${getStatusColor(
+                          order.paymentStatus
+                        )}`}
                       >
                         {order.paymentStatus}
                       </span>

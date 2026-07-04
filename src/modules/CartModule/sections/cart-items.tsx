@@ -12,14 +12,11 @@ import { cn } from "@/lib/utils";
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 import { formatPrice } from "@/lib/formatters";
 
-
 export interface CartItemType {
   bouquet: Bouquet;
   quantity: number;
   size: string;
 }
-
-
 
 interface CartItemsProps {
   items: CartItemType[];

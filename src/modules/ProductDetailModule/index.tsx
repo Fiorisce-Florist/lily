@@ -78,7 +78,6 @@ function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedIm
           </div>
         )}
 
-
         {/* Zoom hint */}
         <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm px-2.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <ZoomIn className="h-3.5 w-3.5 text-neutral-600 dark:text-neutral-300" />

@@ -37,9 +37,7 @@ export function FloatingContactButton() {
       aria-label="Chat Minfio on WhatsApp"
     >
       <WhatsAppIcon className="h-7 w-7" />
-      <span className="hidden lg:block font-inter font-semibold ml-3 text-[15px]">
-        Ask MinFio
-      </span>
+      <span className="hidden lg:block font-inter font-semibold ml-3 text-[15px]">Ask MinFio</span>
     </Link>
   );
 }

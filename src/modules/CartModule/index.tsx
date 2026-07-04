@@ -13,10 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import type { CartItemData } from "@/app/actions/cart";
 import { formatPrice } from "@/lib/formatters";
 
-
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-
 
 // ─── Empty Cart ────────────────────────────────────────────────────────────────
 

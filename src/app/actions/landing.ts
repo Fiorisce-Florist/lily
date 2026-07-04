@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/formatters";
 import { unstable_cache } from "next/cache";
 
-
 // ─── Shared include shape ─────────────────────────────────────────────────────
 
 const productInclude = {
@@ -26,8 +25,6 @@ export interface LandingProduct {
   categorySlug: string;
 }
 
-
-
 function toCard(p: {
   id: string;
   name: string;
@@ -39,7 +36,7 @@ function toCard(p: {
 }): LandingProduct {
   let price = Number(p.price.toString());
   const hasVariants = p.variants && p.variants.length > 0;
-  
+
   if (hasVariants) {
     price = price + Math.min(...p.variants!.map((v) => Number(v.additionalPrice.toString())));
   }
