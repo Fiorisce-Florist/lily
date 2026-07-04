@@ -16,7 +16,6 @@ import { ProductCard } from "@/components/elements/product-card";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/formatters";
 
-
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const COLOR_DOT: Record<string, string> = {
@@ -34,12 +33,10 @@ const COLOR_DOT: Record<string, string> = {
   "Hot Pink": "bg-pink-600",
   Gold: "bg-amber-300",
   Chocolate: "bg-orange-900",
-  Custom: "bg-neutral-600"
+  Custom: "bg-neutral-600",
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-
 
 // Removed unused StarRating component
 
@@ -156,9 +153,11 @@ function ProductInfo({
             New Arrival
           </Badge>
         )}
-        <Badge variant="outline" id="badge-occasion">
-          {bouquet.occasion}
-        </Badge>
+        {bouquet.occasion && (
+          <Badge variant="outline" id="badge-occasion">
+            {bouquet.occasion}
+          </Badge>
+        )}
         {discountPct > 0 && (
           <Badge variant="secondary" id="badge-discount">
             {discountPct}% off
