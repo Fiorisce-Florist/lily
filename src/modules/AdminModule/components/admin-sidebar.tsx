@@ -65,7 +65,7 @@ export function AdminSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:sticky top-0 z-40 h-screen flex flex-col bg-white dark:bg-neutral-950 border-r border-neutral-200 dark:border-neutral-800 transition-transform duration-300 md:transition-all ${
+        className={`fixed md:sticky top-16 z-40 flex flex-col bg-white dark:bg-neutral-950 border-r border-b border-neutral-200 dark:border-neutral-800 transition-transform duration-300 md:transition-all ${
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         } ${collapsed ? "w-17.5" : "w-60"}`}
       >
@@ -101,43 +101,46 @@ export function AdminSidebar() {
               </Link>
             );
           })}
+          {/* Footer */}
+          <div className="border-t border-neutral-200 dark:border-neutral-800 pt-1 space-y-1">
+            <Link
+              href="/"
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-inter text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors ${
+                collapsed ? "justify-center" : ""
+              }`}
+              title={collapsed ? "View Store" : undefined}
+            >
+              <Flower2 className="h-4 w-4 shrink-0" />
+              {!collapsed && <span>View Store</span>}
+            </Link>
+            <button
+              onClick={async () => {
+                await signOut();
+                window.location.href = "/login";
+              }}
+              className={`w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-inter text-neutral-600 dark:text-neutral-400 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors ${
+                collapsed ? "justify-center" : ""
+              }`}
+              title={collapsed ? "Sign Out" : undefined}
+            >
+              <LogOut className="h-4 w-4 shrink-0" />
+              {!collapsed && <span>Sign Out</span>}
+            </button>
+
+            {/* Collapse toggle */}
+            <button
+              onClick={() => setCollapsed((v) => !v)}
+              className="hidden md:flex w-full items-center justify-center rounded-xl px-3 py-2 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {collapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </button>
+          </div>
         </nav>
-
-        {/* Footer */}
-        <div className="border-t border-neutral-200 dark:border-neutral-800 p-2 space-y-1">
-          <Link
-            href="/"
-            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-inter text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors ${
-              collapsed ? "justify-center" : ""
-            }`}
-            title={collapsed ? "View Store" : undefined}
-          >
-            <Flower2 className="h-4 w-4 shrink-0" />
-            {!collapsed && <span>View Store</span>}
-          </Link>
-          <button
-            onClick={async () => {
-              await signOut();
-              window.location.href = "/login";
-            }}
-            className={`w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-inter text-neutral-600 dark:text-neutral-400 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors ${
-              collapsed ? "justify-center" : ""
-            }`}
-            title={collapsed ? "Sign Out" : undefined}
-          >
-            <LogOut className="h-4 w-4 shrink-0" />
-            {!collapsed && <span>Sign Out</span>}
-          </button>
-
-          {/* Collapse toggle */}
-          <button
-            onClick={() => setCollapsed((v) => !v)}
-            className="hidden md:flex w-full items-center justify-center rounded-xl px-3 py-2 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </button>
-        </div>
       </aside>
     </>
   );
