@@ -66,7 +66,15 @@ export default function ShopModule({
         .filter((t) => t.type === "FLOWER")
         .map((t) => t.name)
         .sort(),
-      sizes: [...new Set(bouquets.flatMap((b) => (b.variants || []).map((v) => v.name)))],
+      sizes: [...new Set(bouquets.flatMap((b) => (b.variants || []).map((v) => v.name)))].sort((a, b) => {
+        const order = ["s", "m", "l", "xl"];
+        const indexA = order.indexOf(a.toLowerCase());
+        const indexB = order.indexOf(b.toLowerCase());
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+        return a.localeCompare(b);
+      }),
       maxPrice: Math.max(0, ...bouquets.map((b) => Number(b.price) || 0)),
     };
   }, [bouquets, availableCategories, availableTags]);
