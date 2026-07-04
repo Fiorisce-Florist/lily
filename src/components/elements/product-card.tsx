@@ -101,9 +101,11 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
                     </Badge>
                   )}
                 </div>
-                <h3 className="text-h3 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 group-hover:text-blush-600 dark:group-hover:text-blush-400 transition-colors">
-                  {product.name}
-                </h3>
+                <Link href={`/shop/${product.slug}`} className="after:absolute after:inset-0 z-0">
+                  <h3 className="text-h3 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 group-hover:text-blush-600 dark:group-hover:text-blush-400 transition-colors">
+                    {product.name}
+                  </h3>
+                </Link>
               </div>
             </div>
             {product.description && (
