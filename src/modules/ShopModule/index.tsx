@@ -6,6 +6,14 @@ import { ShopToolbar } from "./sections/shop-toolbar";
 import { ShopSidebar } from "./sections/shop-sidebar";
 import { ShopGrid } from "./sections/shop-grid";
 import type { Bouquet } from "./data/bouquets";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
 
 export type SortKey = "featured" | "price-asc" | "price-desc" | "newest" | "bestseller";
 
@@ -62,25 +70,27 @@ export default function ShopModule({
         .filter((t) => t.type === "COLOR")
         .map((t) => t.name)
         .sort(),
-      flowers: availableTags
-        .filter((t) => t.type === "FLOWER")
-        .map((t) => t.name)
-        .sort(),
-      sizes: [...new Set(bouquets.flatMap((b) => (b.variants || []).map((v) => v.name)))].sort((a, b) => {
-        const order = ["s", "m", "l", "xl"];
-        const indexA = order.indexOf(a.toLowerCase());
-        const indexB = order.indexOf(b.toLowerCase());
-        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-        if (indexA !== -1) return -1;
-        if (indexB !== -1) return 1;
-        return a.localeCompare(b);
-      }),
+      flowers: [...new Set(bouquets.flatMap((b) => b.flowers || []))].sort(),
+      sizes: [...new Set(bouquets.flatMap((b) => (b.variants || []).map((v) => v.name)))].sort(
+        (a, b) => {
+          const order = ["s", "m", "l", "xl"];
+          const indexA = order.indexOf(a.toLowerCase());
+          const indexB = order.indexOf(b.toLowerCase());
+          if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+          if (indexA !== -1) return -1;
+          if (indexB !== -1) return 1;
+          return a.localeCompare(b);
+        }
+      ),
       maxPrice: Math.max(0, ...bouquets.map((b) => Number(b.price) || 0)),
     };
   }, [bouquets, availableCategories, availableTags]);
 
   const [query, setQuery] = React.useState("");
   const [sort, setSort] = React.useState<SortKey>("featured");
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const ITEMS_PER_PAGE = 24;
+
   const [filters, setFilters] = React.useState<FilterState>(() => {
     const initFilters = { ...DEFAULT_FILTERS };
     let hasInit = false;
@@ -108,6 +118,11 @@ export default function ShopModule({
 
     return hasInit ? initFilters : DEFAULT_FILTERS;
   });
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [query, sort, filters]);
+
   const [viewMode, setViewMode] = React.useState<"grid" | "list">("grid");
 
   const filtered = React.useMemo(() => {
@@ -188,6 +203,12 @@ export default function ShopModule({
     (filters.availability !== "all" ? 1 : 0) +
     (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000000 ? 1 : 0);
 
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginatedBouquets = filtered.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <div className="min-h-screen bg-cornsilk-100 dark:bg-neutral-950">
       <ShopHero query={query} onQueryChange={setQuery} />
@@ -212,8 +233,46 @@ export default function ShopModule({
           </aside>
 
           {/* Product grid */}
-          <div className="flex-1 min-w-0">
-            <ShopGrid bouquets={filtered} viewMode={viewMode} />
+          <div className="flex-1 min-w-0 flex flex-col gap-8 pb-12">
+            <ShopGrid bouquets={paginatedBouquets} viewMode={viewMode} />
+
+            {totalPages > 1 && (
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      className={
+                        currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"
+                      }
+                    />
+                  </PaginationItem>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        isActive={currentPage === page}
+                        onClick={() => setCurrentPage(page)}
+                        className="cursor-pointer"
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      className={
+                        currentPage === totalPages
+                          ? "pointer-events-none opacity-50"
+                          : "cursor-pointer"
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
           </div>
         </div>
       </div>

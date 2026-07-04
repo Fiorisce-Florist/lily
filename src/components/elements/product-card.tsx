@@ -60,7 +60,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
                 alt={product.name}
                 onLoad={() => setImgLoaded(true)}
                 className={cn(
-                  "h-full w-full object-cover transition-all duration-500 group-hover:scale-105",
+                  "h-full w-full object-contain transition-all duration-500 group-hover:scale-105",
                   imgLoaded ? "opacity-100" : "opacity-0"
                 )}
               />
@@ -107,7 +107,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
               </div>
             </div>
             {product.description && (
-              <p className="text-b6 mt-1 text-neutral-500 dark:text-neutral-400 line-clamp-2">
+              <p className="text-b6 mt-1 text-neutral-500 dark:text-neutral-400 line-clamp-2 wrap-break-word">
                 {product.description}
               </p>
             )}
@@ -139,7 +139,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
       )}
     >
       {/* Image */}
-      <div className="relative block aspect-4/5 sm:aspect-4/3 overflow-hidden bg-cornsilk-100 dark:bg-neutral-800">
+      <div className="relative block aspect-4/5 sm:aspect-4/3 overflow-hidden ">
         {product.image ? (
           <>
             {!imgLoaded && <Skeleton className="absolute inset-0 rounded-none" />}
@@ -149,7 +149,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
               alt={product.name}
               onLoad={() => setImgLoaded(true)}
               className={cn(
-                "h-full w-full object-cover transition-all duration-500 group-hover:scale-105",
+                "h-full w-full object-contain transition-all duration-500 group-hover:scale-105",
                 imgLoaded ? "opacity-100" : "opacity-0"
               )}
             />
@@ -210,13 +210,13 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
           </h3>
         </Link>
         {product.description && (
-          <p className="text-b6 mt-1 text-neutral-500 dark:text-neutral-400 line-clamp-2 flex-1">
+          <p className="text-b6 mt-1 text-neutral-500 dark:text-neutral-400 line-clamp-2 wrap-break-word">
             {product.description}
           </p>
         )}
 
         {/* Price + CTA */}
-        <div className="mt-2 flex items-center justify-between">
+        <div className="mt-auto pt-2 flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-h5 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100">
               {displayPrice}
