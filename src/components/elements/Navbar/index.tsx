@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -104,17 +104,18 @@ export function Navbar() {
                     pathname === link.href ||
                     (link.href !== "/" && pathname?.startsWith(link.href));
                   return (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      className={`text-h5 font-fraunces transition-colors hover:text-blush-600 dark:hover:text-blush-400 ${
-                        isActive
-                          ? "text-blush-600 dark:text-blush-400 font-semibold"
-                          : "text-neutral-800 dark:text-neutral-200"
-                      }`}
-                    >
-                      {link.name}
-                    </Link>
+                    <SheetClose asChild key={link.name}>
+                      <Link
+                        href={link.href}
+                        className={`text-h5 font-fraunces transition-colors hover:text-blush-600 dark:hover:text-blush-400 ${
+                          isActive
+                            ? "text-blush-600 dark:text-blush-400 font-semibold"
+                            : "text-neutral-800 dark:text-neutral-200"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    </SheetClose>
                   );
                 })}
 
@@ -123,25 +124,31 @@ export function Navbar() {
                 {isLoggedIn ? (
                   <>
                     {isAdmin && (
+                      <SheetClose asChild>
+                        <Link
+                          href="/admin"
+                          className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
+                        >
+                          Admin Panel
+                        </Link>
+                      </SheetClose>
+                    )}
+                    <SheetClose asChild>
                       <Link
-                        href="/admin"
+                        href="/profile"
                         className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
                       >
-                        Admin Panel
+                        My Profile
                       </Link>
-                    )}
-                    <Link
-                      href="/profile"
-                      className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
-                    >
-                      My Profile
-                    </Link>
-                    <Link
-                      href="/orders"
-                      className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
-                    >
-                      My Orders
-                    </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link
+                        href="/orders"
+                        className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
+                      >
+                        My Orders
+                      </Link>
+                    </SheetClose>
                     <button
                       onClick={async () => {
                         await signOut();
@@ -153,12 +160,14 @@ export function Navbar() {
                     </button>
                   </>
                 ) : (
-                  <Link
-                    href="/login"
-                    className="text-h5 font-fraunces text-blush-600 dark:text-blush-400 hover:text-blush-700 transition-colors"
-                  >
-                    Sign In
-                  </Link>
+                  <SheetClose asChild>
+                    <Link
+                      href="/login"
+                      className="text-h5 font-fraunces text-blush-600 dark:text-blush-400 hover:text-blush-700 transition-colors"
+                    >
+                      Sign In
+                    </Link>
+                  </SheetClose>
                 )}
               </div>
             </SheetContent>
