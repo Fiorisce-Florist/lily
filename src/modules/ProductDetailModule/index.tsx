@@ -55,7 +55,7 @@ function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedIm
   return (
     <div className="flex flex-col w-full">
       <div
-        className="relative overflow-hidden rounded-2xl bg-cornsilk-100 dark:bg-neutral-800 aspect-4/5 w-full cursor-zoom-in group"
+        className="relative overflow-hidden rounded-2xl  aspect-4/5 w-full cursor-zoom-in group"
         onMouseEnter={() => setZoomed(true)}
         onMouseLeave={() => setZoomed(false)}
       >
@@ -68,7 +68,7 @@ function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedIm
             alt={bouquet.name}
             fill
             onLoad={() => setImgLoaded(true)}
-            className={`object-cover transition-all duration-700 ${
+            className={`object-contain transition-all duration-700 ${
               zoomed ? "scale-110" : "scale-100"
             } ${imgLoaded ? "opacity-100" : "opacity-0"}`}
           />
@@ -78,8 +78,6 @@ function ImageGallery({ bouquet, selectedImage }: { bouquet: Bouquet; selectedIm
           </div>
         )}
 
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
 
         {/* Zoom hint */}
         <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm px-2.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -437,7 +435,7 @@ function RelatedProducts({ bouquet, allBouquets }: { bouquet: Bouquet; allBouque
         </Link>
       </div>
 
-      <div className="flex gap-5 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory -mx-2 px-2">
+      <div className="flex gap-5 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory -mx-2 px-2 py-2">
         {related.map((b) => (
           <ProductCard key={b.id} product={b} className="w-72 shrink-0 snap-start" />
         ))}

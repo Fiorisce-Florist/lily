@@ -61,13 +61,13 @@ export function FeaturedSection({ products }: FeaturedSectionProps) {
                   href={`/shop/${product.slug}`}
                   className="group/card block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
                 >
-                  <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
+                  <div className=" relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
                     {product.image ? (
                       <Image
                         src={product.image}
                         alt={product.name}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover/card:scale-105"
+                        className="object-contain transition-transform duration-700 group-hover/card:scale-105"
                         sizes="(max-width: 640px) 50vw, 25vw"
                       />
                     ) : (
@@ -76,7 +76,7 @@ export function FeaturedSection({ products }: FeaturedSectionProps) {
                       </div>
                     )}
                   </div>
-                  <div className="space-y-1 text-left">
+                  <div className="space-y-1 text-center">
                     <h3 className="font-fraunces text-b5 sm:text-b4 text-neutral-900 dark:text-cornsilk-100 group-hover/card:text-blush-600 font-semibold uppercase tracking-wider transition-colors line-clamp-1">
                       {product.name}
                     </h3>

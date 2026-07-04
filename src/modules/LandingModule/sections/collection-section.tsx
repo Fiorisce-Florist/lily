@@ -25,7 +25,7 @@ export function CollectionSection({
   href,
   products,
   variant = "light",
-  imageFit = "cover",
+  imageFit = "contain",
 }: CollectionSectionProps) {
   if (products.length === 0) return null;
 
@@ -48,7 +48,7 @@ export function CollectionSection({
               href={`/shop/${product.slug}`}
               className="group block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2 rounded-lg"
             >
-              <div className="bg-cornsilk-300 dark:bg-neutral-800 relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
+              <div className=" relative mb-4 aspect-3/4 overflow-hidden rounded-lg">
                 {product.image ? (
                   <Image
                     src={product.image}
@@ -57,7 +57,7 @@ export function CollectionSection({
                     sizes="(max-width: 640px) 50vw, 25vw"
                     className={cn(
                       "transition-transform duration-700 group-hover:scale-105",
-                      imageFit === "contain" ? "object-contain p-4" : "object-cover"
+                      imageFit === "contain" ? "object-contain" : "object-cover"
                     )}
                   />
                 ) : (
@@ -66,7 +66,7 @@ export function CollectionSection({
                   </div>
                 )}
               </div>
-              <div className="space-y-1 text-left">
+              <div className="space-y-1 text-center">
                 <h3 className="font-fraunces text-b5 sm:text-b4 text-neutral-900 dark:text-cornsilk-100 group-hover:text-blush-600 font-semibold uppercase tracking-wider transition-colors line-clamp-2">
                   {product.name}
                 </h3>
