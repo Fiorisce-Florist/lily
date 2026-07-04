@@ -73,6 +73,7 @@ import { Footer } from "@/components/elements/Footer";
 import { ThemeProvider } from "@/context/theme-provider";
 import { SessionProvider } from "@/context/session-provider";
 import { CartProvider } from "@/context/cart-context";
+import { FloatingContactButton } from "@/components/elements/floating-contact-button";
 
 export default function RootLayout({
   children,
@@ -102,6 +103,7 @@ export default function RootLayout({
                 <Navbar />
                 <main className="flex-1">{children}</main>
                 <Footer />
+                <FloatingContactButton />
               </TooltipProvider>
               <Toaster />
             </CartProvider>
