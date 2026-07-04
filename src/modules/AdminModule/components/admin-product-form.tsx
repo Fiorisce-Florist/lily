@@ -441,6 +441,7 @@ export function AdminProductForm({
                         <SelectItem value="s">S</SelectItem>
                         <SelectItem value="m">M</SelectItem>
                         <SelectItem value="l">L</SelectItem>
+                        <SelectItem value="xl">XL</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
