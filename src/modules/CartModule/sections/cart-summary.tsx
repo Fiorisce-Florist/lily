@@ -32,12 +32,6 @@ export function CartSummary({
   const [promoApplied, setPromoApplied] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_promoError, setPromoError] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _freeShippingProgress = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _remaining = FREE_SHIPPING_THRESHOLD - subtotal;
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function _handleApplyPromo() {
     if (promoCode.toUpperCase() === "FIORISCE") {
       setPromoApplied(true);
@@ -85,9 +79,7 @@ export function CartSummary({
             <span
               className={cn(
                 "text-b5 font-jetbrains font-medium",
-                shipping === 0
-                  ? "text-olive-700 dark:text-olive-400"
-                  : "text-neutral-800 dark:text-cornsilk-100"
+                "text-olive-700 dark:text-olive-400"
               )}
             >
               {shipping === 0 ? "Free" : formatPrice(shipping)}

@@ -162,7 +162,7 @@ function CartSummaryPanel({
   isMixedCart?: boolean;
   selectedIds: string[];
 }) {
-  const shipping = subtotal >= 500000 ? 0 : subtotal > 0 ? 50000 : 0;
+  const shipping = 0;
   const total = subtotal + shipping;
 
   return (
@@ -186,11 +186,7 @@ function CartSummaryPanel({
             )}
           </span>
         </div>
-        {shipping > 0 && (
-          <p className="text-[11px] text-neutral-400 dark:text-neutral-500">
-            Free shipping on orders over {formatPrice(500000)}
-          </p>
-        )}
+        {/* Free shipping text removed since shipping is always free */}
         <div className="border-t border-cornsilk-200 dark:border-neutral-700 pt-3 flex items-center justify-between font-semibold text-b4 text-neutral-900 dark:text-cornsilk-100">
           <span>Total</span>
           <span className="font-jetbrains">{formatPrice(total)}</span>
