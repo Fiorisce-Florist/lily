@@ -1,4 +1,8 @@
 export const NAV_MENU = [
-  { name: "Home", href: "/" },
-  { name: "Shop", href: "/shop" },
-];
+  { key: "home", name: "Home", href: "/" },
+  { key: "shop", name: "Shop", href: "/shop" },
+] as const satisfies {
+  key: "home" | "shop";
+  name: string;
+  href: string;
+}[];

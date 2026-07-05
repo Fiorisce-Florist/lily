@@ -11,6 +11,7 @@ import {
   ShoppingBag,
   LogOut,
   ShieldCheck,
+  Globe2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -21,12 +22,21 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "../theme-toggle";
 import { NAV_MENU } from "./const";
 import { useCart } from "@/context/cart-context";
+import {
+  LANGUAGE_CONFIG,
+  getLanguageDictionary,
+  getStoredLanguage,
+  setStoredLanguage,
+  subscribeToLanguageChange,
+} from "@/config/language";
 
 // ─── User Avatar ──────────────────────────────────────────────────────────────
 
@@ -70,6 +80,57 @@ function UserAvatar({
   );
 }
 
+function LanguageSelector({ compact = false }: { compact?: boolean }) {
+  const language = React.useSyncExternalStore(
+    subscribeToLanguageChange,
+    getStoredLanguage,
+    () => LANGUAGE_CONFIG.defaultLanguage
+  );
+  const dictionary = getLanguageDictionary(language);
+
+  const handleChange = (nextLanguage: string) => {
+    const match = LANGUAGE_CONFIG.options.find((option) => option.code === nextLanguage);
+    if (!match) return;
+
+    setStoredLanguage(match.code);
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size={compact ? "md" : "icon"}
+          aria-label={dictionary.language.label}
+          className={compact ? "justify-start rounded-xl px-0 text-h5 font-fraunces" : ""}
+        >
+          <Globe2 className="h-5 w-5" />
+          <span className={compact ? "font-fraunces" : "sr-only"}>
+            {dictionary.language.label}
+          </span>
+          {!compact && (
+            <span className="font-jetbrains text-[11px] font-semibold">{language}</span>
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align={compact ? "start" : "end"} className="w-40">
+        <DropdownMenuLabel>{dictionary.language.label}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup value={language} onValueChange={handleChange}>
+          {LANGUAGE_CONFIG.options.map((option) => (
+            <DropdownMenuRadioItem key={option.code} value={option.code} className="cursor-pointer">
+              <span>{option.code}</span>
+              <span className="text-neutral-500 dark:text-neutral-400">
+                {dictionary.language.options[option.code]}
+              </span>
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 
 export function Navbar() {
@@ -80,6 +141,12 @@ export function Navbar() {
   const isAdmin = session?.user?.role === "ADMIN";
   const { items } = useCart();
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
+  const language = React.useSyncExternalStore(
+    subscribeToLanguageChange,
+    getStoredLanguage,
+    () => LANGUAGE_CONFIG.defaultLanguage
+  );
+  const dictionary = getLanguageDictionary(language);
 
   return (
     <header className="border-cornsilk-300 bg-cornsilk-100/80 sticky top-0 z-50 w-full border-b backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/80">
@@ -113,11 +180,13 @@ export function Navbar() {
                             : "text-neutral-800 dark:text-neutral-200"
                         }`}
                       >
-                        {link.name}
+                        {dictionary.navigation[link.key]}
                       </Link>
                     </SheetClose>
                   );
                 })}
+
+                <LanguageSelector compact />
 
                 {/* Mobile account links */}
                 <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800 my-2" />
@@ -129,7 +198,7 @@ export function Navbar() {
                           href="/admin"
                           className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
                         >
-                          Admin Panel
+                          {dictionary.navigation.adminPanel}
                         </Link>
                       </SheetClose>
                     )}
@@ -138,7 +207,7 @@ export function Navbar() {
                         href="/profile"
                         className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
                       >
-                        My Profile
+                        {dictionary.navigation.myProfile}
                       </Link>
                     </SheetClose>
                     <SheetClose asChild>
@@ -146,7 +215,7 @@ export function Navbar() {
                         href="/orders"
                         className="text-h5 font-fraunces text-neutral-700 dark:text-neutral-200 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
                       >
-                        My Orders
+                        {dictionary.navigation.myOrders}
                       </Link>
                     </SheetClose>
                     <button
@@ -156,7 +225,7 @@ export function Navbar() {
                       }}
                       className="text-h5 font-fraunces text-red-500 text-left hover:text-red-600 transition-colors"
                     >
-                      Log Out
+                      {dictionary.navigation.logOut}
                     </button>
                   </>
                 ) : (
@@ -165,7 +234,7 @@ export function Navbar() {
                       href="/login"
                       className="text-h5 font-fraunces text-blush-600 dark:text-blush-400 hover:text-blush-700 transition-colors"
                     >
-                      Sign In
+                      {dictionary.navigation.signIn}
                     </Link>
                   </SheetClose>
                 )}
@@ -198,7 +267,7 @@ export function Navbar() {
                     : "text-neutral-700 dark:text-neutral-300"
                 }`}
               >
-                {link.name}
+                {dictionary.navigation[link.key]}
               </Link>
             );
           })}
@@ -206,6 +275,7 @@ export function Navbar() {
 
         {/* Actions */}
         <div className="flex flex-1 items-center justify-end gap-2 md:gap-4">
+          <LanguageSelector />
           <ThemeToggle />
 
           {/* Account Dropdown */}
@@ -214,7 +284,7 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label="Account"
+                aria-label={dictionary.navigation.account}
                 className="hidden sm:inline-flex relative p-0.5"
               >
                 {isLoggedIn ? (
@@ -230,7 +300,7 @@ export function Navbar() {
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col gap-0.5">
                       <p className="font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 truncate">
-                        {session.user?.name ?? "My Account"}
+                        {session.user?.name ?? dictionary.navigation.account}
                       </p>
                       <p className="text-[11px] font-inter text-neutral-400 truncate">
                         {session.user?.email}
@@ -243,20 +313,20 @@ export function Navbar() {
                       <DropdownMenuItem asChild>
                         <Link href="/admin" className="cursor-pointer w-full">
                           <ShieldCheck />
-                          Admin Panel
+                          {dictionary.navigation.adminPanel}
                         </Link>
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem asChild>
                       <Link href="/profile" className="cursor-pointer w-full">
                         <LucideUserCircle />
-                        Profile
+                        {dictionary.navigation.myProfile}
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/orders" className="cursor-pointer w-full">
                         <LucidePackage />
-                        Orders
+                        {dictionary.navigation.myOrders}
                       </Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
@@ -269,24 +339,26 @@ export function Navbar() {
                     className="cursor-pointer text-sm w-full text-red-500 dark:text-red-400 focus:text-red-600"
                   >
                     <LogOut />
-                    Log Out
+                    {dictionary.navigation.logOut}
                   </DropdownMenuItem>
                 </>
               ) : (
                 <>
-                  <DropdownMenuLabel className="font-fraunces">Welcome</DropdownMenuLabel>
+                  <DropdownMenuLabel className="font-fraunces">
+                    {dictionary.navigation.welcome}
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link
                       href="/login"
                       className="cursor-pointer w-full text-blush-600 dark:text-blush-400"
                     >
-                      Sign In
+                      {dictionary.navigation.signIn}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/register" className="cursor-pointer w-full">
-                      Create Account
+                      {dictionary.navigation.createAccount}
                     </Link>
                   </DropdownMenuItem>
                 </>
@@ -295,7 +367,13 @@ export function Navbar() {
           </DropdownMenu>
 
           {/* Cart */}
-          <Button variant="ghost" size="icon" aria-label="Cart" className="relative" asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={dictionary.navigation.cart}
+            className="relative"
+            asChild
+          >
             <Link href="/cart">
               <ShoppingBag className="h-5 w-5" />
               {itemCount > 0 && (

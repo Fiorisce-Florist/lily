@@ -32,6 +32,55 @@ import { formatPrice } from "@/lib/formatters";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+function toDateInputValue(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getTodayInputValue() {
+  return toDateInputValue(new Date());
+}
+
+function parsePickupDateTime(date: string, time?: string) {
+  if (!date || !time) return null;
+  const [year, month, day] = date.split("-").map(Number);
+  const [hour, minute] = time.split(":").map(Number);
+  if (!year || !month || !day || hour === undefined || minute === undefined) return null;
+  return new Date(year, month - 1, day, hour, minute, 0, 0);
+}
+
+function getPickupValidationMessage(date: string, time?: string) {
+  if (!date) return "Please select a pickup/delivery date.";
+  if (!time) return "Please select a pickup/delivery time.";
+
+  const pickupAt = parsePickupDateTime(date, time);
+  if (!pickupAt || Number.isNaN(pickupAt.getTime())) {
+    return "Please select a valid pickup/delivery time.";
+  }
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const selectedDay = new Date(pickupAt.getFullYear(), pickupAt.getMonth(), pickupAt.getDate());
+  if (selectedDay < today) return "Pickup/delivery date cannot be before today.";
+
+  const openingAt = new Date(pickupAt);
+  openingAt.setHours(10, 0, 0, 0);
+  const closingAt = new Date(pickupAt);
+  closingAt.setHours(20, 0, 0, 0);
+  if (pickupAt < openingAt || pickupAt > closingAt) {
+    return "Pickup/delivery time must be during store hours, 10:00-20:00.";
+  }
+
+  const minimumPickupAt = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+  if (pickupAt < minimumPickupAt) {
+    return "Pickup/delivery time must be at least 3 hours from now.";
+  }
+
+  return null;
+}
+
 // ─── Order Summary Panel ──────────────────────────────────────────────────────
 
 function OrderSummaryPanel({
@@ -204,6 +253,9 @@ function Field({
   value,
   onChange,
   className,
+  min,
+  max,
+  step,
 }: {
   id: string;
   label: string;
@@ -213,6 +265,9 @@ function Field({
   value: string;
   onChange: (v: string) => void;
   className?: string;
+  min?: string;
+  max?: string;
+  step?: string;
 }) {
   return (
     <div className={`space-y-2 ${className ?? ""}`}>
@@ -226,6 +281,9 @@ function Field({
         required={required}
         placeholder={placeholder}
         value={value}
+        min={min}
+        max={max}
+        step={step}
         onChange={(e) => onChange(e.target.value)}
       />
     </div>
@@ -342,6 +400,13 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   }, [items]);
 
   const [isProcessing, setIsProcessing] = React.useState(false);
+  const todayInputValue = React.useMemo(() => getTodayInputValue(), []);
+
+  React.useEffect(() => {
+    if (status === "unauthenticated") {
+      toast.error("Please log in to checkout.");
+    }
+  }, [status]);
 
   // ── Derive initial contact from profile ──────────────────────────────────
   const nameParts = (profile?.name ?? session?.user?.name ?? "").split(" ");
@@ -444,16 +509,23 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (status !== "authenticated") {
+      toast.error("Please log in to checkout.");
+      return;
+    }
     if (items.length === 0) {
       toast.error("Your cart is empty.");
       return;
     }
-    if (!form.deliveryDate) {
-      toast.error("Please select a pickup/delivery date.");
+
+    const pickupError = getPickupValidationMessage(form.deliveryDate, form.deliveryTime);
+    if (pickupError) {
+      toast.error(pickupError);
       return;
     }
 
     setIsProcessing(true);
+    let isRedirectingToPayment = false;
 
     try {
       const payload = {
@@ -469,12 +541,20 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
       }
 
       toast.success("Order placed successfully! Redirecting…");
-      refetch();
+      if (result.paymentUrl) {
+        isRedirectingToPayment = true;
+        window.location.assign(result.paymentUrl);
+        return;
+      }
+
+      await refetch();
       router.push(`/orders/${result.orderNumber}`);
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
-      setIsProcessing(false);
+      if (!isRedirectingToPayment) {
+        setIsProcessing(false);
+      }
     }
   };
 
@@ -487,7 +567,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
             Sign in to checkout
           </h2>
           <p className="text-b4 font-inter text-neutral-500 dark:text-neutral-400">
-            You need to be signed in to place an order.
+            Please log in to checkout.
           </p>
           <Button variant="primary" asChild>
             <Link href="/login?callbackUrl=/checkout">Sign In</Link>
@@ -498,7 +578,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   }
 
   // ── Empty cart guard ────────────────────────────────────────────────────
-  if (!cartLoading && items.length === 0) {
+  if (!cartLoading && !isProcessing && items.length === 0) {
     return (
       <div className="min-h-screen bg-cornsilk-50 dark:bg-neutral-950 flex items-center justify-center">
         <div className="text-center space-y-4 px-4">
@@ -520,6 +600,21 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
 
   return (
     <div className="min-h-screen bg-cornsilk-50 dark:bg-neutral-950 pb-20">
+      {isProcessing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-cornsilk-50/85 backdrop-blur-sm dark:bg-neutral-950/85">
+          <div className="flex flex-col items-center gap-4 rounded-2xl border border-cornsilk-200 bg-white px-8 py-6 text-center shadow-lg dark:border-neutral-800 dark:bg-neutral-900">
+            <Loader2 className="h-7 w-7 animate-spin text-blush-500" />
+            <div>
+              <p className="text-b4 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100">
+                Preparing Doku checkout
+              </p>
+              <p className="text-b6 font-inter text-neutral-500 dark:text-neutral-400">
+                Keep this page open while we redirect you.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Minimal Header */}
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl pt-8 sm:pt-12">
@@ -666,13 +761,18 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                   type="date"
                   value={form.deliveryDate}
                   onChange={set("deliveryDate")}
+                  min={todayInputValue}
                 />
                 <Field
                   id="deliveryTime"
-                  label="Pickup / Delivery Time (Optional)"
+                  label="Pickup / Delivery Time"
+                  required
                   type="time"
                   value={form.deliveryTime || ""}
                   onChange={set("deliveryTime")}
+                  min="10:00"
+                  max="20:00"
+                  step="900"
                 />
               </div>
 
@@ -802,10 +902,16 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               </h2>
               <div className="flex items-center gap-3 p-4 rounded-2xl bg-cornsilk-50 dark:bg-neutral-800 border border-cornsilk-200 dark:border-neutral-700">
                 <CreditCard className="h-5 w-5 text-camel-600 dark:text-camel-400 shrink-0" />
-                <p className="text-b5 font-inter text-neutral-700 dark:text-neutral-300">
-                  Clicking <strong>&quot;Place Order & Pay&quot;</strong> will create your order.
-                  You will then be provided with a QRIS code to manually complete your payment.
-                </p>
+                <div className="space-y-1">
+                  <p className="text-b5 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100">
+                    Digital Payments
+                  </p>
+                  <p className="text-b5 font-inter text-neutral-700 dark:text-neutral-300">
+                    Clicking <strong>&quot;Place Order & Pay&quot;</strong> will create your order.
+                    You will continue to Doku Checkout and choose from available digital payment
+                    methods.
+                  </p>
+                </div>
               </div>
             </section>
           </div>

@@ -1,0 +1,28 @@
+{
+  "language": {
+    "label": "Language",
+    "options": {
+      "EN": "English",
+      "ID": "Indonesia"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "shop": "Shop",
+    "adminPanel": "Admin Panel",
+    "myProfile": "My Profile",
+    "myOrders": "My Orders",
+    "signIn": "Sign In",
+    "logOut": "Log Out",
+    "createAccount": "Create Account",
+    "welcome": "Welcome",
+    "account": "Account",
+    "cart": "Cart"
+  },
+  "floatingContact": {
+    "question": "Do you have any question?",
+    "cta": "Contact MinFio",
+    "ariaLabel": "Contact MinFio on WhatsApp",
+    "message": "Hi MinFio, I have a question."
+  }
+}

@@ -1,8 +1,10 @@
 "use server";
 import { headers } from "next/headers";
+import type { Prisma } from "@prisma/client";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getPaymentProvider } from "@/lib/payments";
 import { revalidatePath } from "next/cache";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -76,18 +78,66 @@ function calcShipping(): number {
   return 0; // GoSend ordered by user, Pickup is free
 }
 
+function toPrismaJson(value: unknown): Prisma.InputJsonValue {
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
+}
+
+function parseLocalPickupDateTime(date: string, time?: string) {
+  if (!date || !time) return null;
+  const [year, month, day] = date.split("-").map(Number);
+  const [hour, minute] = time.split(":").map(Number);
+
+  if (!year || !month || !day || hour === undefined || minute === undefined) return null;
+
+  return new Date(year, month - 1, day, hour, minute, 0, 0);
+}
+
+function validatePickupTime(date: string, time?: string) {
+  if (!date) return "Please select a pickup/delivery date.";
+  if (!time) return "Please select a pickup/delivery time.";
+
+  const pickupAt = parseLocalPickupDateTime(date, time);
+  if (!pickupAt || Number.isNaN(pickupAt.getTime())) {
+    return "Please select a valid pickup/delivery time.";
+  }
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const selectedDay = new Date(pickupAt.getFullYear(), pickupAt.getMonth(), pickupAt.getDate());
+
+  if (selectedDay < today) {
+    return "Pickup/delivery date cannot be before today.";
+  }
+
+  const openingAt = new Date(pickupAt);
+  openingAt.setHours(10, 0, 0, 0);
+  const closingAt = new Date(pickupAt);
+  closingAt.setHours(20, 0, 0, 0);
+
+  if (pickupAt < openingAt || pickupAt > closingAt) {
+    return "Pickup/delivery time must be during store hours, 10:00-20:00.";
+  }
+
+  const minimumPickupAt = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+  if (pickupAt < minimumPickupAt) {
+    return "Pickup/delivery time must be at least 3 hours from now.";
+  }
+
+  return null;
+}
+
 // ─── createOrder ──────────────────────────────────────────────────────────────
 
 export async function createOrder(formData: CreateOrderFormData): Promise<{
   orderNumber: string | null;
-  snapToken?: string | null;
+  paymentUrl?: string | null;
   error: string | null;
 }> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return {
       orderNumber: null,
-      snapToken: null,
+      paymentUrl: null,
       error: "You must be logged in to place an order.",
     };
   }
@@ -108,6 +158,11 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
               price: true,
               isAvailable: true,
               status: true,
+              images: {
+                where: { isPrimary: true },
+                take: 1,
+                select: { imageUrl: true },
+              },
             },
           },
           variant: {
@@ -125,7 +180,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   });
 
   if (!cart || cart.items.length === 0) {
-    return { orderNumber: null, snapToken: null, error: "Your cart is empty." };
+    return { orderNumber: null, paymentUrl: null, error: "Your cart is empty." };
   }
 
   // Filter items if selectedItemIds is provided
@@ -135,7 +190,12 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
       : cart.items;
 
   if (itemsToCheckout.length === 0) {
-    return { orderNumber: null, snapToken: null, error: "No items selected for checkout." };
+    return { orderNumber: null, paymentUrl: null, error: "No items selected for checkout." };
+  }
+
+  const pickupValidationError = validatePickupTime(formData.deliveryDate, formData.deliveryTime);
+  if (pickupValidationError) {
+    return { orderNumber: null, paymentUrl: null, error: pickupValidationError };
   }
 
   // 2. Validate all items are still available and price matches
@@ -145,7 +205,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
     if (!item.product.isAvailable || item.product.status !== "ACTIVE" || isVariantUnavailable) {
       return {
         orderNumber: null,
-        snapToken: null,
+        paymentUrl: null,
         error: `"${item.product.name}${item.variant ? ` (${item.variant.variantName})` : ""}" is no longer available.`,
       };
     }
@@ -156,7 +216,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
     if (Number(item.price) !== livePrice) {
       return {
         orderNumber: null,
-        snapToken: null,
+        paymentUrl: null,
         error: `The price of "${item.product.name}" has changed. Please refresh your cart.`,
       };
     }
@@ -188,7 +248,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
     if (!formData.address || !formData.city || !formData.postalCode) {
       return {
         orderNumber: null,
-        snapToken: null,
+        paymentUrl: null,
         error: "Address, city, and postal code are required for Fiorisce delivery.",
       };
     }
@@ -196,7 +256,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
 
   // 4. Run Prisma transaction: use existing address or create new + order + items + clear cart
   try {
-    await prisma.$transaction(async (tx) => {
+    const created = await prisma.$transaction(async (tx) => {
       let addressIdToUse = formData.addressId;
 
       if (formData.deliveryMethod === "FIORISCE_DELIVERY" && formData.address) {
@@ -252,36 +312,97 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
         },
       });
 
-      // Clear the selected items from the cart
-      await tx.cartItem.deleteMany({
-        where: {
-          cartId: cart.id,
-          id: { in: itemsToCheckout.map((i) => i.id) },
-        },
-      });
-
-      // Create Payment record for QRIS
-      await tx.payment.create({
+      const payment = await tx.payment.create({
         data: {
           orderId: order.id,
-          paymentMethod: "QRIS",
+          paymentMethod: getPaymentProvider().method,
           amount: totalAmount,
           status: "PENDING",
         },
       });
 
-      return { order, addressId: addressIdToUse };
+      return { order, payment };
     });
+
+    const appUrl =
+      process.env.NEXT_PUBLIC_APP_URL ?? process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+    const provider = getPaymentProvider();
+    const checkout = await provider.createCheckout({
+      orderNumber,
+      amount: totalAmount,
+      successUrl: `${appUrl}/orders/${orderNumber}`,
+      notificationUrl: `${appUrl}/api/payments/doku/notification`,
+      customer: {
+        id: userId,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        postalCode: formData.postalCode,
+      },
+      lineItems: [
+        ...itemsToCheckout.map((item) => ({
+          id: item.productId,
+          name: item.variant
+            ? `${item.product.name} (${item.variant.variantName})`
+            : item.product.name,
+          quantity: item.quantity,
+          price: Number(item.price),
+          imageUrl: item.product.images[0]?.imageUrl,
+        })),
+        ...(paperBagCost > 0
+          ? [
+              {
+                id: "paper-bag",
+                name: "Paper Bag",
+                quantity: 1,
+                price: paperBagCost,
+              },
+            ]
+          : []),
+      ],
+    });
+
+    await prisma.$transaction([
+      prisma.payment.update({
+        where: { id: created.payment.id },
+        data: {
+          transactionId: checkout.transactionId,
+          receiptUrl: checkout.checkoutUrl,
+        },
+      }),
+      prisma.paymentLog.create({
+        data: {
+          paymentId: created.payment.id,
+          payload: toPrismaJson({
+            provider: checkout.provider,
+            event: "CHECKOUT_CREATED",
+            paymentMethod: provider.method,
+            checkoutUrl: checkout.checkoutUrl,
+            raw: checkout.raw,
+          }),
+        },
+      }),
+      prisma.cartItem.deleteMany({
+        where: {
+          cartId: cart.id,
+          id: { in: itemsToCheckout.map((i) => i.id) },
+        },
+      }),
+    ]);
 
     revalidatePath("/orders");
     revalidatePath("/cart");
 
-    return { orderNumber, error: null };
+    return { orderNumber, paymentUrl: checkout.checkoutUrl, error: null };
   } catch (error) {
     console.error("Error creating order:", error);
+    await prisma.order.delete({ where: { orderNumber } }).catch(() => null);
     return {
       orderNumber: null,
-      snapToken: null,
+      paymentUrl: null,
       error: "Failed to place order. Please try again.",
     };
   }

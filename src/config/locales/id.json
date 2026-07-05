@@ -1,0 +1,28 @@
+{
+  "language": {
+    "label": "Bahasa",
+    "options": {
+      "EN": "English",
+      "ID": "Indonesia"
+    }
+  },
+  "navigation": {
+    "home": "Beranda",
+    "shop": "Belanja",
+    "adminPanel": "Panel Admin",
+    "myProfile": "Profil Saya",
+    "myOrders": "Pesanan Saya",
+    "signIn": "Masuk",
+    "logOut": "Keluar",
+    "createAccount": "Buat Akun",
+    "welcome": "Selamat Datang",
+    "account": "Akun",
+    "cart": "Keranjang"
+  },
+  "floatingContact": {
+    "question": "Ada pertanyaan?",
+    "cta": "Hubungi MinFio",
+    "ariaLabel": "Hubungi MinFio di WhatsApp",
+    "message": "Halo MinFio, saya punya pertanyaan."
+  }
+}

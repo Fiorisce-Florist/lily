@@ -4,6 +4,17 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
+import {
+  LANGUAGE_CONFIG,
+  getLanguageDictionary,
+  getStoredLanguage,
+  subscribeToLanguageChange,
+} from "@/config/language";
+
+function getWhatsAppUrl(message: string) {
+  return `https://api.whatsapp.com/send?phone=6287726120040&text=${encodeURIComponent(message)}`;
+}
+
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -19,6 +30,12 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 export function FloatingContactButton() {
   const pathname = usePathname();
+  const language = React.useSyncExternalStore(
+    subscribeToLanguageChange,
+    getStoredLanguage,
+    () => LANGUAGE_CONFIG.defaultLanguage
+  );
+  const dictionary = getLanguageDictionary(language);
 
   if (
     pathname.startsWith("/admin") ||
@@ -29,15 +46,24 @@ export function FloatingContactButton() {
   }
 
   return (
-    <Link
-      href="https://wa.me/6287726120040"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 lg:w-auto lg:px-6 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-green-700 hover:shadow-xl"
-      aria-label="Chat Minfio on WhatsApp"
-    >
-      <WhatsAppIcon className="h-7 w-7" />
-      <span className="hidden lg:block font-inter font-semibold ml-3 text-[15px]">Ask MinFio</span>
-    </Link>
+    <div className="fixed right-4 bottom-5 z-50 flex items-end gap-3 sm:right-6 sm:bottom-6">
+      <div className="max-w-48 rounded-2xl rounded-br-md border border-cornsilk-200 bg-white px-4 py-3 text-right shadow-lg dark:border-neutral-800 dark:bg-neutral-900">
+        <p className="font-inter text-b6 font-semibold leading-snug text-neutral-900 dark:text-cornsilk-100">
+          {dictionary.floatingContact.question}
+        </p>
+        <p className="font-inter text-b6 text-neutral-500 dark:text-neutral-400">
+          {dictionary.floatingContact.cta}
+        </p>
+      </div>
+      <Link
+        href={getWhatsAppUrl(dictionary.floatingContact.message)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-green-700 hover:shadow-xl"
+        aria-label={dictionary.floatingContact.ariaLabel}
+      >
+        <WhatsAppIcon className="h-7 w-7" />
+      </Link>
+    </div>
   );
 }
