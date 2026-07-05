@@ -12,12 +12,15 @@ import {
 } from "@/components/ui/carousel";
 import { Package } from "lucide-react";
 import type { LandingProduct } from "@/app/actions/landing";
+import { useLanguage } from "@/config/use-language";
 
 interface FeaturedSectionProps {
   products: LandingProduct[];
 }
 
 export function FeaturedSection({ products }: FeaturedSectionProps) {
+  const { dictionary } = useLanguage();
+
   // Don't render section if there are no products
   if (products.length === 0) return null;
 
@@ -34,10 +37,10 @@ export function FeaturedSection({ products }: FeaturedSectionProps) {
           <div className="mb-8 flex items-end justify-between">
             <div>
               <h2 className="font-fraunces text-h2 text-neutral-900 dark:text-cornsilk-100 mb-4 font-bold">
-                Best Sellers
+                {dictionary.landing.featured.title}
               </h2>
               <p className="font-inter text-b4 text-neutral-600 dark:text-neutral-400">
-                Our most loved arrangements, handcrafted with care.
+                {dictionary.landing.featured.description}
               </p>
             </div>
             <div className="hidden md:flex items-center gap-4">
@@ -45,7 +48,7 @@ export function FeaturedSection({ products }: FeaturedSectionProps) {
                 href="/shop"
                 className="font-inter text-b4 text-blush-600 hover:text-blush-700 dark:text-blush-400 font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 rounded-sm"
               >
-                View All
+                {dictionary.common.viewAll}
               </Link>
               <div className="flex gap-2">
                 <CarouselPrevious className="static translate-y-0 translate-x-0 bg-white dark:bg-neutral-800 hover:bg-blush-50 dark:hover:bg-neutral-700 hover:text-blush-600 border-cornsilk-200 dark:border-neutral-700" />
@@ -100,7 +103,7 @@ export function FeaturedSection({ products }: FeaturedSectionProps) {
             href="/shop"
             className="font-inter text-b4 text-blush-600 hover:text-blush-700 inline-block font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 rounded-sm"
           >
-            View All Best Sellers
+            {dictionary.landing.featured.viewAllBestSellers}
           </Link>
         </div>
       </div>

@@ -6,23 +6,25 @@ import { useRouter } from "next/navigation";
 import { User, Package, LogOut } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/config/use-language";
 
 const NAV_ITEMS = [
   {
-    name: "Profile",
+    key: "profile",
     href: "/profile",
     icon: User,
   },
   {
-    name: "Orders",
+    key: "orders",
     href: "/orders",
     icon: Package,
   },
-];
+] as const;
 
 export function AccountSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { dictionary } = useLanguage();
 
   const handleLogOut = async () => {
     await signOut();
@@ -33,7 +35,7 @@ export function AccountSidebar() {
   return (
     <div className="flex flex-col space-y-1 md:sticky md:top-24">
       <h2 className="text-h4 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100 mb-6 px-4 md:px-0">
-        My Account
+        {dictionary.account.title}
       </h2>
 
       <nav className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-4 md:pb-0 px-4 md:px-0 scrollbar-hide">
@@ -43,7 +45,7 @@ export function AccountSidebar() {
 
           return (
             <Link
-              key={item.name}
+              key={item.key}
               href={item.href}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl font-inter text-b3 font-medium transition-colors whitespace-nowrap",
@@ -53,7 +55,7 @@ export function AccountSidebar() {
               )}
             >
               <Icon className="h-5 w-5" />
-              {item.name}
+              {dictionary.account[item.key]}
             </Link>
           );
         })}
@@ -65,7 +67,7 @@ export function AccountSidebar() {
           className="flex items-center gap-3 px-4 py-3 rounded-xl font-inter text-b4 font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left"
         >
           <LogOut className="h-5 w-5" />
-          Log Out
+          {dictionary.account.logOut}
         </button>
       </nav>
     </div>

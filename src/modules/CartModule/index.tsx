@@ -12,12 +12,15 @@ import { useSession } from "@/lib/auth-client";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { CartItemData } from "@/app/actions/cart";
 import { formatPrice } from "@/lib/formatters";
+import { useLanguage } from "@/config/use-language";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 // ─── Empty Cart ────────────────────────────────────────────────────────────────
 
 function EmptyCart() {
+  const { dictionary } = useLanguage();
+
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-24 text-center">
       <div className="flex h-24 w-24 items-center justify-center rounded-full bg-cornsilk-200 dark:bg-neutral-800">
@@ -25,14 +28,14 @@ function EmptyCart() {
       </div>
       <div>
         <h2 className="text-h2 font-fraunces text-neutral-900 dark:text-cornsilk-100">
-          Your cart is empty
+          {dictionary.cart.emptyTitle}
         </h2>
         <p className="mt-2 text-b5 font-inter text-neutral-500 dark:text-neutral-400">
-          Looks like you haven&apos;t added any bouquets yet.
+          {dictionary.cart.emptyDescription}
         </p>
       </div>
       <Button variant="primary" asChild>
-        <Link href="/shop">Browse Bouquets</Link>
+        <Link href="/shop">{dictionary.cart.browseBouquets}</Link>
       </Button>
     </div>
   );
@@ -50,6 +53,7 @@ function CartItemRow({
   onToggle: (checked: boolean) => void;
 }) {
   const { updateItem, removeItem } = useCart();
+  const { dictionary } = useLanguage();
   const image = item.product.images[0]?.imageUrl ?? "";
 
   return (
@@ -89,7 +93,7 @@ function CartItemRow({
           </Link>
           <button
             onClick={() => removeItem(item.id)}
-            aria-label="Remove item"
+            aria-label={dictionary.cart.removeItem}
             className="shrink-0 rounded-lg p-1.5 text-neutral-400 hover:text-blush-600 dark:hover:text-blush-400 hover:bg-blush-50 dark:hover:bg-blush-900/20 transition-colors -mr-1.5"
           >
             <Trash2 className="h-4 w-4" />
@@ -103,7 +107,7 @@ function CartItemRow({
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(item as any).size && (
             <span className="text-b6 font-inter text-neutral-600 dark:text-neutral-300">
-              Size:{" "}
+              {dictionary.cart.size}:{" "}
               <span className="font-medium text-neutral-700 dark:text-neutral-200 uppercase">
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {(item as any).size}
@@ -118,7 +122,7 @@ function CartItemRow({
             <button
               onClick={() => updateItem(item.id, Math.max(1, item.quantity - 1))}
               disabled={item.quantity <= 1}
-              aria-label="Decrease quantity"
+              aria-label={dictionary.cart.decreaseQuantity}
               className="flex h-8 w-8 items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-cornsilk-100 dark:hover:bg-neutral-800 disabled:opacity-40 transition-colors"
             >
               <Minus className="h-3.5 w-3.5" />
@@ -129,7 +133,7 @@ function CartItemRow({
             <button
               onClick={() => updateItem(item.id, Math.min(10, item.quantity + 1))}
               disabled={item.quantity >= 10}
-              aria-label="Increase quantity"
+              aria-label={dictionary.cart.increaseQuantity}
               className="flex h-8 w-8 items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-cornsilk-100 dark:hover:bg-neutral-800 disabled:opacity-40 transition-colors"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -161,23 +165,24 @@ function CartSummaryPanel({
 }) {
   const shipping = 0;
   const total = subtotal + shipping;
+  const { dictionary } = useLanguage();
 
   return (
     <div className="sticky top-24 rounded-2xl border border-cornsilk-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 shadow-sm space-y-4">
       <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-        Order Summary
+        {dictionary.cart.orderSummary}
       </h2>
 
       <div className="space-y-3 text-b5 font-inter">
         <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
-          <span>Subtotal</span>
+          <span>{dictionary.common.subtotal}</span>
           <span className="font-jetbrains">{formatPrice(subtotal)}</span>
         </div>
         <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
-          <span>Shipping</span>
+          <span>{dictionary.cart.shipping}</span>
           <span className="font-jetbrains">
             {shipping === 0 ? (
-              <span className="text-olive-600 dark:text-olive-400">Free</span>
+              <span className="text-olive-600 dark:text-olive-400">{dictionary.cart.free}</span>
             ) : (
               formatPrice(shipping)
             )}
@@ -185,7 +190,7 @@ function CartSummaryPanel({
         </div>
         {/* Free shipping text removed since shipping is always free */}
         <div className="border-t border-cornsilk-200 dark:border-neutral-700 pt-3 flex items-center justify-between font-semibold text-b4 text-neutral-900 dark:text-cornsilk-100">
-          <span>Total</span>
+          <span>{dictionary.common.total}</span>
           <span className="font-jetbrains">{formatPrice(total)}</span>
         </div>
       </div>
@@ -194,8 +199,7 @@ function CartSummaryPanel({
         <div className="rounded-lg bg-blush-50 dark:bg-blush-950/30 p-3 mb-2 flex items-start gap-2 border border-blush-200 dark:border-blush-900">
           <AlertCircle className="h-5 w-5 text-blush-600 dark:text-blush-400 shrink-0 mt-0.5" />
           <p className="text-b5 font-inter text-blush-800 dark:text-blush-300">
-            Papan Bunga includes free delivery and must be checked out separately from other
-            products.
+            {dictionary.cart.mixedCartWarning}
           </p>
         </div>
       )}
@@ -208,9 +212,11 @@ function CartSummaryPanel({
         asChild={!isMixedCart && selectedIds.length > 0}
       >
         {isMixedCart || selectedIds.length === 0 ? (
-          <span>Proceed to Checkout</span>
+          <span>{dictionary.cart.proceedCheckout}</span>
         ) : (
-          <Link href={`/checkout?items=${selectedIds.join(",")}`}>Proceed to Checkout</Link>
+          <Link href={`/checkout?items=${selectedIds.join(",")}`}>
+            {dictionary.cart.proceedCheckout}
+          </Link>
         )}
       </Button>
 
@@ -221,7 +227,7 @@ function CartSummaryPanel({
         onClick={onClear}
       >
         <Trash2 className="h-4 w-4 mr-1.5" />
-        Clear Cart
+        {dictionary.cart.clearCart}
       </Button>
     </div>
   );
@@ -258,6 +264,7 @@ function CartSkeleton() {
 
 export function CartModule() {
   const { data: session, isPending } = useSession();
+  const { dictionary } = useLanguage();
   const status = isPending ? "loading" : session ? "authenticated" : "unauthenticated";
   const { items, isLoading, clearCart } = useCart();
   const [selectedIds, setSelectedIds] = React.useState<string[]>([]);
@@ -305,7 +312,10 @@ export function CartModule() {
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumb
           className="mb-4"
-          items={[{ label: "Shop", href: "/shop" }, { label: "Cart" }]}
+          items={[
+            { label: dictionary.cart.breadcrumbShop, href: "/shop" },
+            { label: dictionary.cart.breadcrumbCart },
+          ]}
         />
 
         <div className="flex items-center justify-between">
@@ -315,11 +325,11 @@ export function CartModule() {
             </div>
             <div>
               <h1 className="text-h3 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-                Your Cart
+                {dictionary.cart.title}
               </h1>
               {items.length > 0 && (
                 <p className="text-b6 font-inter text-neutral-500 dark:text-neutral-400">
-                  {items.length} {items.length === 1 ? "item" : "items"}
+                  {items.length} {items.length === 1 ? dictionary.cart.item : dictionary.cart.items}
                 </p>
               )}
             </div>
@@ -362,7 +372,7 @@ export function CartModule() {
                           htmlFor="select-all"
                           className="text-b5 font-semibold cursor-pointer"
                         >
-                          Select All Items
+                          {dictionary.cart.selectAll}
                         </label>
                       </div>
                       {items.map((item) => (
@@ -377,7 +387,7 @@ export function CartModule() {
 
                     <div className="mt-4 flex items-center gap-4">
                       <Button variant="link" size="sm" asChild>
-                        <Link href="/shop">← Continue Shopping</Link>
+                        <Link href="/shop">← {dictionary.common.continueShopping}</Link>
                       </Button>
                     </div>
                   </div>

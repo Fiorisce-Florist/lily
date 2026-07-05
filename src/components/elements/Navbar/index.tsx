@@ -30,13 +30,8 @@ import {
 import { ThemeToggle } from "../theme-toggle";
 import { NAV_MENU } from "./const";
 import { useCart } from "@/context/cart-context";
-import {
-  LANGUAGE_CONFIG,
-  getLanguageDictionary,
-  getStoredLanguage,
-  setStoredLanguage,
-  subscribeToLanguageChange,
-} from "@/config/language";
+import { LANGUAGE_CONFIG, setStoredLanguage } from "@/config/language";
+import { useLanguage } from "@/config/use-language";
 
 // ─── User Avatar ──────────────────────────────────────────────────────────────
 
@@ -81,12 +76,7 @@ function UserAvatar({
 }
 
 function LanguageSelector({ compact = false }: { compact?: boolean }) {
-  const language = React.useSyncExternalStore(
-    subscribeToLanguageChange,
-    getStoredLanguage,
-    () => LANGUAGE_CONFIG.defaultLanguage
-  );
-  const dictionary = getLanguageDictionary(language);
+  const { language, dictionary } = useLanguage();
 
   const handleChange = (nextLanguage: string) => {
     const match = LANGUAGE_CONFIG.options.find((option) => option.code === nextLanguage);
@@ -141,12 +131,7 @@ export function Navbar() {
   const isAdmin = session?.user?.role === "ADMIN";
   const { items } = useCart();
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const language = React.useSyncExternalStore(
-    subscribeToLanguageChange,
-    getStoredLanguage,
-    () => LANGUAGE_CONFIG.defaultLanguage
-  );
-  const dictionary = getLanguageDictionary(language);
+  const { dictionary } = useLanguage();
 
   return (
     <header className="border-cornsilk-300 bg-cornsilk-100/80 sticky top-0 z-50 w-full border-b backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/80">

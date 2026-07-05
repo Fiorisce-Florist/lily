@@ -6,6 +6,31 @@
       "ID": "Indonesia"
     }
   },
+  "common": {
+    "shop": "Belanja",
+    "shopNow": "Belanja Sekarang",
+    "viewAll": "Lihat Semua",
+    "viewCollection": "Lihat Koleksi",
+    "shopCollection": "Belanja Koleksi",
+    "clear": "Hapus",
+    "loading": "Memuat",
+    "or": "atau",
+    "emailAddress": "Alamat email",
+    "password": "Kata sandi",
+    "fullName": "Nama Lengkap",
+    "phoneNumber": "Nomor Telepon",
+    "optional": "opsional",
+    "saveChanges": "Simpan Perubahan",
+    "cancel": "Batal",
+    "remove": "Hapus",
+    "quantity": "Jumlah",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "payment": "Pembayaran",
+    "status": "Status",
+    "returnHome": "Kembali ke Beranda",
+    "continueShopping": "Lanjut Belanja"
+  },
   "navigation": {
     "home": "Beranda",
     "shop": "Belanja",
@@ -24,5 +49,279 @@
     "cta": "Hubungi MinFio",
     "ariaLabel": "Hubungi MinFio di WhatsApp",
     "message": "Halo MinFio, saya punya pertanyaan."
+  },
+  "footer": {
+    "tagline": "Menghadirkan keindahan alam ke keseharianmu lewat rangkaian bunga yang dikurasi dengan cermat dan berkelanjutan.",
+    "sections": {
+      "shop": "Belanja",
+      "support": "Bantuan",
+      "company": "Perusahaan"
+    },
+    "links": {
+      "allFlowers": "Semua Bunga",
+      "contactUs": "Hubungi Kami",
+      "ourStory": "Cerita Kami"
+    },
+    "copyright": "Seluruh hak cipta dilindungi."
+  },
+  "account": {
+    "title": "Akun Saya",
+    "profile": "Profil",
+    "orders": "Pesanan",
+    "logOut": "Keluar"
+  },
+  "auth": {
+    "layout": {
+      "caption": "Rangkaian bunga untuk setiap momen berarti.",
+      "backHome": "Kembali ke beranda",
+      "imageAlt": "Bunga Fiorisce"
+    },
+    "login": {
+      "title": "Selamat datang kembali",
+      "subtitle": "Masuk untuk mengelola pesanan dan detail yang tersimpan.",
+      "submit": "Masuk",
+      "submitting": "Sedang Masuk...",
+      "google": "Lanjutkan dengan Google",
+      "noAccount": "Belum punya akun?",
+      "createAccount": "Buat akun",
+      "errors": {
+        "emailRequired": "Email wajib diisi.",
+        "passwordRequired": "Kata sandi wajib diisi.",
+        "failed": "Email atau kata sandi tidak valid.",
+        "unexpected": "Terjadi kesalahan tak terduga."
+      }
+    },
+    "register": {
+      "title": "Buat akun",
+      "subtitle": "Simpan detailmu agar checkout berikutnya lebih cepat.",
+      "submit": "Buat Akun",
+      "submitting": "Membuat Akun...",
+      "google": "Lanjutkan dengan Google",
+      "hasAccount": "Sudah punya akun?",
+      "signIn": "Masuk",
+      "errors": {
+        "nameRequired": "Masukkan nama lengkap.",
+        "emailInvalid": "Masukkan alamat email yang valid.",
+        "phoneInvalid": "Masukkan nomor telepon yang valid (contoh: +6281234567890).",
+        "passwordRequired": "Kata sandi wajib diisi.",
+        "passwordMin": "Kata sandi minimal 8 karakter.",
+        "passwordPattern": "Kata sandi harus berisi minimal satu huruf dan satu angka.",
+        "failed": "Pendaftaran gagal.",
+        "unexpected": "Terjadi kesalahan tak terduga."
+      }
+    }
+  },
+  "landing": {
+    "hero": {
+      "title": "Setiap Bunga Menyimpan Cerita",
+      "subtitle": "Temukan koleksi rangkaian bunga premium buatan tangan, dikurasi untuk menghadirkan keanggunan dan kebahagiaan di momen paling berharga.",
+      "primaryCta": "Belanja Sekarang",
+      "secondaryCta": "Jelajahi Koleksi",
+      "imageAlt": "Rangkaian bunga hero"
+    },
+    "categories": {
+      "eyebrow": "Dikurasi Untukmu",
+      "title": "Jelajahi Koleksi Kami",
+      "description": "Dari rangkaian bunga segar yang elegan, bunga artificial yang tahan lama, hingga papan bunga besar, temukan ekspresi floral yang tepat untuk setiap momen.",
+      "items": {
+        "fresh-flowers": "Bunga Segar",
+        "artificial-flowers": "Bunga Artificial",
+        "papan-bunga": "Papan Bunga"
+      }
+    },
+    "featured": {
+      "title": "Paling Diminati",
+      "description": "Rangkaian favorit pelanggan, dibuat dengan penuh perhatian.",
+      "viewAllBestSellers": "Lihat Semua Favorit"
+    },
+    "collections": {
+      "freshFlower": "Bunga Segar",
+      "artificialFlower": "Bunga Artificial",
+      "papanBunga": "Papan Bunga"
+    },
+    "occasions": {
+      "title": "Untuk Setiap Momen",
+      "description": "Untuk perayaan, pencapaian, atau bentuk perhatian, kami punya rangkaian bunga yang tepat untuk menyampaikan perasaanmu.",
+      "items": {
+        "birthday": "Ulang Tahun",
+        "anniversary": "Anniversary",
+        "wedding": "Pernikahan",
+        "sympathy": "Duka Cita",
+        "congratulations": "Ucapan Selamat",
+        "grand-opening": "Grand Opening"
+      }
+    },
+    "about": {
+      "title": "Tentang Fiorisce",
+      "quote": "Setiap Bunga Menyimpan Cerita",
+      "body": "Di Fiorisce Floristry, kami percaya bunga bukan hanya indah dipandang. Bunga membawa rasa, menandai momen spesial, dan menyampaikan hal yang kadang sulit diucapkan. Setiap rangkaian dibuat dengan tangan, menggunakan bunga yang dipilih agar terasa personal, hangat, dan bermakna. Baik untuk perayaan, momen tenang, maupun perhatian sederhana, kami hadir untuk membantumu menyampaikannya dengan indah."
+    },
+    "location": {
+      "title": "Temukan Kami",
+      "placeName": "Fiorisce Floristry",
+      "address": "Kukusan, Depok",
+      "openingHours": "Jam Buka",
+      "hours": "Senin - Sabtu, 10.00 - 20.00",
+      "connect": "Terhubung Dengan Kami",
+      "directions": "Lihat Rute",
+      "mapTitle": "Lokasi Fiorisce Floristry"
+    }
+  },
+  "shopPage": {
+    "hero": {
+      "titlePrefix": "Temukan",
+      "titleAccent": "Bouquetmu",
+      "subtitle": "Dirangkai dengan bunga musiman - temukan rangkaian yang tepat untuk setiap momen.",
+      "placeholder": "Cari mawar, ulang tahun, lavender...",
+      "ariaLabel": "Cari bouquet",
+      "suggestions": {
+        "Roses": "Mawar",
+        "Wedding": "Pernikahan",
+        "Birthday": "Ulang Tahun",
+        "Sunflower": "Sunflower",
+        "Peony": "Peony"
+      }
+    },
+    "grid": {
+      "emptyTitle": "Produk tidak ditemukan",
+      "emptyDescription": "Coba ubah pencarian atau filter untuk menemukan rangkaian lainnya."
+    },
+    "toolbar": {
+      "bouquetSingular": "bouquet",
+      "bouquetPlural": "bouquet",
+      "found": "ditemukan",
+      "filters": "Filter",
+      "active": "aktif",
+      "sortBy": "Urutkan",
+      "sort": {
+        "featured": "Pilihan",
+        "bestseller": "Paling Laris",
+        "newest": "Terbaru",
+        "priceAsc": "Harga: Rendah ke Tinggi",
+        "priceDesc": "Harga: Tinggi ke Rendah"
+      },
+      "gridView": "Tampilan grid",
+      "listView": "Tampilan daftar"
+    },
+    "sidebar": {
+      "flowerType": "Jenis Bunga",
+      "productType": "Jenis Produk",
+      "occasion": "Occasion",
+      "size": "Ukuran",
+      "priceRange": "Rentang Harga",
+      "color": "Warna",
+      "availability": "Ketersediaan",
+      "allItems": "Semua item",
+      "inStockOnly": "Hanya yang tersedia",
+      "clearFlower": "Hapus filter bunga",
+      "clearProductType": "Hapus filter jenis produk"
+    },
+    "productCard": {
+      "from": "Mulai",
+      "soldOut": "Habis",
+      "bestseller": "Paling Laris",
+      "new": "Baru",
+      "off": "diskon"
+    }
+  },
+  "cart": {
+    "breadcrumbShop": "Belanja",
+    "breadcrumbCart": "Keranjang",
+    "title": "Keranjangmu",
+    "emptyTitle": "Keranjangmu masih kosong",
+    "emptyDescription": "Jelajahi koleksi kami dan tambahkan bunga yang kamu suka.",
+    "browseBouquets": "Lihat Bouquet",
+    "orderSummary": "Ringkasan Pesanan",
+    "proceedCheckout": "Lanjut ke Checkout",
+    "clearCart": "Kosongkan Keranjang",
+    "mixedCartWarning": "Papan bunga harus checkout terpisah dari produk lain.",
+    "item": "item",
+    "items": "item",
+    "selectAll": "Pilih Semua Item",
+    "size": "Ukuran",
+    "removeItem": "Hapus item",
+    "decreaseQuantity": "Kurangi jumlah",
+    "increaseQuantity": "Tambah jumlah",
+    "shipping": "Pengiriman",
+    "free": "Gratis"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "emptyTitle": "Checkout masih kosong",
+    "browseBouquets": "Lihat Bouquet",
+    "contactInfo": "1. Informasi Kontak",
+    "deliveryCustomization": "2. Pengiriman & Kustomisasi",
+    "shippingAddress": "3. Alamat Pengiriman",
+    "payment": "4. Pembayaran",
+    "deliveryMethod": "Metode Pengiriman",
+    "freeDelivery": "Pengiriman Gratis oleh Fiorisce",
+    "gosend": "Pesan kurir sendiri",
+    "gosendInstruction": "Instruksi untuk GoSend:",
+    "openMaps": "Buka di Google Maps",
+    "pickupDate": "Tanggal Pickup / Pengiriman",
+    "pickupTime": "Jam Pickup / Pengiriman",
+    "messageCard": "Kartu Ucapan (Opsional)",
+    "messagePlaceholder": "Tulis pesan kartu ucapanmu di sini...",
+    "includePaperBag": "Tambahkan paper bag",
+    "savedAddresses": "Alamat Tersimpan",
+    "newAddress": "Gunakan alamat baru",
+    "manualAddress": "Masukkan alamat manual",
+    "streetAddress": "Alamat Jalan",
+    "apartment": "Apartemen, suite, dll. (opsional)",
+    "city": "Kota",
+    "postalCode": "Kode Pos",
+    "digitalPayments": "Pembayaran Digital",
+    "paymentDescription": "Saat klik \"Place Order & Pay\", pesananmu akan dibuat. Kamu akan diarahkan ke payment provider dan dapat memilih metode pembayaran digital yang tersedia.",
+    "placeOrder": "Place Order & Pay",
+    "processing": "Memproses checkout...",
+    "success": "Pesanan berhasil dibuat! Mengalihkan...",
+    "errors": {
+      "pickupPast": "Tanggal pickup/pengiriman tidak boleh sebelum hari ini.",
+      "pickupHours": "Jam pickup/pengiriman harus mengikuti jam buka toko, 10:00-20:00.",
+      "pickupMinimum": "Jam pickup/pengiriman minimal 3 jam dari sekarang."
+    }
+  },
+  "orders": {
+    "breadcrumbAccount": "Akun Saya",
+    "breadcrumbOrders": "Pesanan",
+    "title": "Riwayat Pesanan",
+    "emptyTitle": "Belum ada pesanan",
+    "emptyDescription": "Pesanan Fiorisce kamu akan muncul di sini.",
+    "startShopping": "Mulai Belanja",
+    "allOrders": "Semua Pesanan",
+    "active": "Aktif",
+    "completed": "Selesai",
+    "cancelled": "Dibatalkan",
+    "order": "Pesanan",
+    "trackOrder": "Lacak Pesanan"
+  },
+  "profile": {
+    "breadcrumbAccount": "Akun Saya",
+    "breadcrumbProfile": "Profil",
+    "titleFallback": "Profil Saya",
+    "personalInfo": "Informasi Pribadi",
+    "emailCannotChange": "Email tidak dapat diubah di sini.",
+    "savedAddresses": "Alamat Tersimpan",
+    "emptyAddresses": "Alamat dari pesananmu akan muncul otomatis di sini.",
+    "accountInfo": "Informasi Akun",
+    "profileUpdated": "Profil diperbarui!",
+    "addressRemoved": "Alamat dihapus.",
+    "notFound": "Profil tidak ditemukan"
+  },
+  "productDetail": {
+    "breadcrumbShop": "Belanja",
+    "bestseller": "Paling Laris",
+    "bouquetSize": "Ukuran bouquet",
+    "addToCart": "Tambah ke Keranjang",
+    "adding": "Menambahkan...",
+    "added": "Ditambahkan ke Keranjang",
+    "aboutArrangement": "Tentang rangkaian ini",
+    "relatedProducts": "Kamu mungkin suka",
+    "outOfStock": "Habis"
+  },
+  "notFound": {
+    "eyebrow": "404",
+    "title": "Halaman ini tidak ditemukan",
+    "description": "Halaman yang kamu cari mungkin sudah dipindahkan, tidak aktif, atau tidak pernah ada."
   }
 }

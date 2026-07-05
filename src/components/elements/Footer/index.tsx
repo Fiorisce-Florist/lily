@@ -6,9 +6,11 @@ import { usePathname } from "next/navigation";
 
 import { Separator } from "@/components/ui/separator";
 import { FOOTER_MENU } from "./const";
+import { useLanguage } from "@/config/use-language";
 
 export function Footer() {
   const pathname = usePathname();
+  const { dictionary } = useLanguage();
 
   const hiddenRoutes = ["/admin", "/login", "/register"];
   if (pathname && hiddenRoutes.some((route) => pathname.startsWith(route))) return null;
@@ -25,53 +27,58 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-b4 font-inter max-w-xs leading-relaxed text-olive-200">
-              Bringing the beauty of nature into your everyday life with carefully curated,
-              sustainable floral arrangements.
+              {dictionary.footer.tagline}
             </p>
           </div>
 
           {/* Links Grid */}
           <div className="mt-12 grid grid-cols-2 gap-8 md:grid-cols-3 xl:col-span-2 xl:mt-0">
             <div>
-              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">Shop</h3>
+              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">
+                {dictionary.footer.sections.shop}
+              </h3>
               <ul className="mt-6 space-y-4">
                 {FOOTER_MENU.shop.map((link) => (
-                  <li key={link.name}>
+                  <li key={link.key}>
                     <Link
                       href={link.href}
                       className="text-b5 font-inter hover:text-cornsilk-100 text-olive-300 transition-colors"
                     >
-                      {link.name}
+                      {dictionary.footer.links[link.key]}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">Support</h3>
+              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">
+                {dictionary.footer.sections.support}
+              </h3>
               <ul className="mt-6 space-y-4">
                 {FOOTER_MENU.support.map((link) => (
-                  <li key={link.name}>
+                  <li key={link.key}>
                     <Link
                       href={link.href}
                       className="text-b5 font-inter hover:text-cornsilk-100 text-olive-300 transition-colors"
                     >
-                      {link.name}
+                      {dictionary.footer.links[link.key]}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
             <div className="mt-12 md:mt-0">
-              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">Company</h3>
+              <h3 className="text-b4 font-fraunces text-cornsilk-100 font-semibold">
+                {dictionary.footer.sections.company}
+              </h3>
               <ul className="mt-6 space-y-4">
                 {FOOTER_MENU.company.map((link) => (
-                  <li key={link.name}>
+                  <li key={link.key}>
                     <Link
                       href={link.href}
                       className="text-b5 font-inter hover:text-cornsilk-100 text-olive-300 transition-colors"
                     >
-                      {link.name}
+                      {dictionary.footer.links[link.key]}
                     </Link>
                   </li>
                 ))}
@@ -85,7 +92,7 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-b5 font-inter text-olive-400">
-            &copy; {new Date().getFullYear()} Fiorisce Florist. All rights reserved.
+            &copy; {new Date().getFullYear()} Fiorisce Florist. {dictionary.footer.copyright}
           </p>
           <div className="flex gap-6">
             {FOOTER_MENU.social.map((social) => (

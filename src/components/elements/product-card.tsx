@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/formatters";
+import { useLanguage } from "@/config/use-language";
 
 export interface ProductCardProps {
   product: {
@@ -28,13 +29,14 @@ export interface ProductCardProps {
 
 export function ProductCard({ product, list, className }: ProductCardProps) {
   const [imgLoaded, setImgLoaded] = React.useState(false);
+  const { dictionary } = useLanguage();
 
   const inStock = product.inStock !== false;
 
   let displayPrice = formatPrice(product.price);
   if (product.variants && product.variants.length > 0) {
     const minVariantPrice = Math.min(...product.variants.map((v) => Number(v.price)));
-    displayPrice = `From ${formatPrice(minVariantPrice)}`;
+    displayPrice = `${dictionary.shopPage.productCard.from} ${formatPrice(minVariantPrice)}`;
   }
 
   if (list) {
@@ -70,7 +72,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
           {!inStock && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-neutral-900/60 backdrop-blur-sm">
               <span className="text-b6 font-inter font-medium text-neutral-600 dark:text-neutral-400">
-                Sold Out
+                {dictionary.shopPage.productCard.soldOut}
               </span>
             </div>
           )}
@@ -84,12 +86,12 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
                 <div className="flex gap-1.5 mb-1 flex-wrap">
                   {product.isBestseller && (
                     <Badge variant="default" className="text-[10px]">
-                      Bestseller
+                      {dictionary.shopPage.productCard.bestseller}
                     </Badge>
                   )}
                   {product.isNew && (
                     <Badge variant="success" className="text-[10px]">
-                      New
+                      {dictionary.shopPage.productCard.new}
                     </Badge>
                   )}
                   {product.occasion && (
@@ -166,19 +168,20 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
           {product.isBestseller && (
             <Badge variant="default" className="text-[10px] shadow">
-              Bestseller
+              {dictionary.shopPage.productCard.bestseller}
             </Badge>
           )}
           {product.isNew && (
             <Badge variant="success" className="text-[10px] shadow">
-              New
+              {dictionary.shopPage.productCard.new}
             </Badge>
           )}
           {product.originalPrice &&
             typeof product.price === "number" &&
             typeof product.originalPrice === "number" && (
               <Badge variant="secondary" className="text-[10px] shadow">
-                {Math.round((1 - product.price / product.originalPrice) * 100)}% off
+                {Math.round((1 - product.price / product.originalPrice) * 100)}%{" "}
+                {dictionary.shopPage.productCard.off}
               </Badge>
             )}
         </div>
@@ -187,7 +190,7 @@ export function ProductCard({ product, list, className }: ProductCardProps) {
         {!inStock && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-neutral-900/60 backdrop-blur-sm">
             <span className="rounded-full bg-white/90 dark:bg-neutral-800/90 px-4 py-1.5 text-b6 font-inter font-medium text-neutral-700 dark:text-neutral-300 shadow">
-              Sold Out
+              {dictionary.shopPage.productCard.soldOut}
             </span>
           </div>
         )}

@@ -29,6 +29,7 @@ import { createOrder } from "@/app/actions/orders";
 import type { CreateOrderFormData } from "@/app/actions/orders";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
 import { formatPrice } from "@/lib/formatters";
+import { useLanguage } from "@/config/use-language";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -108,6 +109,7 @@ function OrderSummaryPanel({
   deliveryMethod: "PICKUP" | "GOSEND" | "FIORISCE_DELIVERY";
   includePaperBag: boolean;
 }) {
+  const { dictionary } = useLanguage();
   let paperBagCost = 0;
   let paperBagLabel = "Standard Size";
   if (includePaperBag || deliveryMethod === "GOSEND") {
@@ -160,7 +162,7 @@ function OrderSummaryPanel({
     <div className="rounded-3xl border border-cornsilk-200 bg-white dark:border-neutral-800 dark:bg-neutral-900 overflow-hidden shadow-sm">
       <div className="bg-linear-to-r from-camel-100 to-cornsilk-100 dark:from-neutral-800 dark:to-neutral-800 px-6 py-4 border-b border-cornsilk-200 dark:border-neutral-700">
         <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-          Order Summary
+          {dictionary.cart.orderSummary}
         </h2>
       </div>
 
@@ -191,7 +193,7 @@ function OrderSummaryPanel({
                     {item.product.name}
                   </p>
                   <p className="text-b6 font-inter text-neutral-500 dark:text-neutral-400">
-                    Qty {item.quantity}
+                    {dictionary.common.quantity} {item.quantity}
                   </p>
                 </div>
                 <span className="text-b5 font-jetbrains text-neutral-800 dark:text-cornsilk-200 shrink-0">
@@ -206,7 +208,7 @@ function OrderSummaryPanel({
 
         <div className="space-y-2 text-b5 font-inter">
           <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
-            <span>Subtotal</span>
+            <span>{dictionary.common.subtotal}</span>
             <span className="font-jetbrains">{formatPrice(subtotal)}</span>
           </div>
           {(includePaperBag || deliveryMethod === "GOSEND") && (
@@ -216,7 +218,7 @@ function OrderSummaryPanel({
             </div>
           )}
           <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
-            <span>Delivery Method</span>
+            <span>{dictionary.checkout.deliveryMethod}</span>
             <span className="font-jetbrains text-olive-600 dark:text-olive-400">
               {deliveryMethod === "GOSEND"
                 ? "GoSend (Ordered by User)"
@@ -231,7 +233,7 @@ function OrderSummaryPanel({
 
         <div className="flex justify-between items-center">
           <span className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-            Total
+            {dictionary.common.total}
           </span>
           <span className="text-h5 font-jetbrains font-bold text-neutral-900 dark:text-cornsilk-100">
             {formatPrice(total)}
@@ -379,6 +381,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, isPending } = useSession();
+  const { dictionary } = useLanguage();
   const status = isPending ? "loading" : session ? "authenticated" : "unauthenticated";
 
   const { items: allItems, isLoading: cartLoading, refetch } = useCart();
@@ -583,13 +586,13 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
       <div className="min-h-screen bg-cornsilk-50 dark:bg-neutral-950 flex items-center justify-center">
         <div className="text-center space-y-4 px-4">
           <h2 className="text-h2 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-            Your cart is empty
+            {dictionary.cart.emptyTitle}
           </h2>
           <p className="text-b4 font-inter text-neutral-500 dark:text-neutral-400">
             Add some beautiful bouquets before checking out.
           </p>
           <Button variant="primary" asChild>
-            <Link href="/shop">Browse Bouquets</Link>
+            <Link href="/shop">{dictionary.cart.browseBouquets}</Link>
           </Button>
         </div>
       </div>
@@ -606,7 +609,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
             <Loader2 className="h-7 w-7 animate-spin text-blush-500" />
             <div>
               <p className="text-b4 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100">
-                Preparing Doku checkout
+                {dictionary.checkout.processing}
               </p>
               <p className="text-b6 font-inter text-neutral-500 dark:text-neutral-400">
                 Keep this page open while we redirect you.
@@ -635,7 +638,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-                  1. Contact Information
+                  {dictionary.checkout.contactInfo}
                 </h2>
                 {profile && (
                   <Link
@@ -665,7 +668,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                 />
                 <Field
                   id="email"
-                  label="Email Address"
+                  label={dictionary.common.emailAddress}
                   required
                   type="email"
                   value={form.email}
@@ -675,7 +678,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                 />
                 <Field
                   id="phone"
-                  label="Phone Number"
+                  label={dictionary.common.phoneNumber}
                   required
                   type="tel"
                   value={form.phone}
@@ -689,14 +692,14 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
             {/* 2. Delivery Method & Customization */}
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm space-y-6">
               <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-                2. Delivery & Customization
+                {dictionary.checkout.deliveryCustomization}
               </h2>
 
               <div className="space-y-4">
-                <Label className="text-b5">Delivery Method</Label>
+                <Label className="text-b5">{dictionary.checkout.deliveryMethod}</Label>
                 {isPapanBungaOnly ? (
                   <div className="p-4 bg-blush-50 dark:bg-blush-950/30 text-blush-800 dark:text-blush-200 rounded-xl border border-blush-200 dark:border-blush-900">
-                    <p className="font-semibold mb-1">Free Delivery by Fiorisce</p>
+                    <p className="font-semibold mb-1">{dictionary.checkout.freeDelivery}</p>
                     <p className="text-sm">
                       Papan Bunga includes free delivery. Please provide the delivery address below.
                     </p>
@@ -726,7 +729,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                         <Label htmlFor="delivery-gosend" className="cursor-pointer flex-1">
                           GoSend
                           <p className="text-b6 text-neutral-500 font-normal">
-                            Order courier yourself
+                            {dictionary.checkout.gosend}
                           </p>
                         </Label>
                       </div>
@@ -734,7 +737,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
 
                     {form.deliveryMethod === "GOSEND" && (
                       <div className="p-4 bg-blue-50 dark:bg-blue-950/30 text-blue-800 dark:text-blue-200 rounded-xl text-sm mt-2">
-                        <p className="font-semibold mb-1">Instruction for GoSend:</p>
+                        <p className="font-semibold mb-1">{dictionary.checkout.gosendInstruction}</p>
                         <p>
                           Please order a GoSend / GrabExpress courier yourself to pick up the
                           flowers at our store.
@@ -745,7 +748,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                           rel="noreferrer"
                           className="inline-flex items-center gap-1 mt-2 text-blue-600 dark:text-blue-400 hover:underline"
                         >
-                          <MapPin className="h-4 w-4" /> Open in Google Maps
+                          <MapPin className="h-4 w-4" /> {dictionary.checkout.openMaps}
                         </a>
                       </div>
                     )}
@@ -756,7 +759,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <Field
                   id="deliveryDate"
-                  label="Pickup / Delivery Date"
+                  label={dictionary.checkout.pickupDate}
                   required
                   type="date"
                   value={form.deliveryDate}
@@ -765,7 +768,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                 />
                 <Field
                   id="deliveryTime"
-                  label="Pickup / Delivery Time"
+                  label={dictionary.checkout.pickupTime}
                   required
                   type="time"
                   value={form.deliveryTime || ""}
@@ -778,7 +781,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
 
               <div className="space-y-2 pt-2">
                 <Label htmlFor="messageCard" className="flex justify-between items-end">
-                  <span>Message Card (Optional)</span>
+                  <span>{dictionary.checkout.messageCard}</span>
                   <span
                     className={`text-xs ${(form.messageCard?.match(/\\S+/g)?.length || 0) > 30 ? "text-red-500 font-bold" : "text-neutral-400"}`}
                   >
@@ -787,7 +790,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                 </Label>
                 <Textarea
                   id="messageCard"
-                  placeholder="Write your greeting card message here..."
+                  placeholder={dictionary.checkout.messagePlaceholder}
                   rows={3}
                   value={form.messageCard}
                   onChange={(e) => set("messageCard")(e.target.value)}
@@ -808,7 +811,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                       htmlFor="includePaperBag"
                       className="cursor-pointer font-medium text-neutral-900 dark:text-neutral-100"
                     >
-                      Include Paper Bag
+                      {dictionary.checkout.includePaperBag}
                     </Label>
                     <p className="text-b6 text-neutral-500 mt-0.5">
                       Required for GoSend. Size adjusts automatically.
@@ -822,7 +825,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
             {isPapanBungaOnly && (
               <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
                 <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-6">
-                  3. Shipping Address
+                  {dictionary.checkout.shippingAddress}
                 </h2>
 
                 {/* Saved address picker */}
@@ -845,7 +848,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                     )}
                     <Field
                       id="address"
-                      label="Street Address"
+                      label={dictionary.checkout.streetAddress}
                       required
                       value={form.address || ""}
                       onChange={set("address")}
@@ -853,7 +856,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                     />
                     <Field
                       id="apartment"
-                      label="Apartment, suite, etc. (optional)"
+                      label={dictionary.checkout.apartment}
                       value={form.apartment ?? ""}
                       onChange={set("apartment")}
                       placeholder="Tower A, Unit 12"
@@ -861,7 +864,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <Field
                         id="city"
-                        label="City"
+                        label={dictionary.checkout.city}
                         required
                         value={form.city || ""}
                         onChange={set("city")}
@@ -869,7 +872,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                       />
                       <Field
                         id="postalCode"
-                        label="Postal Code"
+                        label={dictionary.checkout.postalCode}
                         required
                         value={form.postalCode || ""}
                         onChange={set("postalCode")}
@@ -885,7 +888,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                     {/* Still allow editing address + apartment for this order */}
                     <Field
                       id="apartment"
-                      label="Apartment, suite, etc. (optional)"
+                      label={dictionary.checkout.apartment}
                       value={form.apartment ?? ""}
                       onChange={set("apartment")}
                       placeholder="Tower A, Unit 12"
@@ -898,18 +901,16 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
             {/* 4. Payment note */}
             <section className="bg-white dark:bg-neutral-900 rounded-3xl p-6 sm:p-8 border border-cornsilk-200 dark:border-neutral-800 shadow-sm">
               <h2 className="text-h5 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100 mb-4">
-                4. Payment
+                {dictionary.checkout.payment}
               </h2>
               <div className="flex items-center gap-3 p-4 rounded-2xl bg-cornsilk-50 dark:bg-neutral-800 border border-cornsilk-200 dark:border-neutral-700">
                 <CreditCard className="h-5 w-5 text-camel-600 dark:text-camel-400 shrink-0" />
                 <div className="space-y-1">
                   <p className="text-b5 font-inter font-semibold text-neutral-900 dark:text-cornsilk-100">
-                    Digital Payments
+                    {dictionary.checkout.digitalPayments}
                   </p>
                   <p className="text-b5 font-inter text-neutral-700 dark:text-neutral-300">
-                    Clicking <strong>&quot;Place Order & Pay&quot;</strong> will create your order.
-                    You will continue to Doku Checkout and choose from available digital payment
-                    methods.
+                    {dictionary.checkout.paymentDescription}
                   </p>
                 </div>
               </div>
@@ -935,10 +936,10 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               {isProcessing || cartLoading ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Processing...
+                  {dictionary.checkout.processing}
                 </>
               ) : (
-                "Place Order & Pay"
+                dictionary.checkout.placeOrder
               )}
             </Button>
           </div>

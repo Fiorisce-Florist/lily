@@ -7,9 +7,11 @@ import { signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useLanguage } from "@/config/use-language";
 
 export function LoginModule() {
   const router = useRouter();
+  const { dictionary } = useLanguage();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -30,14 +32,14 @@ export function LoginModule() {
       });
 
       if (authError) {
-        setError("Invalid email or password");
+        setError(dictionary.auth.login.errors.failed);
       } else {
         router.push("/");
         router.refresh();
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_err) {
-      setError("An unexpected error occurred");
+      setError(dictionary.auth.login.errors.unexpected);
     } finally {
       setIsSubmitting(false);
     }
@@ -50,10 +52,10 @@ export function LoginModule() {
     <>
       <div className="mb-8">
         <h1 className="text-h3 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-          Welcome back
+          {dictionary.auth.login.title}
         </h1>
         <p className="mt-2 text-b4 font-inter text-neutral-600 dark:text-neutral-400">
-          Sign in to your account to track orders and manage your wishlist.
+          {dictionary.auth.login.subtitle}
         </p>
       </div>
 
@@ -64,7 +66,7 @@ export function LoginModule() {
           </div>
         )}
         <div className="space-y-2">
-          <Label htmlFor="email">Email address</Label>
+          <Label htmlFor="email">{dictionary.common.emailAddress}</Label>
           <Input
             type="email"
             id="email"
@@ -77,7 +79,7 @@ export function LoginModule() {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{dictionary.common.password}</Label>
           </div>
           <Input
             type="password"
@@ -94,13 +96,15 @@ export function LoginModule() {
           className="w-full h-12 text-b4 mt-2"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Signing In..." : "Sign In"}
+          {isSubmitting ? dictionary.auth.login.submitting : dictionary.auth.login.submit}
         </Button>
       </form>
 
       <div className="mt-6 flex items-center justify-between">
         <div className="w-full h-px bg-neutral-200 dark:bg-neutral-800"></div>
-        <span className="px-4 text-b5 font-inter text-neutral-500 dark:text-neutral-400">or</span>
+        <span className="px-4 text-b5 font-inter text-neutral-500 dark:text-neutral-400">
+          {dictionary.common.or}
+        </span>
         <div className="w-full h-px bg-neutral-200 dark:bg-neutral-800"></div>
       </div>
 
@@ -129,16 +133,16 @@ export function LoginModule() {
           />
           <path d="M1 1h22v22H1z" fill="none" />
         </svg>
-        Continue with Google
+        {dictionary.auth.login.google}
       </Button>
 
       <div className="mt-8 text-center text-b5 font-inter text-neutral-600 dark:text-neutral-400">
-        Don&apos;t have an account?{" "}
+        {dictionary.auth.login.noAccount}{" "}
         <Link
           href="/register"
           className="font-semibold text-blush-600 dark:text-blush-400 hover:text-blush-700 dark:hover:text-blush-300 hover:underline underline-offset-4 transition-colors"
         >
-          Create account
+          {dictionary.auth.login.createAccount}
         </Link>
       </div>
     </>

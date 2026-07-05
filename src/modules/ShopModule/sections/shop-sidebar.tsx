@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { FilterState, FilterOptions } from "../index";
 import { formatPrice } from "@/lib/formatters";
+import { useLanguage } from "@/config/use-language";
 
 interface ShopSidebarProps {
   filters: FilterState;
@@ -76,6 +77,8 @@ function FilterSection({ title, children }: { title: string; children: React.Rea
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarProps) {
+  const { dictionary } = useLanguage();
+
   function toggleCategory(cat: string) {
     const next = filters.categories.includes(cat)
       ? filters.categories.filter((c) => c !== cat)
@@ -114,7 +117,7 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
   return (
     <div className="space-y-5 rounded-2xl border border-cornsilk-300 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900">
       {/* ── Flower Type ───────────────────────────────────────────────── */}
-      <FilterSection title="Flower Type">
+      <FilterSection title={dictionary.shopPage.sidebar.flowerType}>
         <div className="flex flex-wrap gap-2">
           {options.flowers.map((flower) => {
             const active = filters.flowers.includes(flower);
@@ -142,7 +145,7 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
             onClick={() => onFiltersChange({ ...filters, flowers: [] })}
             className="mt-2 text-b6 font-inter text-blush-500 hover:text-blush-700 dark:text-blush-400 transition-colors"
           >
-            Clear flower filter
+            {dictionary.shopPage.sidebar.clearFlower}
           </button>
         )}
       </FilterSection>
@@ -152,7 +155,7 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
       {/* ── Product Type (Category) ──────────────────────────────────────────────────── */}
       {options.categories.length > 0 && (
         <>
-          <FilterSection title="Product Type">
+          <FilterSection title={dictionary.shopPage.sidebar.productType}>
             <ul className="space-y-2.5">
               {options.categories.map((cat) => (
                 <li key={cat} className="flex items-center gap-2.5">
@@ -175,7 +178,7 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
                 onClick={() => onFiltersChange({ ...filters, categories: [] })}
                 className="mt-2 text-b6 font-inter text-blush-500 hover:text-blush-700 dark:text-blush-400 transition-colors"
               >
-                Clear product type filter
+                {dictionary.shopPage.sidebar.clearProductType}
               </button>
             )}
           </FilterSection>
@@ -184,7 +187,7 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
       )}
 
       {/* ── Occasion ──────────────────────────────────────────────────── */}
-      <FilterSection title="Occasion">
+      <FilterSection title={dictionary.shopPage.sidebar.occasion}>
         <ul className="space-y-2.5">
           {options.occasions.map((occ) => (
             <li key={occ} className="flex items-center gap-2.5">
@@ -207,7 +210,7 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
       <Separator className="bg-cornsilk-200 dark:bg-neutral-800" />
 
       {/* ── Size ──────────────────────────────────────────────────────── */}
-      <FilterSection title="Size">
+      <FilterSection title={dictionary.shopPage.sidebar.size}>
         <div className="flex flex-wrap gap-2">
           {options.sizes.map((size) => {
             const active = filters.sizes.includes(size);
@@ -234,7 +237,7 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
       <Separator className="bg-cornsilk-200 dark:bg-neutral-800" />
 
       {/* ── Price Range ───────────────────────────────────────────────── */}
-      <FilterSection title="Price Range">
+      <FilterSection title={dictionary.shopPage.sidebar.priceRange}>
         <Slider
           id="price-range-slider"
           min={0}
@@ -257,7 +260,7 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
       <Separator className="bg-cornsilk-200 dark:bg-neutral-800" />
 
       {/* ── Color ─────────────────────────────────────────────────────── */}
-      <FilterSection title="Color">
+      <FilterSection title={dictionary.shopPage.sidebar.color}>
         <div className="flex flex-wrap gap-2">
           {options.colors.map((color) => {
             const active = filters.colors.includes(color);
@@ -290,7 +293,7 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
       <Separator className="bg-cornsilk-200 dark:bg-neutral-800" />
 
       {/* ── Availability ──────────────────────────────────────────────── */}
-      <FilterSection title="Availability">
+      <FilterSection title={dictionary.shopPage.sidebar.availability}>
         <div className="space-y-2.5">
           {(["all", "in-stock"] as const).map((val) => (
             <div key={val} className="flex items-center gap-2.5">
@@ -303,7 +306,9 @@ export function ShopSidebar({ filters, onFiltersChange, options }: ShopSidebarPr
                 htmlFor={`avail-${val}`}
                 className="text-b5 font-inter text-neutral-700 dark:text-neutral-300 cursor-pointer leading-none"
               >
-                {val === "all" ? "All items" : "In stock only"}
+                {val === "all"
+                  ? dictionary.shopPage.sidebar.allItems
+                  : dictionary.shopPage.sidebar.inStockOnly}
               </Label>
             </div>
           ))}

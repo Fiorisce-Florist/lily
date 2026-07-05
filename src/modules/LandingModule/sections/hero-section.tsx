@@ -4,6 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/config/use-language";
 
 const heroImages = [
   "/images/landing/hero-bg-1.png",
@@ -13,6 +14,7 @@ const heroImages = [
 
 export function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
+  const { dictionary } = useLanguage();
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -29,7 +31,7 @@ export function HeroSection() {
           <Image
             key={src}
             src={src}
-            alt={`Hero floral arrangement ${index + 1}`}
+            alt={`${dictionary.landing.hero.imageAlt} ${index + 1}`}
             fill
             className={`object-cover transition-opacity duration-1000 ease-in-out ${
               index === currentImageIndex ? "opacity-60" : "opacity-0"
@@ -43,11 +45,10 @@ export function HeroSection() {
       <div className="container relative z-10 mx-auto px-4 text-center sm:px-6 lg:px-8">
         <div className="motion-safe:animate-fade-in mx-auto max-w-3xl space-y-8">
           <h1 className="font-fraunces text-h1 max-md:text-h3 text-cornsilk-100 font-bold tracking-tight">
-            Where Every Bloom Tells a Story
+            {dictionary.landing.hero.title}
           </h1>
           <p className="font-inter text-b3 max-md:text-b5 text-cornsilk-200 mx-auto max-w-xl">
-            Discover our premium collection of artisanal floral arrangements, curated to bring
-            elegance and joy to your most cherished moments.
+            {dictionary.landing.hero.subtitle}
           </p>
           <div className="flex flex-col justify-center gap-4 pt-4 sm:flex-row">
             <Button
@@ -55,7 +56,7 @@ export function HeroSection() {
               className="bg-blush-500 text-cornsilk-100 hover:bg-blush-600 border-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
               asChild
             >
-              <Link href="/shop">Shop Now</Link>
+              <Link href="/shop">{dictionary.landing.hero.primaryCta}</Link>
             </Button>
             <Button
               size="lg"
@@ -63,7 +64,7 @@ export function HeroSection() {
               className="border-cornsilk-300 text-cornsilk-100 hover:bg-cornsilk-100/10 hover:text-cornsilk-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blush-500 focus-visible:ring-offset-2"
               asChild
             >
-              <Link href="/#explore-collection">Explore Collections</Link>
+              <Link href="/#explore-collection">{dictionary.landing.hero.secondaryCta}</Link>
             </Button>
           </div>
         </div>

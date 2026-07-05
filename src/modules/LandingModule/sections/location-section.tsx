@@ -1,8 +1,13 @@
+"use client";
+
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Camera } from "lucide-react";
+import { useLanguage } from "@/config/use-language";
 
 export function LocationSection() {
+  const { dictionary } = useLanguage();
+
   return (
     <section className="bg-cornsilk-100 dark:bg-neutral-1000 py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,7 +22,7 @@ export function LocationSection() {
               allowFullScreen={true}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Fiorisce Floristry Location"
+              title={dictionary.landing.location.mapTitle}
               className="h-full w-full border-0 opacity-90 grayscale-50 transition-all duration-700 hover:opacity-100 hover:grayscale-0 dark:invert dark:hue-rotate-180 dark:grayscale-20 dark:contrast-75"
             ></iframe>
             {/* Inner shadow overlay for depth */}
@@ -28,7 +33,7 @@ export function LocationSection() {
           <div className="flex flex-col justify-center space-y-8">
             <div>
               <h2 className="font-fraunces text-h2 text-neutral-900 dark:text-cornsilk-100 mb-2 font-bold">
-                Where To Find Us
+                {dictionary.landing.location.title}
               </h2>
               <div className="h-0.5 w-16 bg-camel-500 mt-4" />
             </div>
@@ -44,10 +49,10 @@ export function LocationSection() {
                 </div>
                 <div>
                   <h3 className="font-fraunces text-b3 text-neutral-900 dark:text-cornsilk-100 font-semibold">
-                    Fiorisce Floristry
+                    {dictionary.landing.location.placeName}
                   </h3>
                   <p className="font-inter text-b4 text-neutral-600 dark:text-neutral-400 mt-1">
-                    Kukusan, Depok
+                    {dictionary.landing.location.address}
                   </p>
                 </div>
               </div>
@@ -62,10 +67,10 @@ export function LocationSection() {
                 </div>
                 <div>
                   <h3 className="font-fraunces text-b3 text-neutral-900 dark:text-cornsilk-100 font-semibold">
-                    Opening Hours
+                    {dictionary.landing.location.openingHours}
                   </h3>
                   <p className="font-inter text-b4 text-neutral-600 dark:text-neutral-400 mt-1">
-                    Mon – Sat, 10.00 – 20.00
+                    {dictionary.landing.location.hours}
                   </p>
                 </div>
               </div>
@@ -80,7 +85,7 @@ export function LocationSection() {
                 </div>
                 <div>
                   <h3 className="font-fraunces text-b3 text-neutral-900 dark:text-cornsilk-100 font-semibold">
-                    Connect With Us
+                    {dictionary.landing.location.connect}
                   </h3>
                   <div className="font-inter text-b4 text-neutral-600 dark:text-neutral-400 mt-1 space-y-1">
                     <p>
@@ -129,7 +134,7 @@ export function LocationSection() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Get Directions
+                  {dictionary.landing.location.directions}
                 </a>
               </Button>
             </div>

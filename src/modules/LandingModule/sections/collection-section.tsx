@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Package } from "lucide-react";
 import type { LandingProduct } from "@/app/actions/landing";
+import { useLanguage } from "@/config/use-language";
 
 interface CollectionSectionProps {
   title: string;
+  titleKey?: keyof ReturnType<typeof useLanguage>["dictionary"]["landing"]["collections"];
   href: string;
   products: LandingProduct[];
   variant?: "light" | "warm" | "muted";
@@ -22,11 +26,14 @@ const bgVariants = {
 
 export function CollectionSection({
   title,
+  titleKey,
   href,
   products,
   variant = "light",
   imageFit = "contain",
 }: CollectionSectionProps) {
+  const { dictionary } = useLanguage();
+
   if (products.length === 0) return null;
 
   return (
@@ -36,7 +43,7 @@ export function CollectionSection({
         <div className="mb-12 flex items-center justify-center gap-6">
           <div className="h-px w-16 bg-camel-400 hidden sm:block" />
           <h2 className="font-fraunces text-h3 text-neutral-900 dark:text-cornsilk-100 uppercase tracking-widest font-medium text-center">
-            {title}
+            {titleKey ? dictionary.landing.collections[titleKey] : title}
           </h2>
           <div className="h-px w-16 bg-camel-400 hidden sm:block" />
         </div>
@@ -80,7 +87,7 @@ export function CollectionSection({
 
         <div className="text-center">
           <Button variant="outline" size="lg" className="uppercase tracking-widest px-8  " asChild>
-            <Link href={href}>View All Product</Link>
+            <Link href={href}>{dictionary.common.viewAll}</Link>
           </Button>
         </div>
       </div>

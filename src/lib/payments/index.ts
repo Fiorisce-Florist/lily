@@ -1,7 +1,7 @@
-import { DokuCheckoutProvider } from "./doku";
+import { DokuPaymentProvider } from "./doku";
 
 export function getPaymentProvider() {
-  return new DokuCheckoutProvider();
+  return new DokuPaymentProvider();
 }
 
 export { normalizeDokuPaymentMethod, verifyDokuSignature } from "./doku";

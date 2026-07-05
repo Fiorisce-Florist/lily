@@ -306,20 +306,15 @@ export function OrderDetailModule({
             </div>
           )}
 
-          {order.status === "PENDING" && order.payment?.paymentMethod.startsWith("DOKU") && (
+          {order.status === "PENDING" && order.payment?.receiptUrl && (
             <div className="rounded-2xl bg-camel-50 dark:bg-camel-900/20 border border-camel-200 dark:border-camel-800/50 p-4 text-center space-y-4">
               <p className="text-b5 font-inter text-camel-800 dark:text-camel-300">
-                Payment is pending for this order. Continue to Doku Checkout to complete payment.
+                Payment is pending for this order. Continue to the payment provider to complete
+                payment.
               </p>
-              {order.payment.receiptUrl ? (
-                <Button variant="primary" className="w-full" asChild>
-                  <a href={order.payment.receiptUrl}>Continue Payment</a>
-                </Button>
-              ) : (
-                <p className="text-xs text-red-500">
-                  Doku checkout link is unavailable. Please contact support.
-                </p>
-              )}
+              <Button variant="primary" className="w-full" asChild>
+                <a href={order.payment.receiptUrl}>Continue Payment</a>
+              </Button>
             </div>
           )}
         </div>

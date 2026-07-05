@@ -4,12 +4,7 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-import {
-  LANGUAGE_CONFIG,
-  getLanguageDictionary,
-  getStoredLanguage,
-  subscribeToLanguageChange,
-} from "@/config/language";
+import { useLanguage } from "@/config/use-language";
 
 function getWhatsAppUrl(message: string) {
   return `https://api.whatsapp.com/send?phone=6287726120040&text=${encodeURIComponent(message)}`;
@@ -30,12 +25,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 export function FloatingContactButton() {
   const pathname = usePathname();
-  const language = React.useSyncExternalStore(
-    subscribeToLanguageChange,
-    getStoredLanguage,
-    () => LANGUAGE_CONFIG.defaultLanguage
-  );
-  const dictionary = getLanguageDictionary(language);
+  const { dictionary } = useLanguage();
 
   if (
     pathname.startsWith("/admin") ||

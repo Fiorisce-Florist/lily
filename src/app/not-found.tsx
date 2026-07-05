@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/config/use-language";
 
 export default function NotFound() {
+  const { dictionary } = useLanguage();
+
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-12 text-center">
       <style>{`
@@ -144,20 +149,17 @@ export default function NotFound() {
 
         {/* Error Label */}
         <p className="font-inter text-xs uppercase tracking-[0.35em] text-neutral-400 dark:text-neutral-500">
-          Error 404
+          {dictionary.notFound.eyebrow}
         </p>
 
         {/* Content */}
         <div className="space-y-5">
           <h1 className="font-fraunces text-5xl font-semibold leading-[0.95] tracking-tight text-neutral-900 dark:text-cornsilk-100 sm:text-6xl lg:text-7xl">
-            This bloom
-            <br />
-            has withered.
+            {dictionary.notFound.title}
           </h1>
 
           <p className="mx-auto max-w-md font-inter text-base leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-lg">
-            The page you&apos;re looking for has been moved, removed, or simply never existed in our
-            garden.
+            {dictionary.notFound.description}
           </p>
         </div>
 
@@ -176,7 +178,7 @@ export default function NotFound() {
           size="lg"
           className="h-12 rounded-full bg-blush-500 px-10 text-sm font-medium text-cornsilk-100 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-blush-600 hover:shadow-xl"
         >
-          <Link href="/">Return Home</Link>
+          <Link href="/">{dictionary.common.returnHome}</Link>
         </Button>
       </div>
     </div>

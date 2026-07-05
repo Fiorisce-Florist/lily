@@ -126,11 +126,11 @@ export function normalizeDokuPaymentMethod(channelId?: string) {
   if (normalized.startsWith("VIRTUAL_ACCOUNT_")) {
     return `DOKU.${normalized.replace("VIRTUAL_ACCOUNT_", "va_").toLowerCase()}`;
   }
-  return normalized ? `DOKU.${normalized.toLowerCase()}` : "DOKU.checkout";
+  return normalized ? `DOKU.${normalized.toLowerCase()}` : "PAYMENT_PROVIDER";
 }
 
-export class DokuCheckoutProvider implements PaymentProvider {
-  readonly method = "DOKU.checkout";
+export class DokuPaymentProvider implements PaymentProvider {
+  readonly method = "PAYMENT_PROVIDER";
 
   async createCheckout(input: CreateCheckoutInput): Promise<CreateCheckoutResult> {
     const clientId = getClientId();
@@ -209,7 +209,7 @@ export class DokuCheckoutProvider implements PaymentProvider {
     const tokenId = data.response?.payment?.token_id;
 
     if (!response.ok || !checkoutUrl || !tokenId) {
-      const message = data.error_messages?.join(", ") || "Failed to create Doku checkout.";
+      const message = data.error_messages?.join(", ") || "Failed to create payment session.";
       throw new Error(message);
     }
 

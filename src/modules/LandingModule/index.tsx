@@ -29,6 +29,7 @@ export default function LandingModule({
       {freshFlowers.length > 0 && (
         <CollectionSection
           title="Fresh Flower"
+          titleKey="freshFlower"
           href="/shop?category=fresh-flowers"
           products={freshFlowers}
           variant="light"
@@ -38,6 +39,7 @@ export default function LandingModule({
       {artificialFlowers.length > 0 && (
         <CollectionSection
           title="Artificial Flower"
+          titleKey="artificialFlower"
           href="/shop?category=artificial-flowers"
           products={artificialFlowers}
           variant="light"
@@ -47,6 +49,7 @@ export default function LandingModule({
       {papanBunga.length > 0 && (
         <CollectionSection
           title="Papan Bunga"
+          titleKey="papanBunga"
           href="/shop?category=papan-bunga"
           products={papanBunga}
           variant="light"

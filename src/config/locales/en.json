@@ -6,6 +6,31 @@
       "ID": "Indonesia"
     }
   },
+  "common": {
+    "shop": "Shop",
+    "shopNow": "Shop Now",
+    "viewAll": "View All",
+    "viewCollection": "View Collection",
+    "shopCollection": "Shop Collection",
+    "clear": "Clear",
+    "loading": "Loading",
+    "or": "or",
+    "emailAddress": "Email address",
+    "password": "Password",
+    "fullName": "Full Name",
+    "phoneNumber": "Phone Number",
+    "optional": "optional",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "payment": "Payment",
+    "status": "Status",
+    "returnHome": "Return Home",
+    "continueShopping": "Continue Shopping"
+  },
   "navigation": {
     "home": "Home",
     "shop": "Shop",
@@ -24,5 +49,279 @@
     "cta": "Contact MinFio",
     "ariaLabel": "Contact MinFio on WhatsApp",
     "message": "Hi MinFio, I have a question."
+  },
+  "footer": {
+    "tagline": "Bringing the beauty of nature into your everyday life with carefully curated, sustainable floral arrangements.",
+    "sections": {
+      "shop": "Shop",
+      "support": "Support",
+      "company": "Company"
+    },
+    "links": {
+      "allFlowers": "All Flowers",
+      "contactUs": "Contact Us",
+      "ourStory": "Our Story"
+    },
+    "copyright": "All rights reserved."
+  },
+  "account": {
+    "title": "My Account",
+    "profile": "Profile",
+    "orders": "Orders",
+    "logOut": "Log Out"
+  },
+  "auth": {
+    "layout": {
+      "caption": "Crafted blooms for every meaningful moment.",
+      "backHome": "Back to home",
+      "imageAlt": "Fiorisce Blooms"
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to manage your orders and saved details.",
+      "submit": "Sign In",
+      "submitting": "Signing In...",
+      "google": "Continue with Google",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "errors": {
+        "emailRequired": "Email is required.",
+        "passwordRequired": "Password is required.",
+        "failed": "Invalid email or password.",
+        "unexpected": "An unexpected error occurred."
+      }
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Save your details and checkout faster next time.",
+      "submit": "Create Account",
+      "submitting": "Creating Account...",
+      "google": "Continue with Google",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "errors": {
+        "nameRequired": "Please enter your full name.",
+        "emailInvalid": "Please enter a valid email address.",
+        "phoneInvalid": "Please enter a valid phone number (e.g., +6281234567890).",
+        "passwordRequired": "Password is required.",
+        "passwordMin": "Password must be at least 8 characters long.",
+        "passwordPattern": "Password must contain at least one letter and one number.",
+        "failed": "Registration failed.",
+        "unexpected": "An unexpected error occurred."
+      }
+    }
+  },
+  "landing": {
+    "hero": {
+      "title": "Where Every Bloom Tells a Story",
+      "subtitle": "Discover our premium collection of artisanal floral arrangements, curated to bring elegance and joy to your most cherished moments.",
+      "primaryCta": "Shop Now",
+      "secondaryCta": "Explore Collections",
+      "imageAlt": "Hero floral arrangement"
+    },
+    "categories": {
+      "eyebrow": "Curated For You",
+      "title": "Explore Our Collections",
+      "description": "From elegant fresh arrangements to lasting artificial blooms and grand papan bunga, find the perfect floral expression for any moment.",
+      "items": {
+        "fresh-flowers": "Fresh Flowers",
+        "artificial-flowers": "Artificial Flowers",
+        "papan-bunga": "Papan Bunga"
+      }
+    },
+    "featured": {
+      "title": "Best Sellers",
+      "description": "Our most loved arrangements, handcrafted with care.",
+      "viewAllBestSellers": "View All Best Sellers"
+    },
+    "collections": {
+      "freshFlower": "Fresh Flower",
+      "artificialFlower": "Artificial Flower",
+      "papanBunga": "Papan Bunga"
+    },
+    "occasions": {
+      "title": "For Every Moment",
+      "description": "Whether it's a celebration, a milestone, or a gesture of comfort, we have the perfect floral arrangement to express your feelings.",
+      "items": {
+        "birthday": "Birthday",
+        "anniversary": "Anniversary",
+        "wedding": "Wedding",
+        "sympathy": "Sympathy",
+        "congratulations": "Congratulations",
+        "grand-opening": "Grand Opening"
+      }
+    },
+    "about": {
+      "title": "About Fiorisce",
+      "quote": "Where Every Bloom Tells A Story",
+      "body": "At Fiorisce Floristry, we believe flowers do more than look beautiful. They carry feelings, mark special moments, and say things words sometimes cannot. Every arrangement is carefully made by hand, with flowers chosen to feel personal, warm, and meaningful. Whether it is a celebration, a quiet moment, or a simple gesture of care, we are here to help you share it beautifully."
+    },
+    "location": {
+      "title": "Where To Find Us",
+      "placeName": "Fiorisce Floristry",
+      "address": "Kukusan, Depok",
+      "openingHours": "Opening Hours",
+      "hours": "Mon - Sat, 10.00 - 20.00",
+      "connect": "Connect With Us",
+      "directions": "Get Directions",
+      "mapTitle": "Fiorisce Floristry Location"
+    }
+  },
+  "shopPage": {
+    "hero": {
+      "titlePrefix": "Discover Your",
+      "titleAccent": "Bouquet",
+      "subtitle": "Handcrafted with seasonal blooms - find the perfect arrangement for every moment.",
+      "placeholder": "Search roses, birthday, lavender...",
+      "ariaLabel": "Search bouquets",
+      "suggestions": {
+        "Roses": "Roses",
+        "Wedding": "Wedding",
+        "Birthday": "Birthday",
+        "Sunflower": "Sunflower",
+        "Peony": "Peony"
+      }
+    },
+    "grid": {
+      "emptyTitle": "No products found",
+      "emptyDescription": "Try adjusting your search or filters to discover more arrangements."
+    },
+    "toolbar": {
+      "bouquetSingular": "bouquet",
+      "bouquetPlural": "bouquets",
+      "found": "found",
+      "filters": "Filters",
+      "active": "active",
+      "sortBy": "Sort by",
+      "sort": {
+        "featured": "Featured",
+        "bestseller": "Best Selling",
+        "newest": "Newest",
+        "priceAsc": "Price: Low to High",
+        "priceDesc": "Price: High to Low"
+      },
+      "gridView": "Grid view",
+      "listView": "List view"
+    },
+    "sidebar": {
+      "flowerType": "Flower Type",
+      "productType": "Product Type",
+      "occasion": "Occasion",
+      "size": "Size",
+      "priceRange": "Price Range",
+      "color": "Color",
+      "availability": "Availability",
+      "allItems": "All items",
+      "inStockOnly": "In stock only",
+      "clearFlower": "Clear flower filter",
+      "clearProductType": "Clear product type filter"
+    },
+    "productCard": {
+      "from": "From",
+      "soldOut": "Sold Out",
+      "bestseller": "Bestseller",
+      "new": "New",
+      "off": "off"
+    }
+  },
+  "cart": {
+    "breadcrumbShop": "Shop",
+    "breadcrumbCart": "Cart",
+    "title": "Your Cart",
+    "emptyTitle": "Your cart is empty",
+    "emptyDescription": "Explore our collections and add blooms you love.",
+    "browseBouquets": "Browse Bouquets",
+    "orderSummary": "Order Summary",
+    "proceedCheckout": "Proceed to Checkout",
+    "clearCart": "Clear Cart",
+    "mixedCartWarning": "Papan bunga must be checked out separately from other products.",
+    "item": "item",
+    "items": "items",
+    "selectAll": "Select All Items",
+    "size": "Size",
+    "removeItem": "Remove item",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity",
+    "shipping": "Shipping",
+    "free": "Free"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "emptyTitle": "Your checkout is empty",
+    "browseBouquets": "Browse Bouquets",
+    "contactInfo": "1. Contact Information",
+    "deliveryCustomization": "2. Delivery & Customization",
+    "shippingAddress": "3. Shipping Address",
+    "payment": "4. Payment",
+    "deliveryMethod": "Delivery Method",
+    "freeDelivery": "Free Delivery by Fiorisce",
+    "gosend": "Order courier yourself",
+    "gosendInstruction": "Instruction for GoSend:",
+    "openMaps": "Open in Google Maps",
+    "pickupDate": "Pickup / Delivery Date",
+    "pickupTime": "Pickup / Delivery Time",
+    "messageCard": "Message Card (Optional)",
+    "messagePlaceholder": "Write your greeting card message here...",
+    "includePaperBag": "Include paper bag",
+    "savedAddresses": "Saved Addresses",
+    "newAddress": "Use a new address",
+    "manualAddress": "Enter address manually",
+    "streetAddress": "Street Address",
+    "apartment": "Apartment, suite, etc. (optional)",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "digitalPayments": "Digital Payments",
+    "paymentDescription": "Clicking \"Place Order & Pay\" will create your order. You will continue to the payment provider and choose from available digital payment methods.",
+    "placeOrder": "Place Order & Pay",
+    "processing": "Processing checkout...",
+    "success": "Order placed successfully! Redirecting...",
+    "errors": {
+      "pickupPast": "Pickup/delivery date cannot be before today.",
+      "pickupHours": "Pickup/delivery time must be during store hours, 10:00-20:00.",
+      "pickupMinimum": "Pickup/delivery time must be at least 3 hours from now."
+    }
+  },
+  "orders": {
+    "breadcrumbAccount": "My Account",
+    "breadcrumbOrders": "Orders",
+    "title": "Order History",
+    "emptyTitle": "No orders yet",
+    "emptyDescription": "Your future Fiorisce orders will appear here.",
+    "startShopping": "Start Shopping",
+    "allOrders": "All Orders",
+    "active": "Active",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "order": "Order",
+    "trackOrder": "Track Order"
+  },
+  "profile": {
+    "breadcrumbAccount": "My Account",
+    "breadcrumbProfile": "Profile",
+    "titleFallback": "My Profile",
+    "personalInfo": "Personal Information",
+    "emailCannotChange": "Email cannot be changed here.",
+    "savedAddresses": "Saved Addresses",
+    "emptyAddresses": "Addresses from your orders will appear here automatically.",
+    "accountInfo": "Account Information",
+    "profileUpdated": "Profile updated!",
+    "addressRemoved": "Address removed.",
+    "notFound": "Profile not found"
+  },
+  "productDetail": {
+    "breadcrumbShop": "Shop",
+    "bestseller": "Bestseller",
+    "bouquetSize": "Bouquet size",
+    "addToCart": "Add to Cart",
+    "adding": "Adding...",
+    "added": "Added to Cart",
+    "aboutArrangement": "About this arrangement",
+    "relatedProducts": "You may also like",
+    "outOfStock": "Sold Out"
+  },
+  "notFound": {
+    "eyebrow": "404",
+    "title": "This bloom is missing",
+    "description": "The page you are looking for may have moved, wilted, or never existed."
   }
 }

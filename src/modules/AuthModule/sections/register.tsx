@@ -7,6 +7,7 @@ import { signUp, signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useLanguage } from "@/config/use-language";
 
 interface FormErrors {
   name?: string;
@@ -17,6 +18,7 @@ interface FormErrors {
 
 export function RegisterModule() {
   const router = useRouter();
+  const { dictionary } = useLanguage();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [errors, setErrors] = React.useState<FormErrors>({});
   const [serverError, setServerError] = React.useState<string | null>(null);
@@ -30,13 +32,13 @@ export function RegisterModule() {
 
     // Name validation
     if (!name || name.trim().length < 2) {
-      newErrors.name = "Please enter your full name.";
+      newErrors.name = dictionary.auth.register.errors.nameRequired;
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
-      newErrors.email = "Please enter a valid email address.";
+      newErrors.email = dictionary.auth.register.errors.emailInvalid;
     }
 
     // Phone validation (optional, but if provided must be valid)
@@ -44,17 +46,17 @@ export function RegisterModule() {
       // Allows optional +, followed by 9 to 14 digits (with optional spaces)
       const phoneRegex = /^\+?[\d\s]{9,15}$/;
       if (!phoneRegex.test(phone.replace(/\s/g, ""))) {
-        newErrors.phone = "Please enter a valid phone number (e.g., +6281234567890).";
+        newErrors.phone = dictionary.auth.register.errors.phoneInvalid;
       }
     }
 
     // Password validation
     if (!password) {
-      newErrors.password = "Password is required.";
+      newErrors.password = dictionary.auth.register.errors.passwordRequired;
     } else if (password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters long.";
+      newErrors.password = dictionary.auth.register.errors.passwordMin;
     } else if (!/(?=.*[A-Za-z])(?=.*\d)/.test(password)) {
-      newErrors.password = "Password must contain at least one letter and one number.";
+      newErrors.password = dictionary.auth.register.errors.passwordPattern;
     }
 
     setErrors(newErrors);
@@ -83,14 +85,14 @@ export function RegisterModule() {
       });
 
       if (authError) {
-        setServerError(authError.message || "Registration failed.");
+        setServerError(authError.message || dictionary.auth.register.errors.failed);
       } else {
         router.push("/");
         router.refresh();
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
-      setServerError("An unexpected error occurred.");
+      setServerError(dictionary.auth.register.errors.unexpected);
     } finally {
       setIsSubmitting(false);
     }
@@ -104,10 +106,10 @@ export function RegisterModule() {
     <>
       <div className="mb-8">
         <h1 className="text-h3 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-          Create account
+          {dictionary.auth.register.title}
         </h1>
         <p className="mt-2 text-b4 font-inter text-neutral-600 dark:text-neutral-400">
-          Join Fiorisce to discover curated, fresh, and beautifully arranged blooms.
+          {dictionary.auth.register.subtitle}
         </p>
       </div>
 
@@ -118,7 +120,7 @@ export function RegisterModule() {
           </div>
         )}
         <div className="space-y-2">
-          <Label htmlFor="name">Full Name</Label>
+          <Label htmlFor="name">{dictionary.common.fullName}</Label>
           <Input
             type="text"
             id="name"
@@ -137,7 +139,7 @@ export function RegisterModule() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email address</Label>
+          <Label htmlFor="email">{dictionary.common.emailAddress}</Label>
           <Input
             type="email"
             id="email"
@@ -157,7 +159,8 @@ export function RegisterModule() {
 
         <div className="space-y-2">
           <Label htmlFor="phone">
-            Phone Number <span className="text-neutral-400 font-normal">(optional)</span>
+            {dictionary.common.phoneNumber}{" "}
+            <span className="text-neutral-400 font-normal">({dictionary.common.optional})</span>
           </Label>
           <Input
             type="tel"
@@ -176,7 +179,7 @@ export function RegisterModule() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{dictionary.common.password}</Label>
           <Input
             type="password"
             id="password"
@@ -200,7 +203,7 @@ export function RegisterModule() {
           disabled={isSubmitting}
         >
           <span className={isSubmitting ? "opacity-0" : "opacity-100 transition-opacity"}>
-            Create Account
+            {dictionary.auth.register.submit}
           </span>
           {isSubmitting && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -212,7 +215,9 @@ export function RegisterModule() {
 
       <div className="mt-6 flex items-center justify-between">
         <div className="w-full h-px bg-neutral-200 dark:bg-neutral-800"></div>
-        <span className="px-4 text-b5 font-inter text-neutral-500 dark:text-neutral-400">or</span>
+        <span className="px-4 text-b5 font-inter text-neutral-500 dark:text-neutral-400">
+          {dictionary.common.or}
+        </span>
         <div className="w-full h-px bg-neutral-200 dark:bg-neutral-800"></div>
       </div>
 
@@ -241,16 +246,16 @@ export function RegisterModule() {
           />
           <path d="M1 1h22v22H1z" fill="none" />
         </svg>
-        Continue with Google
+        {dictionary.auth.register.google}
       </Button>
 
       <div className="mt-8 text-center text-b5 font-inter text-neutral-600 dark:text-neutral-400">
-        Already have an account?{" "}
+        {dictionary.auth.register.hasAccount}{" "}
         <Link
           href="/login"
           className="font-semibold text-blush-600 dark:text-blush-400 hover:text-blush-700 dark:hover:text-blush-300 hover:underline underline-offset-4 transition-colors"
         >
-          Sign in
+          {dictionary.auth.register.signIn}
         </Link>
       </div>
     </>

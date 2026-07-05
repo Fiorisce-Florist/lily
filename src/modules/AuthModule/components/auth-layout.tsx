@@ -1,15 +1,20 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/config/use-language";
 
 export function AuthLayout({ children }: { children: React.ReactNode }) {
+  const { dictionary } = useLanguage();
+
   return (
     <div className="flex min-h-screen w-full bg-white dark:bg-neutral-950">
       {/* Left pane - Image */}
       <div className="relative hidden w-1/2 lg:block border-r border-cornsilk-200 dark:border-neutral-800">
         <Image
           src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=1500&auto=format&fit=crop"
-          alt="Fiorisce Blooms"
+          alt={dictionary.auth.layout.imageAlt}
           fill
           className="object-cover"
           priority
@@ -22,7 +27,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
             </h2>
           </Link>
           <p className="text-b4 font-inter text-cornsilk-100 mt-2 max-w-sm">
-            Curated, fresh, and beautifully arranged blooms delivered to your door.
+            {dictionary.auth.layout.caption}
           </p>
         </div>
       </div>
@@ -34,7 +39,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
           className="absolute group left-6 top-6 sm:left-8 sm:top-8 flex items-center gap-2 text-b5 font-inter text-neutral-500 dark:text-neutral-400 hover:text-blush-600 dark:hover:text-blush-400 transition-colors"
         >
           <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transform transition-all" />
-          Back to home
+          {dictionary.auth.layout.backHome}
         </Link>
         <div className="flex flex-1 flex-col justify-center px-6 sm:px-16 md:px-24 xl:px-32 py-12">
           <div className="mx-auto w-full max-w-sm">{children}</div>
