@@ -4,18 +4,6 @@ import type { CreateCheckoutInput, CreateCheckoutResult, PaymentProvider } from 
 
 const CHECKOUT_TARGET = "/checkout/v1/payment";
 
-const DOKU_DIGITAL_PAYMENT_METHODS = [
-  "CREDIT_CARD",
-  "QRIS",
-  "EMONEY_DOKU",
-  "EMONEY_DANA",
-  "EMONEY_OVO",
-  "EMONEY_SHOPEE_PAY",
-  "EMONEY_LINKAJA",
-  "ONLINE_TO_OFFLINE_INDOMARET",
-  "ONLINE_TO_OFFLINE_ALFA",
-];
-
 interface DokuCheckoutResponse {
   response?: {
     payment?: {
@@ -25,6 +13,12 @@ interface DokuCheckoutResponse {
     };
   };
   error_messages?: string[];
+  error?: {
+    code?: string;
+    message?: string;
+    type?: string;
+  };
+  message?: string | string[];
 }
 
 function getDokuBaseUrl() {
@@ -34,11 +28,26 @@ function getDokuBaseUrl() {
 }
 
 function getClientId() {
-  return process.env.DOKU_CLIENT_ID ?? process.env.DOKU_API_KEY ?? "";
+  return process.env.DOKU_CLIENT_ID ?? process.env.PAYMENT_PROVIDER_CLIENT_ID ?? "";
 }
 
 function getSecretKey() {
-  return process.env.DOKU_SECRET_KEY ?? "";
+  return process.env.DOKU_SECRET_KEY ?? process.env.PAYMENT_PROVIDER_SECRET_KEY ?? "";
+}
+
+function getPaymentMethodTypes() {
+  const configured =
+    process.env.DOKU_PAYMENT_METHOD_TYPES ?? process.env.PAYMENT_PROVIDER_METHOD_TYPES ?? "";
+
+  return configured
+    .split(",")
+    .map((method) => method.trim())
+    .filter(Boolean);
+}
+
+function formatProviderMessage(message?: string | string[]) {
+  if (Array.isArray(message)) return message.join(", ");
+  return message;
 }
 
 function toDokuTimestamp(date = new Date()) {
@@ -137,7 +146,7 @@ export class DokuPaymentProvider implements PaymentProvider {
     const secretKey = getSecretKey();
 
     if (!clientId || !secretKey) {
-      throw new Error("Doku credentials are not configured.");
+      throw new Error("Payment provider credentials are not configured.");
     }
 
     const body = JSON.stringify({
@@ -162,7 +171,9 @@ export class DokuPaymentProvider implements PaymentProvider {
       payment: {
         payment_due_date: 60,
         type: "SALE",
-        payment_method_types: DOKU_DIGITAL_PAYMENT_METHODS,
+        ...(getPaymentMethodTypes().length > 0
+          ? { payment_method_types: getPaymentMethodTypes() }
+          : {}),
       },
       customer: {
         id: input.customer.id,
@@ -209,8 +220,15 @@ export class DokuPaymentProvider implements PaymentProvider {
     const tokenId = data.response?.payment?.token_id;
 
     if (!response.ok || !checkoutUrl || !tokenId) {
-      const message = data.error_messages?.join(", ") || "Failed to create payment session.";
-      throw new Error(message);
+      const providerMessage =
+        data.error_messages?.join(", ") ||
+        data.error?.message ||
+        formatProviderMessage(data.message) ||
+        "Failed to create payment session.";
+      const providerCode = data.error?.code ? ` (${data.error.code})` : "";
+      throw new Error(
+        `Payment provider error${providerCode}: ${providerMessage} [HTTP ${response.status}]`
+      );
     }
 
     return {
