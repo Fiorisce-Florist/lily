@@ -98,6 +98,7 @@ function OrderSummaryPanel({
     productId: string;
     quantity: number;
     price: number;
+    size?: string;
     variant?: { variantName: string } | null;
     product: {
       name: string;
@@ -111,27 +112,62 @@ function OrderSummaryPanel({
 }) {
   const { dictionary } = useLanguage();
   let paperBagCost = 0;
-  let paperBagLabel = "Standard Size";
+  let paperBagsDetails: { productName: string; label: string; count: number; cost: number }[] = [];
+  let hasItemAboveL = false;
+
+  const getVariantSize = (vName: string) => {
+    const v = vName.toLowerCase().trim();
+    if (v.includes("xl") || v.includes("xxl") || v.includes("jumbo") || v.includes("extra large") || v.includes("x-large")) return "above_l";
+    if (v === "l" || v === "large" || v.startsWith("l ") || v.endsWith(" l") || v.includes("large")) return "l";
+    if (v === "m" || v === "medium" || v.startsWith("m ") || v.endsWith(" m") || v.includes("medium")) return "m";
+    if (v === "s" || v === "small" || v.startsWith("s ") || v.endsWith(" s") || v.includes("small")) return "s";
+    return "below_s";
+  };
+
+  for (const item of items) {
+    const vName =
+      item.size ||
+      item.variant?.variantName ||
+      item.product?.variants?.[0]?.variantName ||
+      "";
+    if (getVariantSize(vName) === "above_l") {
+      hasItemAboveL = true;
+    }
+  }
+
   if (includePaperBag || deliveryMethod === "GOSEND") {
-    let hasLarge = false;
-    let hasMedium = false;
     for (const item of items) {
       const vName =
-        item.variant?.variantName?.toLowerCase() ||
-        item.product?.variants?.[0]?.variantName?.toLowerCase() ||
+        item.size ||
+        item.variant?.variantName ||
+        item.product?.variants?.[0]?.variantName ||
         "";
-      if (vName === "l" || vName === "large") hasLarge = true;
-      else if (vName === "m" || vName === "medium") hasMedium = true;
-    }
-    if (hasLarge) {
-      paperBagCost = 8000;
-      paperBagLabel = "Large (+Rp8.000)";
-    } else if (hasMedium) {
-      paperBagCost = 7000;
-      paperBagLabel = "Medium (+Rp7.000)";
-    } else {
-      paperBagCost = 5000;
-      paperBagLabel = "Small (+Rp5.000)";
+      const size = getVariantSize(vName);
+
+      let costPerBag = 0;
+      let label = "";
+
+      if (size === "above_l") {
+        continue;
+      } else if (size === "l") {
+        costPerBag = 8000;
+        label = "Large";
+      } else if (size === "m") {
+        costPerBag = 7000;
+        label = "Medium";
+      } else {
+        costPerBag = 5000;
+        label = "Small";
+      }
+
+      paperBagCost += costPerBag * item.quantity;
+      const existing = paperBagsDetails.find((p) => p.productName === item.product.name && p.label === label);
+      if (existing) {
+        existing.count += item.quantity;
+        existing.cost += costPerBag * item.quantity;
+      } else {
+        paperBagsDetails.push({ productName: item.product.name, label, count: item.quantity, cost: costPerBag * item.quantity });
+      }
     }
   }
 
@@ -193,6 +229,14 @@ function OrderSummaryPanel({
                     {item.product.name}
                   </p>
                   <p className="text-b6 font-inter text-neutral-500 dark:text-neutral-400">
+                    {item.size || item.variant?.variantName || item.product?.variants?.[0]?.variantName ? (
+                      <span className="mr-2 border-r border-neutral-300 dark:border-neutral-700 pr-2">
+                        Size:{" "}
+                        <span className="uppercase">
+                          {item.size}
+                        </span>
+                      </span>
+                    ) : null}
                     {dictionary.common.quantity} {item.quantity}
                   </p>
                 </div>
@@ -211,17 +255,28 @@ function OrderSummaryPanel({
             <span>{dictionary.common.subtotal}</span>
             <span className="font-jetbrains">{formatPrice(subtotal)}</span>
           </div>
-          {(includePaperBag || deliveryMethod === "GOSEND") && (
-            <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
-              <span>Paper Bag ({paperBagLabel})</span>
-              <span className="font-jetbrains">{formatPrice(paperBagCost)}</span>
-            </div>
+          {(includePaperBag || deliveryMethod === "GOSEND") && paperBagsDetails.length > 0 && (
+            <>
+              {paperBagsDetails.map((bag, idx) => (
+                <div
+                  key={idx}
+                  className="flex justify-between text-neutral-600 dark:text-neutral-400"
+                >
+                  <span>
+                    Paper Bag ({bag.label}) - {bag.productName} (x{bag.count})
+                  </span>
+                  <span className="font-jetbrains">{formatPrice(bag.cost)}</span>
+                </div>
+              ))}
+            </>
           )}
           <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
             <span>{dictionary.checkout.deliveryMethod}</span>
             <span className="font-jetbrains text-olive-600 dark:text-olive-400">
               {deliveryMethod === "GOSEND"
-                ? "GoSend (Ordered by User)"
+                ? hasItemAboveL
+                  ? "GoCar (Ordered by User)"
+                  : "GoSend (Ordered by User)"
                 : deliveryMethod === "FIORISCE_DELIVERY"
                   ? "Fiorisce Delivery"
                   : "Pick Up (Free)"}
@@ -488,6 +543,26 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   const isPapanBungaOnly =
     items.length > 0 && items.every((i) => i.product.category?.slug === "papan-bunga");
 
+  const hasItemAboveL = React.useMemo(() => {
+    const getVariantSize = (vName: string) => {
+      const v = vName.toLowerCase().trim();
+      if (v.includes("xl") || v.includes("xxl") || v.includes("jumbo") || v.includes("extra large") || v.includes("x-large")) return "above_l";
+      if (v === "l" || v === "large" || v.startsWith("l ") || v.endsWith(" l") || v.includes("large")) return "l";
+      if (v === "m" || v === "medium" || v.startsWith("m ") || v.endsWith(" m") || v.includes("medium")) return "m";
+      if (v === "s" || v === "small" || v.startsWith("s ") || v.endsWith(" s") || v.includes("small")) return "s";
+      return "below_s";
+    };
+    for (const item of items) {
+      const vName =
+        item.size ||
+        item.variant?.variantName ||
+        item.product?.variants?.[0]?.variantName ||
+        "";
+      if (getVariantSize(vName) === "above_l") return true;
+    }
+    return false;
+  }, [items]);
+
   React.useEffect(() => {
     if (isPapanBungaOnly && form.deliveryMethod !== "FIORISCE_DELIVERY") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -727,9 +802,11 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                       >
                         <RadioGroupItem value="GOSEND" id="delivery-gosend" />
                         <Label htmlFor="delivery-gosend" className="cursor-pointer flex-1">
-                          GoSend
+                          {hasItemAboveL ? "GoCar / GrabCar" : "GoSend"}
                           <p className="text-b6 text-neutral-500 font-normal">
-                            {dictionary.checkout.gosend}
+                            {hasItemAboveL
+                              ? "Order a car for large items"
+                              : dictionary.checkout.gosend}
                           </p>
                         </Label>
                       </div>
@@ -737,10 +814,13 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
 
                     {form.deliveryMethod === "GOSEND" && (
                       <div className="p-4 bg-blue-50 dark:bg-blue-950/30 text-blue-800 dark:text-blue-200 rounded-xl text-sm mt-2">
-                        <p className="font-semibold mb-1">{dictionary.checkout.gosendInstruction}</p>
+                        <p className="font-semibold mb-1">
+                          {dictionary.checkout.gosendInstruction}
+                        </p>
                         <p>
-                          Please order a GoSend / GrabExpress courier yourself to pick up the
-                          flowers at our store.
+                          {hasItemAboveL
+                            ? "Please order a GoCar / GrabCar yourself to pick up the large flowers at our store."
+                            : "Please order a GoSend / GrabExpress courier yourself to pick up the flowers at our store."}
                         </p>
                         <a
                           href="https://maps.app.goo.gl/4HAzwzqoAbfYGrbR8"
