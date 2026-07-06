@@ -141,6 +141,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             size: variantId
               ? product.variants.find((v) => v.id === variantId)?.variantName
               : "Standard",
+            stems: variantId
+              ? product.variants.find((v) => v.id === variantId)?.stemsQuantity || null
+              : null,
           };
           newItems = [...newItems, newItem];
           setItems(newItems);

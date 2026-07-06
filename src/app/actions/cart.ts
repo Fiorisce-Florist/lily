@@ -19,10 +19,11 @@ export interface CartItemData {
     price: number;
     isAvailable: boolean;
     images: { imageUrl: string; isPrimary: boolean }[];
-    variants: { id: string; variantName: string; additionalPrice: number; isAvailable: boolean }[];
+    variants: { id: string; variantName: string; additionalPrice: number; isAvailable: boolean; stemsQuantity?: number | null }[];
     category: { name: string; slug: string };
   };
   size?: string;
+  stems?: number | null;
 }
 
 export interface CartData {
@@ -108,10 +109,12 @@ export async function getCart(): Promise<CartData | null> {
           variantName: v.variantName,
           additionalPrice: Number(v.additionalPrice),
           isAvailable: v.isAvailable,
+          stemsQuantity: v.stemsQuantity,
         })),
         category: item.product.category,
       },
       size: item.variant?.variantName || "Standard",
+      stems: item.variant?.stemsQuantity || null,
     })),
   };
 }
@@ -288,6 +291,7 @@ export async function getProductForCart(productId: string) {
         variantName: v.variantName,
         additionalPrice: Number(v.additionalPrice),
         isAvailable: v.isAvailable,
+        stemsQuantity: v.stemsQuantity,
       })),
       category: product.category,
     },

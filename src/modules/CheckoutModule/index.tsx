@@ -99,11 +99,11 @@ function OrderSummaryPanel({
     quantity: number;
     price: number;
     size?: string;
-    variant?: { variantName: string } | null;
+    stems?: number | null;
     product: {
       name: string;
       images: { imageUrl: string; isPrimary: boolean }[];
-      variants?: { variantName: string }[];
+      variants?: { variantName: string; stemsQuantity?: number | null }[];
       category?: { slug: string } | null;
     };
   }[];
@@ -112,7 +112,7 @@ function OrderSummaryPanel({
 }) {
   const { dictionary } = useLanguage();
   let paperBagCost = 0;
-  let paperBagsDetails: { productName: string; label: string; count: number; cost: number }[] = [];
+  const paperBagsDetails: { productName: string; label: string; count: number; cost: number }[] = [];
   let hasItemAboveL = false;
 
   const getVariantSize = (vName: string) => {
@@ -127,7 +127,6 @@ function OrderSummaryPanel({
   for (const item of items) {
     const vName =
       item.size ||
-      item.variant?.variantName ||
       item.product?.variants?.[0]?.variantName ||
       "";
     if (getVariantSize(vName) === "above_l") {
@@ -139,7 +138,6 @@ function OrderSummaryPanel({
     for (const item of items) {
       const vName =
         item.size ||
-        item.variant?.variantName ||
         item.product?.variants?.[0]?.variantName ||
         "";
       const size = getVariantSize(vName);
@@ -229,15 +227,24 @@ function OrderSummaryPanel({
                     {item.product.name}
                   </p>
                   <p className="text-b6 font-inter text-neutral-500 dark:text-neutral-400">
-                    {item.size || item.variant?.variantName || item.product?.variants?.[0]?.variantName ? (
+                    {item.size || item.product?.variants?.[0]?.variantName ? (
                       <span className="mr-2 border-r border-neutral-300 dark:border-neutral-700 pr-2">
                         Size:{" "}
                         <span className="uppercase">
-                          {item.size}
+                          {item.size || item.product?.variants?.[0]?.variantName}
                         </span>
                       </span>
                     ) : null}
-                    {dictionary.common.quantity} {item.quantity}
+                    {(() => {
+                      const selectedVariant = item.product?.variants?.find((v) => v.variantName === item.size) || item.product?.variants?.[0];
+                      const displayStems = item.stems ?? selectedVariant?.stemsQuantity;
+                      return displayStems ? (
+                        <span className="mr-2 border-r border-neutral-300 dark:border-neutral-700 pr-2">
+                          Stems: {displayStems}
+                        </span>
+                      ) : null;
+                    })()}
+                    x{item.quantity}
                   </p>
                 </div>
                 <span className="text-b5 font-jetbrains text-neutral-800 dark:text-cornsilk-200 shrink-0">
@@ -555,7 +562,6 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
     for (const item of items) {
       const vName =
         item.size ||
-        item.variant?.variantName ||
         item.product?.variants?.[0]?.variantName ||
         "";
       if (getVariantSize(vName) === "above_l") return true;
