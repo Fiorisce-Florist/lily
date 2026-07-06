@@ -12,7 +12,15 @@ import {
   MapPin,
   PlusCircle,
   CheckCircle2,
+  Calendar as CalendarIcon,
+  Clock,
 } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -798,7 +806,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                         <RadioGroupItem value="PICKUP" id="delivery-pickup" />
                         <Label htmlFor="delivery-pickup" className="cursor-pointer flex-1">
                           Pick Up
-                          <p className="text-b6 text-neutral-500 font-normal">
+                          <p className="text-b6 text-neutral-500 font-normal mt-1">
                             Pick up at our store
                           </p>
                         </Label>
@@ -809,7 +817,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                         <RadioGroupItem value="GOSEND" id="delivery-gosend" />
                         <Label htmlFor="delivery-gosend" className="cursor-pointer flex-1">
                           {hasItemAboveL ? "GoCar / GrabCar" : "GoSend"}
-                          <p className="text-b6 text-neutral-500 font-normal">
+                          <p className="text-b6 text-neutral-500 font-normal mt-1">
                             {hasItemAboveL
                               ? "Order a car for large items"
                               : dictionary.checkout.gosend}
@@ -843,26 +851,65 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <Field
-                  id="deliveryDate"
-                  label={dictionary.checkout.pickupDate}
-                  required
-                  type="date"
-                  value={form.deliveryDate}
-                  onChange={set("deliveryDate")}
-                  min={todayInputValue}
-                />
-                <Field
-                  id="deliveryTime"
-                  label={dictionary.checkout.pickupTime}
-                  required
-                  type="time"
-                  value={form.deliveryTime || ""}
-                  onChange={set("deliveryTime")}
-                  min="10:00"
-                  max="20:00"
-                  step="900"
-                />
+                <div className="flex flex-col space-y-2">
+                  <Label htmlFor="deliveryDate">{dictionary.checkout.pickupDate}</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full justify-start text-left font-normal h-10 border-cornsilk-400 bg-cornsilk-100 dark:bg-neutral-800 dark:border-neutral-700 text-b4 font-inter text-neutral-900 dark:text-neutral-300",
+                          !form.deliveryDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {form.deliveryDate ? format(new Date(form.deliveryDate), "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={form.deliveryDate ? new Date(form.deliveryDate) : undefined}
+                        onSelect={(date) => set("deliveryDate")(date ? format(date, "yyyy-MM-dd") : "")}
+                        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <div className="flex flex-col space-y-2">
+                  <Label htmlFor="deliveryTime">{dictionary.checkout.pickupTime}</Label>
+                  <Select value={form.deliveryTime} onValueChange={set("deliveryTime")}>
+                    <SelectTrigger 
+                      className={cn(
+                        "h-10 w-full border-cornsilk-400 bg-cornsilk-100 dark:bg-neutral-800 dark:border-neutral-700 text-b4 font-inter text-neutral-900 dark:text-neutral-300",
+                        !form.deliveryTime && "text-muted-foreground"
+                      )}
+                    >
+                      <div className="flex items-center">
+                        <Clock className="mr-2 h-4 w-4 text-neutral-500" />
+                        <SelectValue placeholder="Select a time" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(() => {
+                        const timeOptions = [];
+                        for (let h = 10; h <= 20; h++) {
+                          for (let m = 0; m < 60; m += 15) {
+                            if (h === 20 && m > 0) continue;
+                            const timeString = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+                            timeOptions.push(timeString);
+                          }
+                        }
+                        return timeOptions.map((time) => (
+                          <SelectItem key={time} value={time}>
+                            {time}
+                          </SelectItem>
+                        ));
+                      })()}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="space-y-2 pt-2">
