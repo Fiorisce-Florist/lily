@@ -72,7 +72,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             localCart.map((i) => ({
               productId: i.productId,
               quantity: i.quantity,
-              // @ts-expect-error variantId not in CartItemData type but present at runtime
               variantId: i.variantId,
             }))
           );
@@ -95,7 +94,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCart();
-  }, [fetchCart, session]);
+  }, [fetchCart]); // Removed 'session' to prevent infinite fetching
 
   // ── Actions ─────────────────────────────────────────────────────────────────
 
@@ -104,10 +103,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (status === "unauthenticated") {
         // Guest cart flow
         let newItems = [...items];
-        // Match product AND price (to differentiate variants). Wait, locally we just match by variantId.
         const idx = newItems.findIndex(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (i) => i.productId === productId && (i as any).variantId === variantId
+          (i) => i.productId === productId && i.variantId === variantId
         );
         if (idx !== -1) {
           newItems[idx] = {
@@ -132,12 +129,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           const newItem: CartItemData = {
             id: crypto.randomUUID(),
             productId,
+            variantId,
             quantity: Math.min(10, quantity),
             price: product.price + variantPrice,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             product: product as any, // Cast to match exactly
-            // @ts-expect-error variantId not in CartItem type but needed for cart logic
-            variantId,
             size: variantId
               ? product.variants.find((v) => v.id === variantId)?.variantName
               : "Standard",
@@ -159,7 +155,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       // Authenticated flow
       // Optimistic update: bump quantity if already in cart
       setItems((prev) => {
-        const idx = prev.findIndex((i) => i.productId === productId);
+        const idx = prev.findIndex((i) => i.productId === productId && i.variantId === variantId);
         if (idx !== -1) {
           return prev.map((i, index) =>
             index === idx ? { ...i, quantity: Math.min(10, i.quantity + quantity) } : i

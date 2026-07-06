@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache";
 export interface CartItemData {
   id: string;
   productId: string;
+  variantId?: string | null;
   quantity: number;
   price: number;
   product: {
@@ -98,6 +99,7 @@ export async function getCart(): Promise<CartData | null> {
     items: cart.items.map((item) => ({
       id: item.id,
       productId: item.productId,
+      variantId: item.variantId,
       quantity: item.quantity,
       price: Number(item.price),
       product: {
@@ -307,7 +309,7 @@ export async function getProductForCart(productId: string) {
 
 /** Sync local guest cart to the user's database cart upon login. */
 export async function syncLocalCart(
-  localItems: { productId: string; quantity: number; variantId?: string }[]
+  localItems: { productId: string; quantity: number; variantId?: string | null }[]
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
