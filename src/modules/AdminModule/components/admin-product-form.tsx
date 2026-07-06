@@ -461,6 +461,7 @@ export function AdminProductForm({
                         <SelectValue placeholder="Select size" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="xs">XS</SelectItem>
                         <SelectItem value="s">S</SelectItem>
                         <SelectItem value="m">M</SelectItem>
                         <SelectItem value="l">L</SelectItem>
