@@ -15,7 +15,14 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -95,12 +102,8 @@ function LanguageSelector({ compact = false }: { compact?: boolean }) {
           className={compact ? "justify-start rounded-xl px-0 text-h5 font-fraunces" : ""}
         >
           <Globe2 className="h-5 w-5" />
-          <span className={compact ? "font-fraunces" : "sr-only"}>
-            {dictionary.language.label}
-          </span>
-          {!compact && (
-            <span className="font-jetbrains text-[11px] font-semibold">{language}</span>
-          )}
+          <span className={compact ? "font-fraunces" : "sr-only"}>{dictionary.language.label}</span>
+          {!compact && <span className="font-jetbrains text-[11px] font-semibold">{language}</span>}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={compact ? "start" : "end"} className="w-40">

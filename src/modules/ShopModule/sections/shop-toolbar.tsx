@@ -114,7 +114,9 @@ export function ShopToolbar({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="featured">{dictionary.shopPage.toolbar.sort.featured}</SelectItem>
-            <SelectItem value="bestseller">{dictionary.shopPage.toolbar.sort.bestseller}</SelectItem>
+            <SelectItem value="bestseller">
+              {dictionary.shopPage.toolbar.sort.bestseller}
+            </SelectItem>
             <SelectItem value="newest">{dictionary.shopPage.toolbar.sort.newest}</SelectItem>
             <SelectItem value="price-asc">{dictionary.shopPage.toolbar.sort.priceAsc}</SelectItem>
             <SelectItem value="price-desc">{dictionary.shopPage.toolbar.sort.priceDesc}</SelectItem>

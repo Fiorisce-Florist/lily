@@ -20,7 +20,13 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -120,23 +126,37 @@ function OrderSummaryPanel({
 }) {
   const { dictionary } = useLanguage();
   let paperBagCost = 0;
-  const paperBagsDetails: { productName: string; label: string; count: number; cost: number }[] = [];
+  const paperBagsDetails: { productName: string; label: string; count: number; cost: number }[] =
+    [];
   let hasItemAboveL = false;
 
   const getVariantSize = (vName: string) => {
     const v = vName.toLowerCase().trim();
-    if (v.includes("xl") || v.includes("xxl") || v.includes("jumbo") || v.includes("extra large") || v.includes("x-large")) return "above_l";
-    if (v === "l" || v === "large" || v.startsWith("l ") || v.endsWith(" l") || v.includes("large")) return "l";
-    if (v === "m" || v === "medium" || v.startsWith("m ") || v.endsWith(" m") || v.includes("medium")) return "m";
-    if (v === "s" || v === "small" || v.startsWith("s ") || v.endsWith(" s") || v.includes("small")) return "s";
+    if (
+      v.includes("xl") ||
+      v.includes("xxl") ||
+      v.includes("jumbo") ||
+      v.includes("extra large") ||
+      v.includes("x-large")
+    )
+      return "above_l";
+    if (v === "l" || v === "large" || v.startsWith("l ") || v.endsWith(" l") || v.includes("large"))
+      return "l";
+    if (
+      v === "m" ||
+      v === "medium" ||
+      v.startsWith("m ") ||
+      v.endsWith(" m") ||
+      v.includes("medium")
+    )
+      return "m";
+    if (v === "s" || v === "small" || v.startsWith("s ") || v.endsWith(" s") || v.includes("small"))
+      return "s";
     return "below_s";
   };
 
   for (const item of items) {
-    const vName =
-      item.size ||
-      item.product?.variants?.[0]?.variantName ||
-      "";
+    const vName = item.size || item.product?.variants?.[0]?.variantName || "";
     if (getVariantSize(vName) === "above_l") {
       hasItemAboveL = true;
     }
@@ -144,10 +164,7 @@ function OrderSummaryPanel({
 
   if (includePaperBag || deliveryMethod === "GOSEND") {
     for (const item of items) {
-      const vName =
-        item.size ||
-        item.product?.variants?.[0]?.variantName ||
-        "";
+      const vName = item.size || item.product?.variants?.[0]?.variantName || "";
       const size = getVariantSize(vName);
 
       let costPerBag = 0;
@@ -167,12 +184,19 @@ function OrderSummaryPanel({
       }
 
       paperBagCost += costPerBag * item.quantity;
-      const existing = paperBagsDetails.find((p) => p.productName === item.product.name && p.label === label);
+      const existing = paperBagsDetails.find(
+        (p) => p.productName === item.product.name && p.label === label
+      );
       if (existing) {
         existing.count += item.quantity;
         existing.cost += costPerBag * item.quantity;
       } else {
-        paperBagsDetails.push({ productName: item.product.name, label, count: item.quantity, cost: costPerBag * item.quantity });
+        paperBagsDetails.push({
+          productName: item.product.name,
+          label,
+          count: item.quantity,
+          cost: costPerBag * item.quantity,
+        });
       }
     }
   }
@@ -244,7 +268,9 @@ function OrderSummaryPanel({
                       </span>
                     ) : null}
                     {(() => {
-                      const selectedVariant = item.product?.variants?.find((v) => v.variantName === item.size) || item.product?.variants?.[0];
+                      const selectedVariant =
+                        item.product?.variants?.find((v) => v.variantName === item.size) ||
+                        item.product?.variants?.[0];
                       const displayStems = item.stems ?? selectedVariant?.stemsQuantity;
                       return displayStems ? (
                         <span className="mr-2 border-r border-neutral-300 dark:border-neutral-700 pr-2">
@@ -473,7 +499,6 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   }, [items]);
 
   const [isProcessing, setIsProcessing] = React.useState(false);
-  const todayInputValue = React.useMemo(() => getTodayInputValue(), []);
 
   React.useEffect(() => {
     if (status === "unauthenticated") {
@@ -561,17 +586,42 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   const hasItemAboveL = React.useMemo(() => {
     const getVariantSize = (vName: string) => {
       const v = vName.toLowerCase().trim();
-      if (v.includes("xl") || v.includes("xxl") || v.includes("jumbo") || v.includes("extra large") || v.includes("x-large")) return "above_l";
-      if (v === "l" || v === "large" || v.startsWith("l ") || v.endsWith(" l") || v.includes("large")) return "l";
-      if (v === "m" || v === "medium" || v.startsWith("m ") || v.endsWith(" m") || v.includes("medium")) return "m";
-      if (v === "s" || v === "small" || v.startsWith("s ") || v.endsWith(" s") || v.includes("small")) return "s";
+      if (
+        v.includes("xl") ||
+        v.includes("xxl") ||
+        v.includes("jumbo") ||
+        v.includes("extra large") ||
+        v.includes("x-large")
+      )
+        return "above_l";
+      if (
+        v === "l" ||
+        v === "large" ||
+        v.startsWith("l ") ||
+        v.endsWith(" l") ||
+        v.includes("large")
+      )
+        return "l";
+      if (
+        v === "m" ||
+        v === "medium" ||
+        v.startsWith("m ") ||
+        v.endsWith(" m") ||
+        v.includes("medium")
+      )
+        return "m";
+      if (
+        v === "s" ||
+        v === "small" ||
+        v.startsWith("s ") ||
+        v.endsWith(" s") ||
+        v.includes("small")
+      )
+        return "s";
       return "below_s";
     };
     for (const item of items) {
-      const vName =
-        item.size ||
-        item.product?.variants?.[0]?.variantName ||
-        "";
+      const vName = item.size || item.product?.variants?.[0]?.variantName || "";
       if (getVariantSize(vName) === "above_l") return true;
     }
     return false;
@@ -863,14 +913,20 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {form.deliveryDate ? format(new Date(form.deliveryDate), "PPP") : <span>Pick a date</span>}
+                        {form.deliveryDate ? (
+                          format(new Date(form.deliveryDate), "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
                         selected={form.deliveryDate ? new Date(form.deliveryDate) : undefined}
-                        onSelect={(date) => set("deliveryDate")(date ? format(date, "yyyy-MM-dd") : "")}
+                        onSelect={(date) =>
+                          set("deliveryDate")(date ? format(date, "yyyy-MM-dd") : "")
+                        }
                         disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                       />
                     </PopoverContent>
@@ -880,7 +936,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                 <div className="flex flex-col space-y-2">
                   <Label htmlFor="deliveryTime">{dictionary.checkout.pickupTime}</Label>
                   <Select value={form.deliveryTime} onValueChange={set("deliveryTime")}>
-                    <SelectTrigger 
+                    <SelectTrigger
                       className={cn(
                         "h-10 w-full border-cornsilk-400 bg-cornsilk-100 dark:bg-neutral-800 dark:border-neutral-700 text-b4 font-inter text-neutral-900 dark:text-neutral-300",
                         !form.deliveryTime && "text-muted-foreground"
@@ -897,7 +953,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                         for (let h = 10; h <= 20; h++) {
                           for (let m = 0; m < 60; m += 15) {
                             if (h === 20 && m > 0) continue;
-                            const timeString = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+                            const timeString = `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
                             timeOptions.push(timeString);
                           }
                         }

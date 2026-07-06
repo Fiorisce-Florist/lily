@@ -151,7 +151,8 @@ export function normalizeDokuPaymentMethod(channelId?: string) {
   if (normalized === "QRIS" || normalized === "QRIS_DOKU") return "DOKU.qris";
   if (normalized === "ONLINE_TO_OFFLINE_INDOMARET") return "DOKU.indomaret";
   if (normalized === "ONLINE_TO_OFFLINE_ALFA") return "DOKU.alfa";
-  if (normalized.startsWith("EMONEY_")) return `DOKU.${normalized.replace("EMONEY_", "").toLowerCase()}`;
+  if (normalized.startsWith("EMONEY_"))
+    return `DOKU.${normalized.replace("EMONEY_", "").toLowerCase()}`;
   if (normalized.startsWith("VIRTUAL_ACCOUNT_")) {
     return `DOKU.${normalized.replace("VIRTUAL_ACCOUNT_", "va_").toLowerCase()}`;
   }
@@ -311,11 +312,15 @@ export class DokuPaymentProvider implements PaymentProvider {
       const message = `Payment provider error${providerCode}: ${providerMessage} [HTTP ${response.status}]`;
       const error = new Error(message);
       // Attach raw payload for upstream logging in the server action catch block.
-      (error as Error & { rawResponse?: string; requestBody?: string; httpStatus?: number }).rawResponse =
-        responseText;
-      (error as Error & { rawResponse?: string; requestBody?: string; httpStatus?: number }).requestBody = body;
-      (error as Error & { rawResponse?: string; requestBody?: string; httpStatus?: number }).httpStatus =
-        response.status;
+      (
+        error as Error & { rawResponse?: string; requestBody?: string; httpStatus?: number }
+      ).rawResponse = responseText;
+      (
+        error as Error & { rawResponse?: string; requestBody?: string; httpStatus?: number }
+      ).requestBody = body;
+      (
+        error as Error & { rawResponse?: string; requestBody?: string; httpStatus?: number }
+      ).httpStatus = response.status;
       throw error;
     }
 

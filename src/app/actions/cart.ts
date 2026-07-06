@@ -19,7 +19,13 @@ export interface CartItemData {
     price: number;
     isAvailable: boolean;
     images: { imageUrl: string; isPrimary: boolean }[];
-    variants: { id: string; variantName: string; additionalPrice: number; isAvailable: boolean; stemsQuantity?: number | null }[];
+    variants: {
+      id: string;
+      variantName: string;
+      additionalPrice: number;
+      isAvailable: boolean;
+      stemsQuantity?: number | null;
+    }[];
     category: { name: string; slug: string };
   };
   size?: string;
