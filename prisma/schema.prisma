@@ -238,6 +238,24 @@ model PaymentLog {
   @@map("payment_logs")
 }
 
+model CheckoutLog {
+  id          String   @id @default(uuid())
+  orderNumber String   @map("order_number") @db.VarChar(50)
+  provider    String   @db.VarChar(50)
+  status      String   @db.VarChar(20) // SUCCESS | FAILED
+  httpStatus  Int?     @map("http_status")
+  message     String?  @db.Text
+  requestBody Json?    @map("request_body")
+  rawResponse Json?    @map("raw_response")
+  userId      String?  @map("user_id")
+  amount      Decimal? @db.Decimal(12, 2)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([orderNumber])
+  @@index([createdAt])
+  @@map("checkout_logs")
+}
+
 model Order {
   id              String               @id @default(uuid())
   userId          String               @map("user_id")

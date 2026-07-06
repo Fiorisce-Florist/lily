@@ -25,6 +25,19 @@ const ORDER_STATUSES = [
   "CANCELLED",
 ] as const;
 
+function formatJson(value: unknown) {
+  if (value === null || value === undefined) return "null";
+  return JSON.stringify(value, null, 2);
+}
+
+function JsonBlock({ value }: { value: unknown }) {
+  return (
+    <pre className="mt-2 max-h-72 overflow-auto rounded-lg bg-neutral-950 p-3 font-mono text-xs leading-relaxed text-cornsilk-100">
+      {formatJson(value)}
+    </pre>
+  );
+}
+
 // Minimal types for the view based on adminGetOrder
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function OrderDetailView({ order }: { order: any }) {
@@ -122,6 +135,79 @@ export function OrderDetailView({ order }: { order: any }) {
               </p>
             </div>
           )}
+
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm">
+            <h2 className="font-fraunces font-medium mb-4">Payment Provider Logs</h2>
+            {order.checkoutLogs?.length > 0 ? (
+              <div className="space-y-4">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {order.checkoutLogs.map((log: any) => (
+                  <div
+                    key={log.id}
+                    className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800"
+                  >
+                    <div className="flex flex-wrap items-center gap-2 text-sm">
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          log.status === "SUCCESS"
+                            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                            : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                        }`}
+                      >
+                        {log.status}
+                      </span>
+                      <span className="text-neutral-500">{log.provider}</span>
+                      {log.httpStatus && (
+                        <span className="text-neutral-500">HTTP {log.httpStatus}</span>
+                      )}
+                      <span className="text-neutral-400">
+                        {new Date(log.createdAt).toLocaleString()}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm text-neutral-700 dark:text-neutral-300">
+                      {log.message ?? "No message"}
+                    </p>
+                    <details className="mt-3">
+                      <summary className="cursor-pointer text-sm font-medium text-neutral-700 dark:text-neutral-200">
+                        Request body
+                      </summary>
+                      <JsonBlock value={log.requestBody} />
+                    </details>
+                    <details className="mt-3">
+                      <summary className="cursor-pointer text-sm font-medium text-neutral-700 dark:text-neutral-200">
+                        DOKU response
+                      </summary>
+                      <JsonBlock value={log.rawResponse} />
+                    </details>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-neutral-500">No checkout logs for this order.</p>
+            )}
+          </div>
+
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm">
+            <h2 className="font-fraunces font-medium mb-4">Payment Event Logs</h2>
+            {order.payment?.logs?.length > 0 ? (
+              <div className="space-y-3">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {order.payment.logs.map((log: any) => (
+                  <details
+                    key={log.id}
+                    className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800"
+                  >
+                    <summary className="cursor-pointer text-sm font-medium text-neutral-700 dark:text-neutral-200">
+                      {new Date(log.createdAt).toLocaleString()}
+                    </summary>
+                    <JsonBlock value={log.payload} />
+                  </details>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-neutral-500">No payment event logs for this order.</p>
+            )}
+          </div>
         </div>
 
         {/* Sidebar (Status, Customer, Address) */}

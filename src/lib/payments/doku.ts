@@ -27,6 +27,17 @@ function getDokuBaseUrl() {
     : "https://api-sandbox.doku.com";
 }
 
+function maskValue(value: string, visible = 6) {
+  if (!value) return "<empty>";
+  if (value.length <= visible) return "*".repeat(value.length);
+  return `${value.slice(0, visible)}...${value.slice(-4)}`;
+}
+
+function log(label: string, data: unknown) {
+  // Server actions & route handlers surface console logs to Vercel runtime logs.
+  console.log(`[doku-checkout] ${label}`, typeof data === "string" ? data : JSON.stringify(data));
+}
+
 function getClientId() {
   return process.env.DOKU_CLIENT_ID ?? process.env.PAYMENT_PROVIDER_CLIENT_ID ?? "";
 }
@@ -146,6 +157,12 @@ export class DokuPaymentProvider implements PaymentProvider {
     const secretKey = getSecretKey();
 
     if (!clientId || !secretKey) {
+      log("config_error", {
+        message: "Payment provider credentials are not configured.",
+        clientIdPresent: Boolean(clientId),
+        secretKeyPresent: Boolean(secretKey),
+        isProduction: process.env.DOKU_IS_PRODUCTION === "true",
+      });
       throw new Error("Payment provider credentials are not configured.");
     }
 
@@ -203,6 +220,27 @@ export class DokuPaymentProvider implements PaymentProvider {
       secretKey,
     });
 
+    const baseUrl = getDokuBaseUrl();
+    log("request", {
+      url: `${baseUrl}${CHECKOUT_TARGET}`,
+      isProduction: process.env.DOKU_IS_PRODUCTION === "true",
+      clientId: maskValue(clientId),
+      secretKey: maskValue(secretKey),
+      requestId,
+      requestTimestamp,
+      requestTarget: CHECKOUT_TARGET,
+      orderNumber: input.orderNumber,
+      amount: input.amount,
+      lineItemCount: input.lineItems.length,
+      customer: {
+        id: input.customer.id,
+        email: input.customer.email,
+        phone: input.customer.phone,
+        name: input.customer.firstName,
+      },
+    });
+    log("request_body", body);
+
     const response = await fetch(`${getDokuBaseUrl()}${CHECKOUT_TARGET}`, {
       method: "POST",
       headers: {
@@ -215,21 +253,64 @@ export class DokuPaymentProvider implements PaymentProvider {
       body,
     });
 
-    const data = (await response.json()) as DokuCheckoutResponse;
+    const responseText = await response.text();
+    let data: DokuCheckoutResponse = {};
+    try {
+      data = responseText ? (JSON.parse(responseText) as DokuCheckoutResponse) : {};
+    } catch {
+      log("response_parse_error", {
+        status: response.status,
+        statusText: response.statusText,
+        rawBody: responseText,
+      });
+    }
+
     const checkoutUrl = data.response?.payment?.url;
     const tokenId = data.response?.payment?.token_id;
 
+    log("response", {
+      status: response.status,
+      statusText: response.statusText,
+      hasCheckoutUrl: Boolean(checkoutUrl),
+      hasTokenId: Boolean(tokenId),
+      message: data.message,
+      error: data.error,
+      errorMessages: data.error_messages,
+    });
+    log("response_body", responseText);
+
     if (!response.ok || !checkoutUrl || !tokenId) {
+      log("checkout_failed", {
+        orderNumber: input.orderNumber,
+        httpStatus: response.status,
+        rawResponse: responseText,
+        requestBody: body,
+        signatureComponents: {
+          clientId: maskValue(clientId),
+          requestId,
+          requestTimestamp,
+          requestTarget: CHECKOUT_TARGET,
+          digest,
+        },
+      });
       const providerMessage =
         data.error_messages?.join(", ") ||
         data.error?.message ||
         formatProviderMessage(data.message) ||
         "Failed to create payment session.";
       const providerCode = data.error?.code ? ` (${data.error.code})` : "";
-      throw new Error(
-        `Payment provider error${providerCode}: ${providerMessage} [HTTP ${response.status}]`
-      );
+      const message = `Payment provider error${providerCode}: ${providerMessage} [HTTP ${response.status}]`;
+      const error = new Error(message);
+      // Attach raw payload for upstream logging in the server action catch block.
+      (error as Error & { rawResponse?: string; requestBody?: string; httpStatus?: number }).rawResponse =
+        responseText;
+      (error as Error & { rawResponse?: string; requestBody?: string; httpStatus?: number }).requestBody = body;
+      (error as Error & { rawResponse?: string; requestBody?: string; httpStatus?: number }).httpStatus =
+        response.status;
+      throw error;
     }
+
+    log("checkout_success", { orderNumber: input.orderNumber, tokenId, checkoutUrl });
 
     return {
       provider: "DOKU",

@@ -465,7 +465,13 @@ export async function adminGetOrder(id: string) {
       user: { select: { name: true, email: true, phone: true } },
       address: true,
       items: true,
-      payment: true,
+      payment: {
+        include: {
+          logs: {
+            orderBy: { createdAt: "desc" },
+          },
+        },
+      },
       statusHistories: {
         orderBy: { createdAt: "desc" },
         include: { changedByUser: { select: { name: true, email: true } } },
@@ -475,7 +481,13 @@ export async function adminGetOrder(id: string) {
 
   if (!order) return { order: null, error: "Order not found" };
 
+  const checkoutLogs = await prisma.checkoutLog.findMany({
+    where: { orderNumber: order.orderNumber },
+    orderBy: { createdAt: "desc" },
+  });
+
   const plainOrder = JSON.parse(JSON.stringify(order));
+  const plainCheckoutLogs = JSON.parse(JSON.stringify(checkoutLogs));
 
   const serializedOrder = {
     ...plainOrder,
@@ -493,9 +505,45 @@ export async function adminGetOrder(id: string) {
           amount: Number(plainOrder.payment.amount),
         }
       : null,
+    checkoutLogs: plainCheckoutLogs.map((log: Record<string, unknown>) => ({
+      ...log,
+      amount: log.amount === null || log.amount === undefined ? null : Number(log.amount),
+    })),
   };
 
   return { order: serializedOrder, error: null };
+}
+
+export async function adminGetCheckoutLogs(limit: number = 50) {
+  await requireAdmin();
+
+  const logs = await prisma.checkoutLog.findMany({
+    take: limit,
+    orderBy: { createdAt: "desc" },
+  });
+  const orderNumbers = [...new Set(logs.map((log) => log.orderNumber))];
+  const orders = await prisma.order.findMany({
+    where: { orderNumber: { in: orderNumbers } },
+    select: { id: true, orderNumber: true },
+  });
+  const orderIdByNumber = new Map(orders.map((order) => [order.orderNumber, order.id]));
+
+  return {
+    logs: logs.map((log) => ({
+      id: log.id,
+      orderNumber: log.orderNumber,
+      orderId: orderIdByNumber.get(log.orderNumber) ?? null,
+      provider: log.provider,
+      status: log.status,
+      httpStatus: log.httpStatus,
+      message: log.message,
+      requestBody: log.requestBody,
+      rawResponse: log.rawResponse,
+      userId: log.userId,
+      amount: log.amount === null ? null : Number(log.amount),
+      createdAt: log.createdAt.toISOString(),
+    })),
+  };
 }
 
 export async function adminUpdateOrderStatus(orderId: string, newStatus: string) {

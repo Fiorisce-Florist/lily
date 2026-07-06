@@ -82,6 +82,30 @@ function toPrismaJson(value: unknown): Prisma.InputJsonValue {
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 }
 
+function parseJsonOrText(value: unknown) {
+  if (typeof value !== "string") return value;
+
+  try {
+    return JSON.parse(value) as unknown;
+  } catch {
+    return value;
+  }
+}
+
+function getPaymentErrorMetadata(error: unknown) {
+  const metadata = error as {
+    httpStatus?: number;
+    requestBody?: unknown;
+    rawResponse?: unknown;
+  };
+
+  return {
+    httpStatus: metadata.httpStatus,
+    requestBody: parseJsonOrText(metadata.requestBody),
+    rawResponse: parseJsonOrText(metadata.rawResponse),
+  };
+}
+
 function parseLocalPickupDateTime(date: string, time?: string) {
   if (!date || !time) return null;
   const [year, month, day] = date.split("-").map(Number);
@@ -327,6 +351,25 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
     const appUrl =
       process.env.NEXT_PUBLIC_APP_URL ?? process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
     const provider = getPaymentProvider();
+    const lineItems = [
+      ...itemsToCheckout.map((item) => ({
+        id: item.productId,
+        name: item.variant ? `${item.product.name} (${item.variant.variantName})` : item.product.name,
+        quantity: item.quantity,
+        price: Number(item.price),
+        imageUrl: item.product.images[0]?.imageUrl,
+      })),
+      ...(paperBagCost > 0
+        ? [
+            {
+              id: "paper-bag",
+              name: "Paper Bag",
+              quantity: 1,
+              price: paperBagCost,
+            },
+          ]
+        : []),
+    ];
     const checkout = await provider.createCheckout({
       orderNumber,
       amount: totalAmount,
@@ -342,27 +385,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
         city: formData.city,
         postalCode: formData.postalCode,
       },
-      lineItems: [
-        ...itemsToCheckout.map((item) => ({
-          id: item.productId,
-          name: item.variant
-            ? `${item.product.name} (${item.variant.variantName})`
-            : item.product.name,
-          quantity: item.quantity,
-          price: Number(item.price),
-          imageUrl: item.product.images[0]?.imageUrl,
-        })),
-        ...(paperBagCost > 0
-          ? [
-              {
-                id: "paper-bag",
-                name: "Paper Bag",
-                quantity: 1,
-                price: paperBagCost,
-              },
-            ]
-          : []),
-      ],
+      lineItems,
     });
 
     await prisma.$transaction([
@@ -385,6 +408,19 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
           }),
         },
       }),
+      prisma.checkoutLog.create({
+        data: {
+          orderNumber,
+          provider: checkout.provider,
+          status: "SUCCESS",
+          httpStatus: 200,
+          message: "Checkout session created.",
+          requestBody: toPrismaJson({ orderNumber, amount: totalAmount, lineItems }),
+          rawResponse: toPrismaJson(checkout.raw),
+          userId,
+          amount: totalAmount,
+        },
+      }),
       prisma.cartItem.deleteMany({
         where: {
           cartId: cart.id,
@@ -398,7 +434,40 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
 
     return { orderNumber, paymentUrl: checkout.checkoutUrl, error: null };
   } catch (error) {
-    console.error("Error creating order:", error);
+    const metadata = getPaymentErrorMetadata(error);
+    console.error("[createOrder] Error creating order:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      orderNumber,
+      totalAmount,
+      paymentProvider: getPaymentProvider().method,
+      appUrl:
+        process.env.NEXT_PUBLIC_APP_URL ?? process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
+      dokuConfig: {
+        isProduction: process.env.DOKU_IS_PRODUCTION === "true",
+        clientIdPresent: Boolean(process.env.DOKU_CLIENT_ID),
+        secretKeyPresent: Boolean(process.env.DOKU_SECRET_KEY),
+      },
+      dokuRequestBody: metadata.requestBody,
+      dokuRawResponse: metadata.rawResponse,
+    });
+    await prisma.checkoutLog
+      .create({
+        data: {
+          orderNumber,
+          provider: "DOKU",
+          status: "FAILED",
+          httpStatus: metadata.httpStatus,
+          message: error instanceof Error ? error.message : String(error),
+          requestBody: metadata.requestBody ? toPrismaJson(metadata.requestBody) : undefined,
+          rawResponse: metadata.rawResponse ? toPrismaJson(metadata.rawResponse) : undefined,
+          userId,
+          amount: totalAmount,
+        },
+      })
+      .catch((logError) => {
+        console.error("[createOrder] Failed to write checkout log:", logError);
+      });
     await prisma.order.delete({ where: { orderNumber } }).catch(() => null);
     return {
       orderNumber: null,
