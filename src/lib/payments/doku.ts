@@ -61,6 +61,15 @@ function formatProviderMessage(message?: string | string[]) {
   return message;
 }
 
+function sanitizeDokuText(value: string | undefined, fallback: string) {
+  const sanitized = (value ?? "")
+    .replace(/[^a-zA-Z0-9 .\-/+,=_'@%:]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return sanitized || fallback;
+}
+
 function toDokuTimestamp(date = new Date()) {
   return date.toISOString().replace(/\.\d{3}Z$/, "Z");
 }
@@ -176,11 +185,11 @@ export class DokuPaymentProvider implements PaymentProvider {
         language: "EN",
         auto_redirect: true,
         line_items: input.lineItems.map((item) => ({
-          id: item.id,
-          name: item.name,
+          id: sanitizeDokuText(item.id, "item"),
+          name: sanitizeDokuText(item.name, "Product"),
           quantity: item.quantity,
           price: Math.round(item.price),
-          sku: item.id,
+          sku: sanitizeDokuText(item.id, "item"),
           category: "gifts-and-flowers",
           image_url: item.imageUrl,
         })),
@@ -193,14 +202,14 @@ export class DokuPaymentProvider implements PaymentProvider {
           : {}),
       },
       customer: {
-        id: input.customer.id,
-        name: input.customer.firstName,
-        last_name: input.customer.lastName || "-",
+        id: sanitizeDokuText(input.customer.id, "customer"),
+        name: sanitizeDokuText(input.customer.firstName, "Customer"),
+        last_name: sanitizeDokuText(input.customer.lastName, "-"),
         phone: normalizePhone(input.customer.phone),
         email: input.customer.email,
-        address: input.customer.address,
-        city: input.customer.city,
-        postcode: input.customer.postalCode,
+        address: sanitizeDokuText(input.customer.address, "-"),
+        city: sanitizeDokuText(input.customer.city, "-"),
+        postcode: sanitizeDokuText(input.customer.postalCode, "00000"),
         country: "ID",
       },
       additional_info: {

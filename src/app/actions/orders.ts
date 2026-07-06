@@ -348,13 +348,18 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
       return { order, payment };
     });
 
-    const appUrl =
-      process.env.NEXT_PUBLIC_APP_URL ?? process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+    const appUrl = (
+      process.env.NEXT_PUBLIC_APP_URL ??
+      process.env.BETTER_AUTH_URL ??
+      "http://localhost:3000"
+    ).replace(/\/+$/, "");
     const provider = getPaymentProvider();
     const lineItems = [
       ...itemsToCheckout.map((item) => ({
         id: item.productId,
-        name: item.variant ? `${item.product.name} (${item.variant.variantName})` : item.product.name,
+        name: item.variant
+          ? `${item.product.name} (${item.variant.variantName})`
+          : item.product.name,
         quantity: item.quantity,
         price: Number(item.price),
         imageUrl: item.product.images[0]?.imageUrl,
