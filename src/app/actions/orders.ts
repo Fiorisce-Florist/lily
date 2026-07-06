@@ -491,12 +491,51 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   }
 }
 
+// ─── Expire Stale Orders ────────────────────────────────────────────────────────
+
+export async function expireStaleOrders() {
+  const cutoff = new Date(Date.now() - 59 * 60 * 1000);
+
+  try {
+    const staleOrders = await prisma.order.findMany({
+      where: {
+        status: "PENDING",
+        createdAt: { lt: cutoff },
+      },
+      select: { id: true, payment: { select: { id: true } } },
+    });
+
+    if (staleOrders.length === 0) return;
+
+    const orderIds = staleOrders.map((o) => o.id);
+    const paymentIds = staleOrders.map((o) => o.payment?.id).filter(Boolean) as string[];
+
+    await prisma.$transaction([
+      prisma.order.updateMany({
+        where: { id: { in: orderIds } },
+        data: { status: "CANCELLED" },
+      }),
+      ...(paymentIds.length > 0
+        ? [
+            prisma.payment.updateMany({
+              where: { id: { in: paymentIds } },
+              data: { status: "EXPIRED" },
+            }),
+          ]
+        : []),
+    ]);
+  } catch (err) {
+    console.error("Failed to expire stale orders:", err);
+  }
+}
+
 // ─── getUserOrders ────────────────────────────────────────────────────────────
 
 export async function getUserOrders(): Promise<{
   orders: OrderData[];
   error: string | null;
 }> {
+  await expireStaleOrders(); // Lazy expiration check
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { orders: [], error: "Not authenticated." };
@@ -576,6 +615,7 @@ export async function getOrderByNumber(orderNumber: string): Promise<{
   order: OrderData | null;
   error: string | null;
 }> {
+  await expireStaleOrders(); // Lazy expiration check
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { order: null, error: "Not authenticated." };

@@ -8,6 +8,8 @@ import { Prisma, ProductStatus, TagType } from "@prisma/client";
 
 // ─── Auth guard ───────────────────────────────────────────────────────────────
 
+import { expireStaleOrders } from "./orders";
+
 async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id || session.user.role !== "ADMIN") {
@@ -20,6 +22,7 @@ async function requireAdmin() {
 
 export async function adminGetDashboardStats() {
   await requireAdmin();
+  await expireStaleOrders(); // Lazy expiration
 
   const [totalProducts, activeProducts, totalOrders, totalUsers, revenueResult, recentOrders] =
     await Promise.all([
@@ -406,6 +409,7 @@ export async function adminGetAllOrders(
   status: string = "all"
 ) {
   await requireAdmin();
+  await expireStaleOrders(); // Lazy expiration
 
   const skip = (page - 1) * limit;
 
