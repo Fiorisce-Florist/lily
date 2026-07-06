@@ -223,27 +223,36 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   }
 
   // 2. Validate all items are still available and price matches
+  let cartNeedsRefresh = false;
+
   for (const item of itemsToCheckout) {
     const isVariantUnavailable = item.variant ? !item.variant.isAvailable : false;
 
     if (!item.product.isAvailable || item.product.status !== "ACTIVE" || isVariantUnavailable) {
-      return {
-        orderNumber: null,
-        paymentUrl: null,
-        error: `"${item.product.name}${item.variant ? ` (${item.variant.variantName})` : ""}" is no longer available.`,
-      };
+      // Remove unavailable items
+      await prisma.cartItem.delete({ where: { id: item.id } });
+      cartNeedsRefresh = true;
+      continue;
     }
 
     // Check for stale pricing
     const livePrice =
       Number(item.product.price) + (item.variant ? Number(item.variant.additionalPrice) : 0);
     if (Number(item.price) !== livePrice) {
-      return {
-        orderNumber: null,
-        paymentUrl: null,
-        error: `The price of "${item.product.name}" has changed. Please refresh your cart.`,
-      };
+      await prisma.cartItem.update({
+        where: { id: item.id },
+        data: { price: livePrice },
+      });
+      cartNeedsRefresh = true;
     }
+  }
+
+  if (cartNeedsRefresh) {
+    return {
+      orderNumber: null,
+      paymentUrl: null,
+      error: "Some items in your cart had price or availability changes. We have updated your cart with the latest data. Please review before checking out.",
+    };
   }
 
   // 3. Calculate totals

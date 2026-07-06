@@ -679,6 +679,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
 
       if (result.error) {
         toast.error(result.error);
+        await refetch();
         return;
       }
 
