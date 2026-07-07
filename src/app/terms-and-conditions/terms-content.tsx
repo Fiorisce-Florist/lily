@@ -22,7 +22,7 @@ export function TermsContent() {
           <div className="space-y-6 md:space-y-8">
             {t.rules.map((rule, index) => (
               <div key={index} className="flex gap-4 md:gap-6">
-                <div className="flex-shrink-0 mt-0.5 md:mt-1">
+                <div className="shrink-0 mt-0.5 md:mt-1">
                   <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-olive-100 dark:bg-olive-900/30 text-olive-800 dark:text-olive-300 flex items-center justify-center font-fraunces font-bold text-b4 md:text-b3">
                     {index + 1}
                   </div>

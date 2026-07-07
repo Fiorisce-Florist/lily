@@ -27,6 +27,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -499,6 +509,9 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   }, [items]);
 
   const [isProcessing, setIsProcessing] = React.useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = React.useState(false);
+  const [isTermsAccepted, setIsTermsAccepted] = React.useState(false);
+  const t = dictionary.termsAndConditions;
 
   React.useEffect(() => {
     if (status === "unauthenticated") {
@@ -666,6 +679,12 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
       return;
     }
 
+    // Open terms modal instead of processing directly
+    setIsTermsModalOpen(true);
+  };
+
+  const processOrder = async () => {
+    setIsTermsModalOpen(false);
     setIsProcessing(true);
     let isRedirectingToPayment = false;
 
@@ -1135,6 +1154,74 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
           </div>
         </form>
       </div>
+
+      <Dialog 
+        open={isTermsModalOpen} 
+        onOpenChange={(open) => {
+          setIsTermsModalOpen(open);
+          if (!open) setIsTermsAccepted(false);
+        }}
+      >
+        <DialogContent className="sm:max-w-125">
+          <DialogHeader>
+            <DialogTitle className="font-fraunces text-h4 text-neutral-900 dark:text-cornsilk-100">
+              {t.title}
+            </DialogTitle>
+            <DialogDescription className="font-inter text-b5">
+              {t.mustRead}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <ScrollArea className="h-75 max-md:h-50 rounded-md border border-neutral-200 dark:border-neutral-800 p-4">
+            <ul className="space-y-4">
+              {t.rules.map((rule, index) => (
+                <li key={index} className="flex gap-3 text-b5 text-neutral-700 dark:text-neutral-300">
+                  <div className="shrink-0 mt-0.5">
+                    <div className="w-5 h-5 rounded-full bg-olive-100 dark:bg-olive-900/30 text-olive-800 dark:text-olive-300 flex items-center justify-center font-fraunces text-b6">
+                      {index + 1}
+                    </div>
+                  </div>
+                  <span>{rule}</span>
+                </li>
+              ))}
+            </ul>
+          </ScrollArea>
+          
+          <div className="flex items-center space-x-3">
+            <Checkbox 
+              id="accept-terms" 
+              checked={isTermsAccepted}
+              onCheckedChange={(checked) => setIsTermsAccepted(!!checked)}
+              className="mt-1"
+            />
+            <label 
+              htmlFor="accept-terms" 
+              className="text-b4 max-md:text-b5 font-inter font-medium text-neutral-900 dark:text-neutral-100 leading-tight cursor-pointer"
+            >
+              I have read and agree to the Terms and Conditions
+            </label>
+          </div>
+          
+          <DialogFooter className="gap-2">
+            <DialogClose asChild>
+              <Button variant="ghost">
+                {dictionary.common.cancel}
+              </Button>
+            </DialogClose>
+            <Button 
+              variant="primary" 
+              disabled={!isTermsAccepted || isProcessing}
+              onClick={processOrder}
+            >
+              {isProcessing ? (
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
+              ) : (
+                "Confirm & Pay"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

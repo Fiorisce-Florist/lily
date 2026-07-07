@@ -188,7 +188,6 @@ function CartSummaryPanel({
             )}
           </span>
         </div>
-        {/* Free shipping text removed since shipping is always free */}
         <div className="border-t border-cornsilk-200 dark:border-neutral-700 pt-3 flex items-center justify-between font-semibold text-b4 text-neutral-900 dark:text-cornsilk-100">
           <span>{dictionary.common.total}</span>
           <span className="font-jetbrains">{formatPrice(total)}</span>
