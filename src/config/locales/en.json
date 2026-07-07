@@ -60,7 +60,8 @@
     "links": {
       "allFlowers": "All Flowers",
       "contactUs": "Contact Us",
-      "ourStory": "Our Story"
+      "ourStory": "Our Story",
+      "termsAndConditions": "Terms & Conditions"
     },
     "copyright": "All rights reserved."
   },
@@ -323,5 +324,24 @@
     "eyebrow": "404",
     "title": "This bloom is missing",
     "description": "The page you are looking for may have moved, wilted, or never existed."
+  },
+  "termsAndConditions": {
+    "title": "Terms and Conditions",
+    "mustRead": "MUST READ BEFORE CONTINUING YOUR ORDER",
+    "rules": [
+      "Delivery/Pickup can only be done during store operational hours: Monday - Friday (09:00 - 19:00) & Saturday (10:00 - 20:00).",
+      "Bouquets in photos are for reference only and cannot be made 100% identical due to handmade production.",
+      "Fiorisce address: Jl.Palakali Raya No.69, Kukusan, Depok (Fiorisce Floristry on Gojek).",
+      "For Gojek deliveries, the use of a paper bag is mandatory.",
+      "L & XL bouquet deliveries require a car (Fiorisce is not responsible for damage caused by incorrect delivery modes).",
+      "Fresh flower prices may change depending on farmer harvest conditions.",
+      "Orders will only be processed after payment has been made.",
+      "Fiorisce reserves the right to reject revisions not communicated at the beginning of the order.",
+      "Payments made cannot be refunded or exchanged, except in cases of order discrepancies.",
+      "Specifically for fresh flower products, rescheduling the pickup date is not allowed, as fresh flowers are prepared in advance.",
+      "For orders > 500k IDR, a 60% down payment (DP) can be made, with the remaining balance due D-1 when the product is ready (DP is non-refundable)."
+    ],
+    "closingTitle": "THANK YOU FOR YOUR ATTENTION",
+    "closingBody": "Fiorisce\nEst. 2023\n\"Where Every Bloom Tells a Story\""
   }
 }

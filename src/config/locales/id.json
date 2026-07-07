@@ -60,7 +60,8 @@
     "links": {
       "allFlowers": "Semua Bunga",
       "contactUs": "Hubungi Kami",
-      "ourStory": "Cerita Kami"
+      "ourStory": "Cerita Kami",
+      "termsAndConditions": "Syarat & Ketentuan"
     },
     "copyright": "Seluruh hak cipta dilindungi."
   },
@@ -323,5 +324,24 @@
     "eyebrow": "404",
     "title": "Halaman ini tidak ditemukan",
     "description": "Halaman yang kamu cari mungkin sudah dipindahkan, tidak aktif, atau tidak pernah ada."
+  },
+  "termsAndConditions": {
+    "title": "Syarat & Ketentuan",
+    "mustRead": "WAJIB DIBACA SEBELUM MELANJUTKAN PEMESANAN",
+    "rules": [
+      "Pengiriman/Pengambilan hanya dapat dilakukan saat operasional toko, yakni Senin - Jumat (09.00 - 19.00) & Sabtu (10:00 - 20:00)",
+      "Bouquet di foto hanya referensi, tidak dapat dibuat 100% sama karena produksi handmade",
+      "Berikut alamat Fiorisce: Jl.Palakali Raya No.69, Kukusan, Depok (Fiorisce Floristry di Gojek)",
+      "Untuk pengiriman via gojek, wajib menggunakan paperbag",
+      "Pengiriman bouquet L & XL wajib dengan mobil (Fiorisce tidak bertanggungjawab atas kerusakan akibat salah moda pengiriman)",
+      "Harga fresh flowers dapat berubah tergantung kondisi panen petani",
+      "Pesanan hanya akan diproses jika pembayaran sudah dilakukan",
+      "Fiorisce berhak menolak revisi yang tidak disampaikan di awal pemesanan",
+      "Pembayaran yang sudah dilakukan tidak dapat direfund maupun ditukar, kecuali adanya ketidaksesuaian pesanan",
+      "Khusus produk fresh flowers, tidak dapat reschedule untuk tanggal pengambilan, karena kondisi fresh flowers sudah disiapkan sebelumnya",
+      "Untuk pesanan > 500k, dapat melakukan DP 60% dan pelunasan H-1 saat produk jadi (DP tidak dapat direfund)"
+    ],
+    "closingTitle": "ATAS PERHATIANNYA, TERIMA KASIH",
+    "closingBody": "Fiorisce\nEst. 2023\n\"Where Every Bloom Tells a Story\""
   }
 }
