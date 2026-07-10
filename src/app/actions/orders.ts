@@ -251,7 +251,8 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
     return {
       orderNumber: null,
       paymentUrl: null,
-      error: "Some items in your cart had price or availability changes. We have updated your cart with the latest data. Please review before checking out.",
+      error:
+        "Some items in your cart had price or availability changes. We have updated your cart with the latest data. Please review before checking out.",
     };
   }
 

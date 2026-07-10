@@ -17,6 +17,7 @@ import {
   Menu,
   FolderTree,
   Tags,
+  Newspaper,
 } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
 
@@ -28,6 +29,7 @@ const NAV_ITEMS = [
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
   { href: "/admin/tags", label: "Tags", icon: Tags },
   { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/admin/news", label: "News", icon: Newspaper },
 ];
 
 export function AdminSidebar() {

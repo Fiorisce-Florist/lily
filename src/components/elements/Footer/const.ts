@@ -3,6 +3,7 @@ export const FOOTER_MENU = {
   support: [{ key: "contactUs", href: "https://wa.me/6287726120040" }],
   company: [
     { key: "ourStory", href: "/#about" },
+    { key: "news", href: "/news" },
     { key: "termsAndConditions", href: "/terms-and-conditions" },
   ],
   social: [

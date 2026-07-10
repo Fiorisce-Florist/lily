@@ -34,6 +34,7 @@
   "navigation": {
     "home": "Beranda",
     "shop": "Belanja",
+    "news": "Berita",
     "adminPanel": "Panel Admin",
     "myProfile": "Profil Saya",
     "myOrders": "Pesanan Saya",
@@ -61,6 +62,7 @@
       "allFlowers": "Semua Bunga",
       "contactUs": "Hubungi Kami",
       "ourStory": "Cerita Kami",
+      "news": "Berita",
       "termsAndConditions": "Syarat & Ketentuan"
     },
     "copyright": "Seluruh hak cipta dilindungi."

@@ -10,7 +10,7 @@ import { Prisma, ProductStatus, TagType } from "@prisma/client";
 
 import { expireStaleOrders } from "./orders";
 
-async function requireAdmin() {
+export async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id || session.user.role !== "ADMIN") {
     throw new Error("Unauthorized: Admin access required.");
@@ -32,7 +32,7 @@ export async function adminGetDashboardStats() {
       prisma.user.count(),
       prisma.order.aggregate({
         _sum: { totalAmount: true },
-        where: { status: { in: ["PAID", "PROCESSING", "SHIPPED", "COMPLETED"] } },
+        where: { status: { in: ["COMPLETED"] } },
       }),
       prisma.order.findMany({
         take: 5,

@@ -64,9 +64,7 @@ function toDateInputValue(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-function getTodayInputValue() {
-  return toDateInputValue(new Date());
-}
+
 
 function parsePickupDateTime(date: string, time?: string) {
   if (!date || !time) return null;
@@ -1155,8 +1153,8 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
         </form>
       </div>
 
-      <Dialog 
-        open={isTermsModalOpen} 
+      <Dialog
+        open={isTermsModalOpen}
         onOpenChange={(open) => {
           setIsTermsModalOpen(open);
           if (!open) setIsTermsAccepted(false);
@@ -1167,15 +1165,16 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
             <DialogTitle className="font-fraunces text-h4 text-neutral-900 dark:text-cornsilk-100">
               {t.title}
             </DialogTitle>
-            <DialogDescription className="font-inter text-b5">
-              {t.mustRead}
-            </DialogDescription>
+            <DialogDescription className="font-inter text-b5">{t.mustRead}</DialogDescription>
           </DialogHeader>
-          
+
           <ScrollArea className="h-75 max-md:h-50 rounded-md border border-neutral-200 dark:border-neutral-800 p-4">
             <ul className="space-y-4">
               {t.rules.map((rule, index) => (
-                <li key={index} className="flex gap-3 text-b5 text-neutral-700 dark:text-neutral-300">
+                <li
+                  key={index}
+                  className="flex gap-3 text-b5 text-neutral-700 dark:text-neutral-300"
+                >
                   <div className="shrink-0 mt-0.5">
                     <div className="w-5 h-5 rounded-full bg-olive-100 dark:bg-olive-900/30 text-olive-800 dark:text-olive-300 flex items-center justify-center font-fraunces text-b6">
                       {index + 1}
@@ -1186,35 +1185,35 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
               ))}
             </ul>
           </ScrollArea>
-          
+
           <div className="flex items-center space-x-3">
-            <Checkbox 
-              id="accept-terms" 
+            <Checkbox
+              id="accept-terms"
               checked={isTermsAccepted}
               onCheckedChange={(checked) => setIsTermsAccepted(!!checked)}
               className="mt-1"
             />
-            <label 
-              htmlFor="accept-terms" 
+            <label
+              htmlFor="accept-terms"
               className="text-b4 max-md:text-b5 font-inter font-medium text-neutral-900 dark:text-neutral-100 leading-tight cursor-pointer"
             >
               I have read and agree to the Terms and Conditions
             </label>
           </div>
-          
+
           <DialogFooter className="gap-2">
             <DialogClose asChild>
-              <Button variant="ghost">
-                {dictionary.common.cancel}
-              </Button>
+              <Button variant="ghost">{dictionary.common.cancel}</Button>
             </DialogClose>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               disabled={!isTermsAccepted || isProcessing}
               onClick={processOrder}
             >
               {isProcessing ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...
+                </>
               ) : (
                 "Confirm & Pay"
               )}

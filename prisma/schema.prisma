@@ -24,6 +24,7 @@ model User {
   orderStatusChanges OrderStatusHistory[]
   orders             Order[]
   sessions           Session[]
+  news               News[]
 
   @@map("users")
 }
@@ -377,4 +378,23 @@ enum DeliveryMethod {
   FIORISCE_DELIVERY
 
   @@map("delivery_method")
+}
+
+model News {
+  id          String   @id @default(uuid())
+  title       String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(255)
+  content     String   @db.Text
+  excerpt     String?  @db.Text
+  imageUrl    String?  @map("image_url") @db.VarChar(500)
+  isPublished Boolean  @default(false) @map("is_published")
+  authorId    String   @map("author_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  author      User     @relation(fields: [authorId], references: [id])
+
+  @@index([authorId])
+  @@index([isPublished])
+  @@map("news")
 }
