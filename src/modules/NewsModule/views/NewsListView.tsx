@@ -62,9 +62,9 @@ export function NewsListView({ news }: { news: NewsArticle[] }) {
               </Link>
               <div className="p-6 flex flex-col flex-1">
                 <div className="flex items-center text-b6 text-neutral-500 dark:text-neutral-400 mb-3 space-x-2 font-inter">
-                  <span>{new Date(article.createdAt).toLocaleDateString()}</span>
-                  <span>•</span>
                   <span>{article.authorName}</span>
+                  <span>•</span>
+                  <span>{new Date(article.createdAt).toLocaleDateString()}</span>
                 </div>
                 <Link
                   href={`/news/${article.slug}`}
