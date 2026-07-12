@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Newspaper } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/config/use-language";
 
 export interface NewsDetail {
   id: string;
@@ -16,13 +17,15 @@ export interface NewsDetail {
 }
 
 export function NewsDetailView({ article }: { article: NewsDetail }) {
+  const { dictionary } = useLanguage();
+
   return (
     <div className="container mx-auto px-6 py-12 max-w-4xl">
       <div className="space-y-2">
         <Button variant="ghost" size="sm" asChild>
           <Link href="/news">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to News
+            {dictionary.news.backToNews} 
           </Link>
         </Button>
         <div className="flex items-center text-b5 text-neutral-500 dark:text-neutral-400 mb-4 space-x-2 font-inter">

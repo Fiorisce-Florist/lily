@@ -21,8 +21,7 @@ type InitialData = {
   excerpt?: string | null;
   imageUrl?: string | null;
   isPublished?: boolean;
-  // allow other fields from prisma like createdAt, updatedAt, authorId
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export function NewsFormView({ initialData }: { initialData?: InitialData }) {
@@ -73,8 +72,8 @@ export function NewsFormView({ initialData }: { initialData?: InitialData }) {
       }
       router.push("/admin/news");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message || "Something went wrong");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Something went wrong");
     } finally {
       setIsSubmitting(false);
     }

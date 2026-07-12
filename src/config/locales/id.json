@@ -322,6 +322,14 @@
     "relatedProducts": "Kamu mungkin suka",
     "outOfStock": "Habis"
   },
+  "news": {
+    "title": "Berita Terbaru",
+    "subtitle": "Ikuti berita terbaru, rangkaian bunga, dan informasi dari Fiorisce.",
+    "emptyTitle": "Belum ada berita",
+    "emptyDescription": "Nantikan update selanjutnya!",
+    "readMore": "Baca Selengkapnya",
+    "backToNews": "Kembali ke Berita"
+  },
   "notFound": {
     "eyebrow": "404",
     "title": "Halaman ini tidak ditemukan",

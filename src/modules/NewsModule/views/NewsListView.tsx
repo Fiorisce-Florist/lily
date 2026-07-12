@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/config/use-language";
 
 export interface NewsArticle {
   id: string;
@@ -16,14 +17,16 @@ export interface NewsArticle {
 }
 
 export function NewsListView({ news }: { news: NewsArticle[] }) {
+  const { dictionary } = useLanguage();
+
   return (
     <div className="container mx-auto px-6 py-12 max-w-5xl">
       <div className="text-center mb-12">
         <h1 className="text-h2 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100 mb-4">
-          Latest News
+          {dictionary.news.title}
         </h1>
         <p className="text-b3 font-inter text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-          Stay up to date with the latest stories, floral arrangements, and updates from Fiorisce.
+          {dictionary.news.subtitle}
         </p>
       </div>
 
@@ -31,9 +34,9 @@ export function NewsListView({ news }: { news: NewsArticle[] }) {
         <div className="flex flex-col items-center justify-center py-20 text-center bg-neutral-50 dark:bg-neutral-900/50 rounded-2xl">
           <Newspaper className="h-16 w-16 text-neutral-300 mb-4" />
           <h2 className="text-h4 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
-            No news yet
+            {dictionary.news.emptyTitle}
           </h2>
-          <p className="text-b4 font-inter text-neutral-500 mt-2">Check back later for updates!</p>
+          <p className="text-b4 font-inter text-neutral-500 mt-2">{dictionary.news.emptyDescription}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -85,7 +88,7 @@ export function NewsListView({ news }: { news: NewsArticle[] }) {
                     className="p-0 h-auto text-blush-600 hover:text-blush-700 dark:text-blush-400 dark:hover:text-blush-300 font-medium"
                     asChild
                   >
-                    <Link href={`/news/${article.slug}`}>Read More &rarr;</Link>
+                    <Link href={`/news/${article.slug}`}>{dictionary.news.readMore} &rarr;</Link>
                   </Button>
                 </div>
               </div>

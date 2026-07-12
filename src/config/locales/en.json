@@ -322,6 +322,14 @@
     "relatedProducts": "You may also like",
     "outOfStock": "Sold Out"
   },
+  "news": {
+    "title": "Latest News",
+    "subtitle": "Stay up to date with the latest stories, floral arrangements, and updates from Fiorisce.",
+    "emptyTitle": "No news yet",
+    "emptyDescription": "Check back later for updates!",
+    "readMore": "Read More",
+    "backToNews": "Back to News"
+  },
   "notFound": {
     "eyebrow": "404",
     "title": "This bloom is missing",
