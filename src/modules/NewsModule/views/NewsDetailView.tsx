@@ -25,7 +25,7 @@ export function NewsDetailView({ article }: { article: NewsDetail }) {
         <Button variant="ghost" size="sm" asChild>
           <Link href="/news">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            {dictionary.news.backToNews} 
+            {dictionary.news.backToNews}
           </Link>
         </Button>
         <div className="flex items-center text-b5 text-neutral-500 dark:text-neutral-400 mb-4 space-x-2 font-inter">

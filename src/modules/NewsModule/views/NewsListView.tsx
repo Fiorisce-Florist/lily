@@ -36,7 +36,9 @@ export function NewsListView({ news }: { news: NewsArticle[] }) {
           <h2 className="text-h4 font-fraunces font-semibold text-neutral-900 dark:text-cornsilk-100">
             {dictionary.news.emptyTitle}
           </h2>
-          <p className="text-b4 font-inter text-neutral-500 mt-2">{dictionary.news.emptyDescription}</p>
+          <p className="text-b4 font-inter text-neutral-500 mt-2">
+            {dictionary.news.emptyDescription}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

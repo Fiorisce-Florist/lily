@@ -3,7 +3,6 @@
 import { Tag, ShieldCheck, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { formatPrice } from "@/lib/formatters";
 
@@ -15,13 +14,7 @@ interface CartSummaryProps {
   selectedCount: number;
 }
 
-export function CartSummary({
-  subtotal,
-  shipping,
-  total,
-  itemCount,
-  selectedCount,
-}: CartSummaryProps) {
+export function CartSummary({ subtotal, total, itemCount, selectedCount }: CartSummaryProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [promoCode, _setPromoCode] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
@@ -68,7 +61,7 @@ export function CartSummary({
             </span>
           </div>
 
-          <div className="flex justify-between items-center">
+          {/* <div className="flex justify-between items-center">
             <span className="text-b5 font-inter text-neutral-600 dark:text-neutral-400">
               Shipping
             </span>
@@ -80,7 +73,7 @@ export function CartSummary({
             >
               {shipping === 0 ? "Free" : formatPrice(shipping)}
             </span>
-          </div>
+          </div> */}
 
           {promoApplied && (
             <div className="flex justify-between items-center">

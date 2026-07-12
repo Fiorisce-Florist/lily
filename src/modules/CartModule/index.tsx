@@ -178,7 +178,7 @@ function CartSummaryPanel({
           <span>{dictionary.common.subtotal}</span>
           <span className="font-jetbrains">{formatPrice(subtotal)}</span>
         </div>
-        <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
+        {/* <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
           <span>{dictionary.cart.shipping}</span>
           <span className="font-jetbrains">
             {shipping === 0 ? (
@@ -187,7 +187,7 @@ function CartSummaryPanel({
               formatPrice(shipping)
             )}
           </span>
-        </div>
+        </div> */}
         <div className="border-t border-cornsilk-200 dark:border-neutral-700 pt-3 flex items-center justify-between font-semibold text-b4 text-neutral-900 dark:text-cornsilk-100">
           <span>{dictionary.common.total}</span>
           <span className="font-jetbrains">{formatPrice(total)}</span>

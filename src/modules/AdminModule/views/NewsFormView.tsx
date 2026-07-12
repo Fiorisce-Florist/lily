@@ -82,16 +82,16 @@ export function NewsFormView({ initialData }: { initialData?: InitialData }) {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="flex flex-col gap-3">
-       <Link
+        <Link
           href="/admin/news"
           className="inline-flex items-center gap-2 text-b4 font-inter text-neutral-500 hover:text-neutral-900 dark:hover:text-cornsilk-100 mb-4 transition-colors group"
         >
           <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
           Back to News
         </Link>
-          <h1 className="text-h2 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100">
-            {isEditing ? "Edit News" : "Create News"}
-          </h1>
+        <h1 className="text-h2 font-fraunces font-bold text-neutral-900 dark:text-cornsilk-100">
+          {isEditing ? "Edit News" : "Create News"}
+        </h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">

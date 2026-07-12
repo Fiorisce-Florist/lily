@@ -319,7 +319,7 @@ function OrderSummaryPanel({
                   : "GoSend (Ordered by User)"
                 : deliveryMethod === "FIORISCE_DELIVERY"
                   ? "Fiorisce Delivery"
-                  : "Pick Up (Free)"}
+                  : "Pick Up"}
             </span>
           </div>
         </div>

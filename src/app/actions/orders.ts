@@ -5,6 +5,7 @@ import type { Prisma } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getPaymentProvider } from "@/lib/payments";
+import { sendOrderNotificationToAdmin } from "@/lib/mail";
 import { revalidatePath } from "next/cache";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -446,6 +447,40 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
 
     revalidatePath("/orders");
     revalidatePath("/cart");
+
+    // Fire-and-forget admin notification email
+    sendOrderNotificationToAdmin({
+      orderNumber,
+      customerName: `${formData.firstName} ${formData.lastName}`.trim(),
+      customerEmail: formData.email,
+      customerPhone: formData.phone,
+      totalAmount,
+      subtotal,
+      shippingCost,
+      deliveryMethod: formData.deliveryMethod,
+      deliveryDate: formData.deliveryDate,
+      deliveryTime: formData.deliveryTime,
+      messageCard: formData.messageCard,
+      includePaperBag: formData.includePaperBag || formData.deliveryMethod === "GOSEND",
+      items: itemsToCheckout.map((item) => ({
+        productName: item.product.name,
+        variantName: item.variant?.variantName,
+        quantity: item.quantity,
+        unitPrice: Number(item.price),
+      })),
+      address:
+        formData.deliveryMethod === "FIORISCE_DELIVERY" && formData.address
+          ? {
+              address: formData.apartment
+                ? `${formData.address}, ${formData.apartment}`
+                : formData.address,
+              city: formData.city || "",
+              postalCode: formData.postalCode || "",
+            }
+          : null,
+    }).catch(() => {
+      // Silently ignore — already logged inside sendOrderNotificationToAdmin
+    });
 
     return { orderNumber, paymentUrl: checkout.checkoutUrl, error: null };
   } catch (error) {
