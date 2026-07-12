@@ -63,7 +63,7 @@ function buildAdminOrderEmailHtml(data: OrderMailData): string {
       (item) => `
         <tr>
           <td style="padding: 12px 16px; border-bottom: 1px solid #f0ece8; font-family: 'Segoe UI', sans-serif; font-size: 14px; color: #3d3528;">
-            ${item.productName}${item.variantName ? ` <span style="color: #8c7e6a;">(${item.variantName})</span>` : ""}
+            ${item.productName}${item.variantName ? ` <span style="color: #8c7e6a; text-transform: uppercase;">(${item.variantName})</span>` : ""}
           </td>
           <td style="padding: 12px 16px; border-bottom: 1px solid #f0ece8; font-family: 'Segoe UI', sans-serif; font-size: 14px; color: #3d3528; text-align: center;">
             ${item.quantity}
