@@ -6,12 +6,12 @@ import Link from "next/link";
 import { useLanguage } from "@/config/use-language";
 
 const categories = [
-  { slug: "fresh-flowers", image: "/images/landing/cat-bouquet.png" },
+  { slug: "fresh-flowers", image: "/images/landing/fresh.png" },
   {
     slug: "artificial-flowers",
-    image: "/images/landing/cat-flower-box-2.png",
+    image: "/images/landing/artificial.png",
   },
-  { slug: "papan-bunga", image: "/images/landing/cat-standing-flower-2.png" },
+  { slug: "papan-bunga", image: "/images/landing/papan-bunga.png" },
 ] as const;
 
 export function CategorySection() {
