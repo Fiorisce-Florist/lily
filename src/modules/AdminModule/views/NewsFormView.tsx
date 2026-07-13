@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CldUploadWidget } from "next-cloudinary";
 
 type InitialData = {
   id?: string;
@@ -149,15 +150,55 @@ export function NewsFormView({ initialData }: { initialData?: InitialData }) {
             </div>
 
             <div>
-              <Label htmlFor="imageUrl">Cover Image URL</Label>
-              <Input
-                id="imageUrl"
-                name="imageUrl"
-                type="url"
-                value={formData.imageUrl || ""}
-                onChange={handleChange}
-                placeholder="https://example.com/image.jpg"
-              />
+              <Label>Cover Image</Label>
+              <div className="flex items-center gap-4 mt-2">
+                <CldUploadWidget
+                  signatureEndpoint="/api/cloudinary/sign"
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  onSuccess={(result: any) => {
+                    if (result?.info?.secure_url) {
+                      setFormData((prev) => ({ ...prev, imageUrl: result.info.secure_url }));
+                    }
+                  }}
+                  options={{
+                    multiple: false,
+                    resourceType: "image",
+                  }}
+                >
+                  {({ open }) => {
+                    return (
+                      <Button type="button" variant="outline" onClick={() => open()}>
+                        Upload Image
+                      </Button>
+                    );
+                  }}
+                </CldUploadWidget>
+                <Input
+                  id="imageUrl"
+                  name="imageUrl"
+                  type="url"
+                  value={formData.imageUrl || ""}
+                  onChange={handleChange}
+                  placeholder="Or paste an image URL..."
+                  className="flex-1"
+                />
+              </div>
+              {formData.imageUrl && (
+                <div className="relative mt-3 h-24 w-24 overflow-hidden rounded-xl bg-cornsilk-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={formData.imageUrl}
+                    alt="Cover preview"
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                </div>
+              )}
+              <p className="text-b6 font-inter text-neutral-400 mt-1">
+                Upload an image or paste a URL for the news cover photo.
+              </p>
             </div>
 
             <div className="flex items-center gap-2 pt-2">
