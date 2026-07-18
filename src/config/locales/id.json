@@ -278,10 +278,19 @@
     "placeOrder": "Place Order & Pay",
     "processing": "Memproses checkout...",
     "success": "Pesanan berhasil dibuat! Mengalihkan...",
+    "sameDayWarning": {
+      "title": "Pesanan hari yang sama",
+      "bodyBefore": "Untuk pesanan di hari yang sama, pickup/pengiriman minimal ",
+      "highlight": "6 jam setelah pemesanan",
+      "bodyAfter": ". Pastikan kamu memilih waktu yang sesuai agar pesanan dapat diproses dengan baik."
+    },
     "errors": {
+      "pickupDateRequired": "Pilih tanggal pickup/pengiriman terlebih dahulu.",
+      "pickupTimeRequired": "Pilih jam pickup/pengiriman terlebih dahulu.",
+      "pickupTimeInvalid": "Pilih jam pickup/pengiriman yang valid.",
       "pickupPast": "Tanggal pickup/pengiriman tidak boleh sebelum hari ini.",
       "pickupHours": "Jam pickup/pengiriman harus mengikuti jam buka toko, 10:00-20:00.",
-      "pickupMinimum": "Jam pickup/pengiriman minimal 3 jam dari sekarang."
+      "pickupMinimum": "Jam pickup/pengiriman minimal 6 jam dari sekarang."
     }
   },
   "orders": {
