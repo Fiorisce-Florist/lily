@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/config/use-language";
 
 const heroImages = [
-  "/images/landing/hero-bg-1.png",
-  "/images/landing/hero-bg-2.png",
-  "/images/landing/hero-bg-3.png",
+  "/images/landing/hero-bg-1-rev.jpeg",
+  "/images/landing/hero-bg-2-rev.jpeg",
+  "/images/landing/hero-bg-3-rev.jpeg",
 ];
 
 export function HeroSection() {

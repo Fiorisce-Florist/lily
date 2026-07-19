@@ -10,37 +10,37 @@ import { useLanguage } from "@/config/use-language";
 const occasions = [
   {
     slug: "birthday",
-    image: "/images/landing/occasion-birthday-v3.png",
+    image: "/images/landing/occasion-birthday-rev.jpeg",
     colSpan: "col-span-12 md:col-span-6 lg:col-span-4",
     rowSpan: "row-span-1 md:row-span-2",
   },
   {
     slug: "anniversary",
-    image: "/images/landing/occasion-anniversary-new.png",
+    image: "/images/landing/occasion-anniversary-rev.jpeg",
     colSpan: "col-span-12 md:col-span-6 lg:col-span-4",
     rowSpan: "row-span-1",
   },
   {
     slug: "wedding",
-    image: "/images/landing/occasion-wedding-new.png",
+    image: "/images/landing/occasion-wedding-rev.jpeg",
     colSpan: "col-span-12 md:col-span-6 lg:col-span-4",
     rowSpan: "row-span-1 md:row-span-2",
   },
   {
     slug: "sympathy",
-    image: "/images/landing/occasion-sympathy-new.png",
+    image: "/images/landing/occasion-sympathy-rev.jpeg",
     colSpan: "col-span-12 md:col-span-6 lg:col-span-4",
     rowSpan: "row-span-1",
   },
   {
     slug: "congratulations",
-    image: "/images/landing/occasion-congrats-new.png",
+    image: "/images/landing/occasion-congrats-rev.jpeg",
     colSpan: "col-span-12 md:col-span-6 lg:col-span-6",
     rowSpan: "row-span-1",
   },
   {
     slug: "grand-opening",
-    image: "/images/landing/occasion-grand-opening-new.png",
+    image: "/images/landing/occasion-grandopening-rev2.jpeg",
     colSpan: "col-span-12 md:col-span-6 lg:col-span-6",
     rowSpan: "row-span-1",
   },

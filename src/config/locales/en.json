@@ -278,10 +278,19 @@
     "placeOrder": "Place Order & Pay",
     "processing": "Processing checkout...",
     "success": "Order placed successfully! Redirecting...",
+    "sameDayWarning": {
+      "title": "Same-day order",
+      "bodyBefore": "For same-day orders, pickup/delivery must be at least ",
+      "highlight": "6 hours after ordering",
+      "bodyAfter": ". Please choose a suitable time so your order can be prepared properly."
+    },
     "errors": {
+      "pickupDateRequired": "Please select a pickup/delivery date.",
+      "pickupTimeRequired": "Please select a pickup/delivery time.",
+      "pickupTimeInvalid": "Please select a valid pickup/delivery time.",
       "pickupPast": "Pickup/delivery date cannot be before today.",
       "pickupHours": "Pickup/delivery time must be during store hours, 10:00-20:00.",
-      "pickupMinimum": "Pickup/delivery time must be at least 3 hours from now."
+      "pickupMinimum": "Pickup/delivery time must be at least 6 hours from now."
     }
   },
   "orders": {

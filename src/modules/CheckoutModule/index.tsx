@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Calendar as CalendarIcon,
   Clock,
+  AlertTriangle,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -65,31 +66,42 @@ function parsePickupDateTime(date: string, time?: string) {
   return new Date(year, month - 1, day, hour, minute, 0, 0);
 }
 
-function getPickupValidationMessage(date: string, time?: string) {
-  if (!date) return "Please select a pickup/delivery date.";
-  if (!time) return "Please select a pickup/delivery time.";
+function getPickupValidationMessage(
+  date: string,
+  time: string | undefined,
+  messages: {
+    pickupDateRequired: string;
+    pickupTimeRequired: string;
+    pickupTimeInvalid: string;
+    pickupPast: string;
+    pickupHours: string;
+    pickupMinimum: string;
+  }
+) {
+  if (!date) return messages.pickupDateRequired;
+  if (!time) return messages.pickupTimeRequired;
 
   const pickupAt = parsePickupDateTime(date, time);
   if (!pickupAt || Number.isNaN(pickupAt.getTime())) {
-    return "Please select a valid pickup/delivery time.";
+    return messages.pickupTimeInvalid;
   }
 
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const selectedDay = new Date(pickupAt.getFullYear(), pickupAt.getMonth(), pickupAt.getDate());
-  if (selectedDay < today) return "Pickup/delivery date cannot be before today.";
+  if (selectedDay < today) return messages.pickupPast;
 
   const openingAt = new Date(pickupAt);
   openingAt.setHours(10, 0, 0, 0);
   const closingAt = new Date(pickupAt);
   closingAt.setHours(20, 0, 0, 0);
   if (pickupAt < openingAt || pickupAt > closingAt) {
-    return "Pickup/delivery time must be during store hours, 10:00-20:00.";
+    return messages.pickupHours;
   }
 
-  const minimumPickupAt = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+  const minimumPickupAt = new Date(now.getTime() + 6 * 60 * 60 * 1000);
   if (pickupAt < minimumPickupAt) {
-    return "Pickup/delivery time must be at least 3 hours from now.";
+    return messages.pickupMinimum;
   }
 
   return null;
@@ -662,7 +674,11 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
       return;
     }
 
-    const pickupError = getPickupValidationMessage(form.deliveryDate, form.deliveryTime);
+    const pickupError = getPickupValidationMessage(
+      form.deliveryDate,
+      form.deliveryTime,
+      dictionary.checkout.errors
+    );
     if (pickupError) {
       toast.error(pickupError);
       return;
@@ -976,6 +992,25 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                   </Select>
                 </div>
               </div>
+
+              {/* Same-day order warning */}
+              {form.deliveryDate === format(new Date(), "yyyy-MM-dd") && (
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200 text-sm">
+                  <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 text-amber-500" />
+                  <div>
+                    <p className="font-semibold font-inter mb-0.5">
+                      {dictionary.checkout.sameDayWarning.title}
+                    </p>
+                    <p className="font-inter leading-relaxed">
+                      {dictionary.checkout.sameDayWarning.bodyBefore}
+                      <span className="font-semibold">
+                        {dictionary.checkout.sameDayWarning.highlight}
+                      </span>
+                      {dictionary.checkout.sameDayWarning.bodyAfter}
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-2 pt-2">
                 <Label htmlFor="messageCard" className="flex justify-between items-end">
