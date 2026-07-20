@@ -7,9 +7,14 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/config/use-language";
 
 const heroImages = [
-  "/images/landing/hero-bg-1-rev.jpeg",
-  "/images/landing/hero-bg-2-rev.jpeg",
-  "/images/landing/hero-bg-3-rev.jpeg",
+  "/images/landing/Fiorisce-52.jpg.jpeg",
+  "/images/landing/Fiorisce-62.jpg.jpeg",
+  "/images/landing/Fiorisce-87.jpg.jpeg",
+  "/images/landing/Fiorisce-93.jpg.jpeg",
+  "/images/landing/Fiorisce-118.jpg.jpeg",
+  "/images/landing/Fiorisce-130.jpg.jpeg",
+  "/images/landing/Fiorisce-177.jpg.jpeg",
+  "/images/landing/Fiorisce-197.jpg.jpeg",
 ];
 
 export function HeroSection() {
