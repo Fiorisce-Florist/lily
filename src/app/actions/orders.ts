@@ -332,7 +332,6 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
           deliveryMethod: formData.deliveryMethod,
           deliveryDate: new Date(formData.deliveryDate),
           deliveryTime: formData.deliveryTime || null,
-          customerPhone: formData.phone,
           messageCard: formData.messageCard || null,
           includePaperBag: formData.includePaperBag || formData.deliveryMethod === "GOSEND",
           items: {
@@ -366,6 +365,16 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
       "http://localhost:3000"
     ).replace(/\/+$/, "");
     const provider = getPaymentProvider();
+    const customer = {
+      id: userId,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address,
+      city: formData.city,
+      postalCode: formData.postalCode,
+    };
     const lineItems = [
       ...itemsToCheckout.map((item) => ({
         id: item.productId,
@@ -392,16 +401,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
       amount: totalAmount,
       successUrl: `${appUrl}/orders/${orderNumber}`,
       notificationUrl: `${appUrl}/api/payments/doku/notification`,
-      customer: {
-        id: userId,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        address: formData.address,
-        city: formData.city,
-        postalCode: formData.postalCode,
-      },
+      customer,
       lineItems,
     });
 
@@ -432,7 +432,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
           status: "SUCCESS",
           httpStatus: 200,
           message: "Checkout session created.",
-          requestBody: toPrismaJson({ orderNumber, amount: totalAmount, lineItems }),
+          requestBody: toPrismaJson({ orderNumber, amount: totalAmount, customer, lineItems }),
           rawResponse: toPrismaJson(checkout.raw),
           userId,
           amount: totalAmount,

@@ -10,6 +10,20 @@ import { Prisma, ProductStatus, TagType } from "@prisma/client";
 
 import { expireStaleOrders } from "./orders";
 
+function getCheckoutPhoneFromLogs(logs: Array<{ requestBody: unknown }>) {
+  for (const log of logs) {
+    const requestBody = log.requestBody as {
+      customer?: { phone?: unknown };
+    } | null;
+    const phone = requestBody?.customer?.phone;
+    if (typeof phone === "string" && phone.trim()) {
+      return phone;
+    }
+  }
+
+  return null;
+}
+
 export async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id || session.user.role !== "ADMIN") {
@@ -492,9 +506,11 @@ export async function adminGetOrder(id: string) {
 
   const plainOrder = JSON.parse(JSON.stringify(order));
   const plainCheckoutLogs = JSON.parse(JSON.stringify(checkoutLogs));
+  const customerPhone = getCheckoutPhoneFromLogs(plainCheckoutLogs);
 
   const serializedOrder = {
     ...plainOrder,
+    customerPhone,
     subtotal: Number(plainOrder.subtotal),
     shippingCost: Number(plainOrder.shippingCost),
     totalAmount: Number(plainOrder.totalAmount),
