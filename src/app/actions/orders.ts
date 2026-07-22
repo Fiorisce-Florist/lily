@@ -332,6 +332,7 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
           deliveryMethod: formData.deliveryMethod,
           deliveryDate: new Date(formData.deliveryDate),
           deliveryTime: formData.deliveryTime || null,
+          customerPhone: formData.phone,
           messageCard: formData.messageCard || null,
           includePaperBag: formData.includePaperBag || formData.deliveryMethod === "GOSEND",
           items: {

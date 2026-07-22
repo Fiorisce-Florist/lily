@@ -58,6 +58,7 @@ export function OrderDetailView({ order }: { order: any }) {
 
   const shippingAddress = order.address;
   const user = order.user;
+  const customerPhone = order.customerPhone;
 
   return (
     <div className="space-y-6">
@@ -309,6 +310,10 @@ export function OrderDetailView({ order }: { order: any }) {
                   {user?.name || "Guest User"}
                 </p>
                 <p className="text-neutral-500">{user?.email}</p>
+                <p className="text-neutral-500">
+                  <span className="text-neutral-400">Checkout phone:</span>{" "}
+                  {customerPhone || "Not captured"}
+                </p>
               </div>
               {order.payment && (
                 <div>

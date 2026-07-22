@@ -269,7 +269,8 @@ model Order {
   deliveryMethod  DeliveryMethod       @default(PICKUP) @map("delivery_method")
   deliveryDate    DateTime?            @map("delivery_date")
   deliveryTime    String?              @map("delivery_time")
-  messageCard     String?              @db.Text @map("message_card")
+  customerPhone   String?              @map("customer_phone") @db.VarChar(20)
+  messageCard     String?              @map("message_card") @db.Text
   includePaperBag Boolean              @default(false) @map("include_paper_bag")
   createdAt       DateTime             @default(now()) @map("created_at")
   updatedAt       DateTime             @default(now()) @updatedAt @map("updated_at")
@@ -392,7 +393,7 @@ model News {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
-  author      User     @relation(fields: [authorId], references: [id])
+  author User @relation(fields: [authorId], references: [id])
 
   @@index([authorId])
   @@index([isPublished])
