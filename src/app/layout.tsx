@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Inter, Fraunces, JetBrains_Mono } from "next/font/google";
 import "../styles/globals.css";
 
@@ -74,6 +75,7 @@ import { ThemeProvider } from "@/context/theme-provider";
 import { SessionProvider } from "@/context/session-provider";
 import { CartProvider } from "@/context/cart-context";
 import { FloatingContactButton } from "@/components/elements/floating-contact-button";
+import { AnalyticsProvider } from "@/components/elements/analytics-provider";
 
 export default function RootLayout({
   children,
@@ -100,6 +102,9 @@ export default function RootLayout({
           <SessionProvider>
             <CartProvider>
               <TooltipProvider>
+                <Suspense fallback={null}>
+                  <AnalyticsProvider />
+                </Suspense>
                 <Navbar />
                 <main className="flex-1">{children}</main>
                 <Footer />

@@ -20,6 +20,7 @@ import {
   Newspaper,
 } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
+import { resetAnalytics, trackEvent } from "@/lib/analytics";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -119,6 +120,8 @@ export function AdminSidebar() {
             </Link>
             <button
               onClick={async () => {
+                trackEvent("logout_completed");
+                resetAnalytics();
                 await signOut();
                 window.location.href = "/login";
               }}

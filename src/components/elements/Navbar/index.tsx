@@ -39,6 +39,7 @@ import { NAV_MENU } from "./const";
 import { useCart } from "@/context/cart-context";
 import { LANGUAGE_CONFIG, setStoredLanguage } from "@/config/language";
 import { useLanguage } from "@/config/use-language";
+import { resetAnalytics, trackEvent } from "@/lib/analytics";
 
 // ─── User Avatar ──────────────────────────────────────────────────────────────
 
@@ -208,6 +209,8 @@ export function Navbar() {
                     </SheetClose>
                     <button
                       onClick={async () => {
+                        trackEvent("logout_completed");
+                        resetAnalytics();
                         await signOut();
                         window.location.href = "/";
                       }}
@@ -321,6 +324,8 @@ export function Navbar() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={async () => {
+                      trackEvent("logout_completed");
+                      resetAnalytics();
                       await signOut();
                       window.location.href = "/";
                     }}

@@ -13,8 +13,23 @@ import { Checkbox } from "@/components/ui/checkbox";
 import type { CartItemData } from "@/app/actions/cart";
 import { formatPrice } from "@/lib/formatters";
 import { useLanguage } from "@/config/use-language";
+import { trackEvent } from "@/lib/analytics";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function getCartItemTrackingProperties(item: CartItemData) {
+  return {
+    product_id: item.productId,
+    product_slug: item.product.slug,
+    product_name: item.product.name,
+    category: item.product.category?.slug,
+    variant_id: item.variantId,
+    variant_name: item.size,
+    quantity: item.quantity,
+    price: item.price,
+    item_value: item.price * item.quantity,
+  };
+}
 
 // ─── Empty Cart ────────────────────────────────────────────────────────────────
 
@@ -92,7 +107,10 @@ function CartItemRow({
             {item.product.name}
           </Link>
           <button
-            onClick={() => removeItem(item.id)}
+            onClick={() => {
+              trackEvent("cart_item_removed", getCartItemTrackingProperties(item));
+              removeItem(item.id);
+            }}
             aria-label={dictionary.cart.removeItem}
             className="shrink-0 rounded-lg p-1.5 text-neutral-400 hover:text-blush-600 dark:hover:text-blush-400 hover:bg-blush-50 dark:hover:bg-blush-900/20 transition-colors -mr-1.5"
           >
@@ -120,7 +138,16 @@ function CartItemRow({
           {/* Quantity stepper */}
           <div className="flex items-center gap-1 rounded-xl border border-cornsilk-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 overflow-hidden">
             <button
-              onClick={() => updateItem(item.id, Math.max(1, item.quantity - 1))}
+              onClick={() => {
+                const quantity = Math.max(1, item.quantity - 1);
+                trackEvent("cart_item_quantity_updated", {
+                  ...getCartItemTrackingProperties(item),
+                  quantity,
+                  previous_quantity: item.quantity,
+                  action: "decrease",
+                });
+                updateItem(item.id, quantity);
+              }}
               disabled={item.quantity <= 1}
               aria-label={dictionary.cart.decreaseQuantity}
               className="flex h-8 w-8 items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-cornsilk-100 dark:hover:bg-neutral-800 disabled:opacity-40 transition-colors"
@@ -131,7 +158,16 @@ function CartItemRow({
               {item.quantity}
             </span>
             <button
-              onClick={() => updateItem(item.id, Math.min(10, item.quantity + 1))}
+              onClick={() => {
+                const quantity = Math.min(10, item.quantity + 1);
+                trackEvent("cart_item_quantity_updated", {
+                  ...getCartItemTrackingProperties(item),
+                  quantity,
+                  previous_quantity: item.quantity,
+                  action: "increase",
+                });
+                updateItem(item.id, quantity);
+              }}
               disabled={item.quantity >= 10}
               aria-label={dictionary.cart.increaseQuantity}
               className="flex h-8 w-8 items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-cornsilk-100 dark:hover:bg-neutral-800 disabled:opacity-40 transition-colors"
@@ -214,7 +250,19 @@ function CartSummaryPanel({
           <span>{dictionary.cart.proceedCheckout}</span>
         ) : (
           <Link href={`/checkout?items=${selectedIds.join(",")}`}>
-            {dictionary.cart.proceedCheckout}
+            <span
+              onClick={() =>
+                trackEvent("checkout_started", {
+                  source: "cart",
+                  selected_item_count: selectedIds.length,
+                  cart_subtotal: subtotal,
+                  cart_total: total,
+                  selected_item_ids: selectedIds,
+                })
+              }
+            >
+              {dictionary.cart.proceedCheckout}
+            </span>
           </Link>
         )}
       </Button>
@@ -395,7 +443,16 @@ export function CartModule() {
                   <div className="lg:col-span-5 xl:col-span-4">
                     <CartSummaryPanel
                       subtotal={subtotal}
-                      onClear={clearCart}
+                      onClear={() => {
+                        trackEvent("cart_cleared", {
+                          item_count: items.length,
+                          cart_subtotal: items.reduce(
+                            (acc, item) => acc + item.price * item.quantity,
+                            0
+                          ),
+                        });
+                        clearCart();
+                      }}
                       isMixedCart={isMixedCart}
                       selectedIds={selectedIds}
                     />

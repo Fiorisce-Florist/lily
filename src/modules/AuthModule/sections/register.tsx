@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLanguage } from "@/config/use-language";
+import { identifyUser, trackEvent } from "@/lib/analytics";
 
 interface FormErrors {
   name?: string;
@@ -76,7 +77,6 @@ export function RegisterModule() {
     setIsSubmitting(true);
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { data: _data, error: authError } = await signUp.email({
         name: formData.get("name") as string,
         email: formData.get("email") as string,
@@ -87,6 +87,19 @@ export function RegisterModule() {
       if (authError) {
         setServerError(authError.message || dictionary.auth.register.errors.failed);
       } else {
+        const user = _data?.user;
+        if (user?.id) {
+          identifyUser(user.id, {
+            name: user.name,
+            email: user.email,
+            phone: formData.get("phone") as string,
+            role: "CUSTOMER",
+          });
+        }
+        trackEvent("sign_up_completed", {
+          sign_up_method: "email",
+          platform: "web",
+        });
         router.push("/");
         router.refresh();
       }
@@ -99,6 +112,10 @@ export function RegisterModule() {
   };
 
   const handleGoogleSignIn = () => {
+    trackEvent("sign_up_started", {
+      sign_up_method: "google",
+      platform: "web",
+    });
     signIn.social({ provider: "google", callbackURL: "/" });
   };
 

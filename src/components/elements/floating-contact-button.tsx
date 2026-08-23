@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 import { useLanguage } from "@/config/use-language";
+import { trackEvent } from "@/lib/analytics";
 
 function getWhatsAppUrl(message: string) {
   return `https://api.whatsapp.com/send?phone=6287726120040&text=${encodeURIComponent(message)}`;
@@ -49,6 +50,12 @@ export function FloatingContactButton() {
         href={getWhatsAppUrl(dictionary.floatingContact.message)}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() =>
+          trackEvent("whatsapp_contact_clicked", {
+            source: "floating_contact_button",
+            path: pathname,
+          })
+        }
         className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-green-700 hover:shadow-xl"
         aria-label={dictionary.floatingContact.ariaLabel}
       >

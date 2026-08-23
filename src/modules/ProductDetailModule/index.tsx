@@ -11,10 +11,11 @@ import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/comp
 import type { Bouquet } from "@/modules/ShopModule/data/bouquets";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { useCart } from "@/context/cart-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductCard } from "@/components/elements/product-card";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/formatters";
+import { trackEvent } from "@/lib/analytics";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -119,6 +120,22 @@ function ProductInfo({
   const selectedVariant = variants.find((v) => v.id === selectedVariantId) || defaultVariant;
   const displayPrice = selectedVariant ? selectedVariant.price : bouquet.price;
 
+  useEffect(() => {
+    trackEvent("product_viewed", {
+      product_id: bouquet.id,
+      product_slug: bouquet.slug,
+      product_name: bouquet.name,
+      category: bouquet.category,
+      price: displayPrice,
+      in_stock: bouquet.inStock,
+      is_bestseller: bouquet.isBestseller,
+      is_new: bouquet.isNew,
+      sold_count: bouquet.soldCount,
+    });
+    // Fire once per product page view.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bouquet.id]);
+
   const displayOriginal = bouquet.originalPrice
     ? Math.round(
         bouquet.originalPrice * (selectedVariant ? selectedVariant.price / bouquet.price : 1)
@@ -130,10 +147,26 @@ function ProductInfo({
   async function handleAddToCart() {
     if (isAddingToCart) return;
     setIsAddingToCart(true);
-    await addItem(bouquet.id as string, quantity, selectedVariantId || undefined);
+    const wasAdded = await addItem(bouquet.id as string, quantity, selectedVariantId || undefined);
+    if (wasAdded) {
+      trackEvent("cart_item_added", {
+        product_id: bouquet.id,
+        product_slug: bouquet.slug,
+        product_name: bouquet.name,
+        category: bouquet.category,
+        variant_id: selectedVariant?.id,
+        variant_name: selectedVariant?.name,
+        quantity,
+        price: displayPrice,
+        cart_add_value: displayPrice * quantity,
+        source: "product_detail",
+      });
+    }
     setIsAddingToCart(false);
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
+    if (wasAdded) {
+      setAddedToCart(true);
+      setTimeout(() => setAddedToCart(false), 2000);
+    }
   }
 
   return (
@@ -268,7 +301,18 @@ function ProductInfo({
               <button
                 key={opt.id}
                 id={`size-${opt.name.replace(/\s+/g, "-")}`}
-                onClick={() => setSelectedVariantId(opt.id)}
+                onClick={() => {
+                  setSelectedVariantId(opt.id);
+                  trackEvent("product_variant_selected", {
+                    product_id: bouquet.id,
+                    product_slug: bouquet.slug,
+                    product_name: bouquet.name,
+                    variant_id: opt.id,
+                    variant_name: opt.name,
+                    stems_quantity: opt.stemsQuantity,
+                    price: opt.price,
+                  });
+                }}
                 aria-pressed={selectedVariantId === opt.id}
                 className={`flex-1 min-w-20 flex flex-col items-center gap-1 rounded-xl border-2 py-3 px-2 transition-all duration-200 ${
                   selectedVariantId === opt.id
@@ -302,7 +346,19 @@ function ProductInfo({
             <button
               id="qty-minus"
               aria-label="Decrease quantity"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              onClick={() =>
+                setQuantity((q) => {
+                  const nextQuantity = Math.max(1, q - 1);
+                  trackEvent("product_quantity_changed", {
+                    product_id: bouquet.id,
+                    product_slug: bouquet.slug,
+                    product_name: bouquet.name,
+                    quantity: nextQuantity,
+                    action: "decrease",
+                  });
+                  return nextQuantity;
+                })
+              }
               disabled={quantity <= 1}
               className="flex h-10 w-10 items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-cornsilk-100 dark:hover:bg-neutral-800 disabled:opacity-40 transition-colors"
             >
@@ -317,7 +373,19 @@ function ProductInfo({
             <button
               id="qty-plus"
               aria-label="Increase quantity"
-              onClick={() => setQuantity((q) => Math.min(10, q + 1))}
+              onClick={() =>
+                setQuantity((q) => {
+                  const nextQuantity = Math.min(10, q + 1);
+                  trackEvent("product_quantity_changed", {
+                    product_id: bouquet.id,
+                    product_slug: bouquet.slug,
+                    product_name: bouquet.name,
+                    quantity: nextQuantity,
+                    action: "increase",
+                  });
+                  return nextQuantity;
+                })
+              }
               disabled={quantity >= 10}
               className="flex h-10 w-10 items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-cornsilk-100 dark:hover:bg-neutral-800 disabled:opacity-40 transition-colors"
             >

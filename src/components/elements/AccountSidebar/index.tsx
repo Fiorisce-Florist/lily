@@ -7,6 +7,7 @@ import { User, Package, LogOut } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/config/use-language";
+import { resetAnalytics, trackEvent } from "@/lib/analytics";
 
 const NAV_ITEMS = [
   {
@@ -27,6 +28,8 @@ export function AccountSidebar() {
   const { dictionary } = useLanguage();
 
   const handleLogOut = async () => {
+    trackEvent("logout_completed");
+    resetAnalytics();
     await signOut();
     router.push("/");
     router.refresh();

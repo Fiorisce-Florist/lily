@@ -13,7 +13,7 @@ export interface CartContextValue {
   itemCount: number;
   subtotal: number;
   isLoading: boolean;
-  addItem: (productId: string, quantity?: number, variantId?: string) => Promise<void>;
+  addItem: (productId: string, quantity?: number, variantId?: string) => Promise<boolean>;
   updateItem: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -114,7 +114,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           setItems(newItems);
           localStorage.setItem("guest_cart", JSON.stringify(newItems));
           toast.success("Added to cart!");
-          return;
+          return true;
         }
 
         // Need to fetch product details to construct CartItemData
@@ -148,8 +148,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : "Could not add to cart.";
           toast.error(message);
+          return false;
         }
-        return;
+        return true;
       }
 
       // Authenticated flow
@@ -176,10 +177,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
         toast.success("Added to cart!");
         await fetchCart(); // Re-fetch to get accurate server state
+        return true;
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "Could not add to cart.";
         toast.error(message);
         await fetchCart(); // Revert optimistic update
+        return false;
       }
     },
     [status, fetchCart, items]

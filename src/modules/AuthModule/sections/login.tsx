@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLanguage } from "@/config/use-language";
+import { identifyUser, trackEvent } from "@/lib/analytics";
 
 export function LoginModule() {
   const router = useRouter();
@@ -25,7 +26,6 @@ export function LoginModule() {
     const password = formData.get("password") as string;
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { data: _data, error: authError } = await signIn.email({
         email,
         password,
@@ -34,6 +34,17 @@ export function LoginModule() {
       if (authError) {
         setError(dictionary.auth.login.errors.failed);
       } else {
+        const user = _data?.user;
+        if (user?.id) {
+          identifyUser(user.id, {
+            name: user.name,
+            email: user.email,
+          });
+        }
+        trackEvent("login_completed", {
+          login_method: "email",
+          platform: "web",
+        });
         router.push("/");
         router.refresh();
       }
@@ -46,6 +57,10 @@ export function LoginModule() {
   };
 
   const handleGoogleSignIn = () => {
+    trackEvent("login_started", {
+      login_method: "google",
+      platform: "web",
+    });
     signIn.social({ provider: "google", callbackURL: "/" });
   };
   return (

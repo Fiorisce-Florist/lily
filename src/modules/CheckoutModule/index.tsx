@@ -55,6 +55,7 @@ import type { CreateOrderFormData } from "@/app/actions/orders";
 import type { ProfileData, AddressData } from "@/app/actions/profile";
 import { formatPrice } from "@/lib/formatters";
 import { useLanguage } from "@/config/use-language";
+import { trackEvent } from "@/lib/analytics";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -508,10 +509,17 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   const subtotal = React.useMemo(() => {
     return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
   }, [items]);
+  const itemCount = React.useMemo(() => {
+    return items.reduce((acc, item) => acc + item.quantity, 0);
+  }, [items]);
+  const categoryMix = React.useMemo(() => {
+    return [...new Set(items.map((item) => item.product.category?.slug).filter(Boolean))];
+  }, [items]);
 
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = React.useState(false);
   const [isTermsAccepted, setIsTermsAccepted] = React.useState(false);
+  const checkoutStartedTracked = React.useRef(false);
   const t = dictionary.termsAndConditions;
 
   React.useEffect(() => {
@@ -543,6 +551,36 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
     messageCard: "",
     includePaperBag: false,
   });
+
+  React.useEffect(() => {
+    if (
+      checkoutStartedTracked.current ||
+      status !== "authenticated" ||
+      cartLoading ||
+      items.length === 0
+    ) {
+      return;
+    }
+
+    checkoutStartedTracked.current = true;
+    trackEvent("checkout_started", {
+      source: selectedItemIds.length > 0 ? "cart_selected_items" : "cart_all_items",
+      selected_item_count: items.length,
+      item_count: itemCount,
+      cart_subtotal: subtotal,
+      category_mix: categoryMix,
+      delivery_method: form.deliveryMethod,
+    });
+  }, [
+    cartLoading,
+    categoryMix,
+    form.deliveryMethod,
+    itemCount,
+    items.length,
+    selectedItemIds.length,
+    status,
+    subtotal,
+  ]);
 
   // Track which saved address is selected (null = enter new)
   // Start with null; if there are saved addresses, the user chooses.
@@ -666,6 +704,10 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (status !== "authenticated") {
+      trackEvent("checkout_login_required", {
+        cart_subtotal: subtotal,
+        item_count: itemCount,
+      });
       toast.error("Please log in to checkout.");
       return;
     }
@@ -680,11 +722,26 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
       dictionary.checkout.errors
     );
     if (pickupError) {
+      trackEvent("checkout_validation_failed", {
+        reason: pickupError,
+        delivery_method: form.deliveryMethod,
+        cart_subtotal: subtotal,
+        item_count: itemCount,
+      });
       toast.error(pickupError);
       return;
     }
 
     // Open terms modal instead of processing directly
+    trackEvent("checkout_submitted", {
+      delivery_method: form.deliveryMethod,
+      cart_subtotal: subtotal,
+      item_count: itemCount,
+      category_mix: categoryMix,
+      include_paper_bag: form.includePaperBag || form.deliveryMethod === "GOSEND",
+      has_message_card: Boolean(form.messageCard?.trim()),
+      selected_item_count: items.length,
+    });
     setIsTermsModalOpen(true);
   };
 
@@ -702,14 +759,37 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
       const result = await createOrder(payload);
 
       if (result.error) {
+        trackEvent("order_create_failed", {
+          reason: result.error,
+          delivery_method: form.deliveryMethod,
+          cart_subtotal: subtotal,
+          item_count: itemCount,
+        });
         toast.error(result.error);
         await refetch();
         return;
       }
 
+      trackEvent("order_created", {
+        order_number: result.orderNumber,
+        delivery_method: form.deliveryMethod,
+        cart_subtotal: subtotal,
+        item_count: itemCount,
+        category_mix: categoryMix,
+        include_paper_bag: form.includePaperBag || form.deliveryMethod === "GOSEND",
+        has_message_card: Boolean(form.messageCard?.trim()),
+        payment_provider: "doku",
+        payment_redirect_available: Boolean(result.paymentUrl),
+      });
       toast.success("Order placed successfully! Redirecting…");
       if (result.paymentUrl) {
         isRedirectingToPayment = true;
+        trackEvent("payment_redirect_started", {
+          order_number: result.orderNumber,
+          payment_provider: "doku",
+          cart_subtotal: subtotal,
+          item_count: itemCount,
+        });
         window.location.assign(result.paymentUrl);
         return;
       }
@@ -717,6 +797,12 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
       await refetch();
       router.push(`/orders/${result.orderNumber}`);
     } catch {
+      trackEvent("order_create_failed", {
+        reason: "unexpected_client_error",
+        delivery_method: form.deliveryMethod,
+        cart_subtotal: subtotal,
+        item_count: itemCount,
+      });
       toast.error("Something went wrong. Please try again.");
     } finally {
       if (!isRedirectingToPayment) {
@@ -872,7 +958,14 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                   <>
                     <RadioGroup
                       value={form.deliveryMethod}
-                      onValueChange={(val: "PICKUP" | "GOSEND") => set("deliveryMethod")(val)}
+                      onValueChange={(val: "PICKUP" | "GOSEND") => {
+                        set("deliveryMethod")(val);
+                        trackEvent("checkout_delivery_method_selected", {
+                          delivery_method: val,
+                          cart_subtotal: subtotal,
+                          item_count: itemCount,
+                        });
+                      }}
                       className="grid grid-cols-1 sm:grid-cols-2 gap-4"
                     >
                       <div
@@ -949,9 +1042,14 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                       <Calendar
                         mode="single"
                         selected={form.deliveryDate ? new Date(form.deliveryDate) : undefined}
-                        onSelect={(date) =>
-                          set("deliveryDate")(date ? format(date, "yyyy-MM-dd") : "")
-                        }
+                        onSelect={(date) => {
+                          const deliveryDate = date ? format(date, "yyyy-MM-dd") : "";
+                          set("deliveryDate")(deliveryDate);
+                          trackEvent("checkout_delivery_date_selected", {
+                            delivery_date: deliveryDate,
+                            delivery_method: form.deliveryMethod,
+                          });
+                        }}
                         disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                       />
                     </PopoverContent>
@@ -960,7 +1058,16 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
 
                 <div className="flex flex-col space-y-2">
                   <Label htmlFor="deliveryTime">{dictionary.checkout.pickupTime}</Label>
-                  <Select value={form.deliveryTime} onValueChange={set("deliveryTime")}>
+                  <Select
+                    value={form.deliveryTime}
+                    onValueChange={(deliveryTime) => {
+                      set("deliveryTime")(deliveryTime);
+                      trackEvent("checkout_delivery_time_selected", {
+                        delivery_time: deliveryTime,
+                        delivery_method: form.deliveryMethod,
+                      });
+                    }}
+                  >
                     <SelectTrigger
                       className={cn(
                         "h-10 w-full border-cornsilk-400 bg-cornsilk-100 dark:bg-neutral-800 dark:border-neutral-700 text-b4 font-inter text-neutral-900 dark:text-neutral-300",
@@ -1036,7 +1143,15 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                     id="includePaperBag"
                     checked={form.deliveryMethod === "GOSEND" || form.includePaperBag}
                     disabled={form.deliveryMethod === "GOSEND"}
-                    onCheckedChange={(c) => set("includePaperBag")(!!c)}
+                    onCheckedChange={(c) => {
+                      const includePaperBag = !!c;
+                      set("includePaperBag")(includePaperBag);
+                      trackEvent("checkout_paper_bag_toggled", {
+                        include_paper_bag: includePaperBag,
+                        cart_subtotal: subtotal,
+                        item_count: itemCount,
+                      });
+                    }}
                     className="mt-1"
                   />
                   <div>
