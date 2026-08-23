@@ -13,6 +13,12 @@ export function AnalyticsProvider() {
 
   React.useEffect(() => {
     initAnalytics();
+    trackEvent("analytics_initialized", {
+      path: pathname,
+      url: window.location.href,
+    });
+    // Fire once so Mixpanel setup can detect the browser SDK connection quickly.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {

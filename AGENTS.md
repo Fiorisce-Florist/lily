@@ -24,6 +24,8 @@ with the previous WhatsApp-centered florist ordering flow.
   of scope on 2026-08-23.
 - Analytics wrapper: `src/lib/analytics.ts`.
 - Global page and identity wiring: `src/components/elements/analytics-provider.tsx`.
+- Mixpanel SDK-recognized pageview/autocapture is enabled for connection detection and behavioral
+  context. Input autocapture and text-content capture are disabled to avoid collecting checkout PII.
 
 ## Business Measurement
 
@@ -45,6 +47,7 @@ Key questions the tracking should answer:
 | Event | Trigger | Key properties |
 | --- | --- | --- |
 | `page_viewed` | Route changes | `path`, `url`, `referrer`, `page_title` |
+| `analytics_initialized` | Browser analytics provider mounts | `path`, `url` |
 | `product_viewed` | Product detail page opens | `product_id`, `product_slug`, `product_name`, `category`, `price`, `in_stock` |
 | `product_variant_selected` | Product variant/size selected | `product_id`, `variant_id`, `variant_name`, `stems_quantity`, `price` |
 | `product_quantity_changed` | Product detail quantity stepper changes | `product_id`, `quantity`, `action` |

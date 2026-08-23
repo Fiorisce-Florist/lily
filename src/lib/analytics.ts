@@ -19,8 +19,20 @@ export function initAnalytics() {
   if (typeof window === "undefined" || isInitialized || !MIXPANEL_TOKEN) return;
 
   mixpanel.init(MIXPANEL_TOKEN, {
+    api_host: "https://api-js.mixpanel.com",
     debug: process.env.NODE_ENV === "development",
-    track_pageview: false,
+    track_pageview: "full-url",
+    autocapture: {
+      click: true,
+      input: false,
+      pageview: "full-url",
+      rage_click: true,
+      dead_click: true,
+      scroll: true,
+      submit: true,
+      capture_text_content: false,
+    },
+    batch_requests: false,
     persistence: "localStorage",
   });
 
