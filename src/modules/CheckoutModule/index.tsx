@@ -56,6 +56,7 @@ import type { ProfileData, AddressData } from "@/app/actions/profile";
 import { formatPrice } from "@/lib/formatters";
 import { useLanguage } from "@/config/use-language";
 import { trackEvent } from "@/lib/analytics";
+import { isDateKeyInPickupWindow } from "@/lib/pickup-availability";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -70,6 +71,7 @@ function parsePickupDateTime(date: string, time?: string) {
 function getPickupValidationMessage(
   date: string,
   time: string | undefined,
+  openPickupDates: Set<string>,
   messages: {
     pickupDateRequired: string;
     pickupTimeRequired: string;
@@ -80,6 +82,9 @@ function getPickupValidationMessage(
   }
 ) {
   if (!date) return messages.pickupDateRequired;
+  if (!openPickupDates.has(date)) {
+    return "Selected pickup/delivery date is not available. Please choose another date.";
+  }
   if (!time) return messages.pickupTimeRequired;
 
   const pickupAt = parsePickupDateTime(date, time);
@@ -100,7 +105,7 @@ function getPickupValidationMessage(
     return messages.pickupHours;
   }
 
-  const minimumPickupAt = new Date(now.getTime() + 6 * 60 * 60 * 1000);
+  const minimumPickupAt = new Date(now.getTime() + 3 * 60 * 60 * 1000);
   if (pickupAt < minimumPickupAt) {
     return messages.pickupMinimum;
   }
@@ -483,14 +488,16 @@ function SavedAddressPicker({
 interface CheckoutModuleProps {
   profile: ProfileData | null;
   addresses: AddressData[];
+  openPickupDates: string[];
 }
 
-export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
+export function CheckoutModule({ profile, addresses, openPickupDates }: CheckoutModuleProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, isPending } = useSession();
   const { dictionary } = useLanguage();
   const status = isPending ? "loading" : session ? "authenticated" : "unauthenticated";
+  const openPickupDateSet = React.useMemo(() => new Set(openPickupDates), [openPickupDates]);
 
   const { items: allItems, isLoading: cartLoading, refetch } = useCart();
 
@@ -719,6 +726,7 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
     const pickupError = getPickupValidationMessage(
       form.deliveryDate,
       form.deliveryTime,
+      openPickupDateSet,
       dictionary.checkout.errors
     );
     if (pickupError) {
@@ -1050,7 +1058,14 @@ export function CheckoutModule({ profile, addresses }: CheckoutModuleProps) {
                             delivery_method: form.deliveryMethod,
                           });
                         }}
-                        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                        disabled={(date) => {
+                          const dateKey = format(date, "yyyy-MM-dd");
+                          return (
+                            date < new Date(new Date().setHours(0, 0, 0, 0)) ||
+                            !isDateKeyInPickupWindow(dateKey) ||
+                            !openPickupDateSet.has(dateKey)
+                          );
+                        }}
                       />
                     </PopoverContent>
                   </Popover>

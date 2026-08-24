@@ -18,6 +18,7 @@ import {
   FolderTree,
   Tags,
   Newspaper,
+  CalendarDays,
 } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
 import { resetAnalytics, trackEvent } from "@/lib/analytics";
@@ -26,6 +27,7 @@ const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/admin/pickup-availability", label: "Availability", icon: CalendarDays },
   { href: "/admin/payment-logs", label: "Payment Logs", icon: CreditCard },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
   { href: "/admin/tags", label: "Tags", icon: Tags },

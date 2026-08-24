@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { getPaymentProvider } from "@/lib/payments";
 import { sendOrderNotificationToAdmin } from "@/lib/mail";
 import { revalidatePath } from "next/cache";
+import { dateKeyToDate, isDateKeyInPickupWindow } from "@/lib/pickup-availability";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -151,6 +152,38 @@ function validatePickupTime(date: string, time?: string) {
   return null;
 }
 
+async function isPickupDateOpen(date: string) {
+  if (!isDateKeyInPickupWindow(date)) return false;
+
+  const availability = await prisma.pickupAvailability.findUnique({
+    where: { date: dateKeyToDate(date) },
+    select: { isOpen: true },
+  });
+
+  return availability?.isOpen === true;
+}
+
+export async function getOpenPickupDates(): Promise<{ dates: string[]; error: string | null }> {
+  try {
+    const availability = await prisma.pickupAvailability.findMany({
+      where: {
+        isOpen: true,
+      },
+      orderBy: { date: "asc" },
+    });
+
+    return {
+      dates: availability
+        .map((item) => item.date.toISOString().slice(0, 10))
+        .filter((date) => isDateKeyInPickupWindow(date)),
+      error: null,
+    };
+  } catch (error) {
+    console.error("Error fetching open pickup dates:", error);
+    return { dates: [], error: "Failed to fetch pickup availability." };
+  }
+}
+
 // ─── createOrder ──────────────────────────────────────────────────────────────
 
 export async function createOrder(formData: CreateOrderFormData): Promise<{
@@ -221,6 +254,14 @@ export async function createOrder(formData: CreateOrderFormData): Promise<{
   const pickupValidationError = validatePickupTime(formData.deliveryDate, formData.deliveryTime);
   if (pickupValidationError) {
     return { orderNumber: null, paymentUrl: null, error: pickupValidationError };
+  }
+
+  if (!(await isPickupDateOpen(formData.deliveryDate))) {
+    return {
+      orderNumber: null,
+      paymentUrl: null,
+      error: "Selected pickup/delivery date is not available. Please choose another date.",
+    };
   }
 
   // 2. Validate all items are still available and price matches

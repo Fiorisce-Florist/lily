@@ -257,6 +257,17 @@ model CheckoutLog {
   @@map("checkout_logs")
 }
 
+model PickupAvailability {
+  id        String   @id @default(uuid())
+  date      DateTime @unique @db.Date
+  isOpen    Boolean  @default(false) @map("is_open")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([date])
+  @@map("pickup_availability")
+}
+
 model Order {
   id              String               @id @default(uuid())
   userId          String               @map("user_id")

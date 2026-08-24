@@ -5,6 +5,12 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { Prisma, ProductStatus, TagType } from "@prisma/client";
+import {
+  dateKeyToDate,
+  dateToDateKey,
+  getPickupAvailabilityDateKeys,
+  isDateKeyInPickupWindow,
+} from "@/lib/pickup-availability";
 
 // ─── Auth guard ───────────────────────────────────────────────────────────────
 
@@ -74,6 +80,57 @@ export async function adminGetDashboardStats() {
       itemCount: o._count.items,
     })),
   };
+}
+
+// ─── Pickup Availability ─────────────────────────────────────────────────────
+
+export async function adminGetPickupAvailability() {
+  await requireAdmin();
+
+  const dateKeys = getPickupAvailabilityDateKeys();
+  const records = await prisma.pickupAvailability.findMany({
+    where: {
+      date: {
+        gte: dateKeyToDate(dateKeys[0]),
+        lte: dateKeyToDate(dateKeys[dateKeys.length - 1]),
+      },
+    },
+    orderBy: { date: "asc" },
+  });
+  const openByDate = new Map(records.map((record) => [dateToDateKey(record.date), record.isOpen]));
+
+  return {
+    dates: dateKeys.map((date) => ({
+      date,
+      isOpen: openByDate.get(date) ?? false,
+    })),
+    error: null,
+  };
+}
+
+export async function adminSetPickupAvailability(date: string, isOpen: boolean) {
+  await requireAdmin();
+
+  if (!isDateKeyInPickupWindow(date)) {
+    return {
+      error: "Date must be within the current 30-day pickup/delivery window.",
+    };
+  }
+
+  await prisma.pickupAvailability.upsert({
+    where: { date: dateKeyToDate(date) },
+    create: {
+      date: dateKeyToDate(date),
+      isOpen,
+    },
+    update: {
+      isOpen,
+    },
+  });
+
+  revalidatePath("/admin/pickup-availability");
+  revalidatePath("/checkout");
+  return { error: null };
 }
 
 // ─── Product Management ───────────────────────────────────────────────────────
