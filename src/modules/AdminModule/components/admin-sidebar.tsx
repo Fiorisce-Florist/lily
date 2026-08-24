@@ -19,6 +19,7 @@ import {
   Tags,
   Newspaper,
   CalendarDays,
+  Settings,
 } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
 import { resetAnalytics, trackEvent } from "@/lib/analytics";
@@ -33,6 +34,7 @@ const NAV_ITEMS = [
   { href: "/admin/tags", label: "Tags", icon: Tags },
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/news", label: "News", icon: Newspaper },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export function AdminSidebar() {

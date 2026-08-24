@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { Prisma, ProductStatus, TagType } from "@prisma/client";
+import { AI_CONCIERGE_SETTING_KEY, getAiConciergeEnabled } from "@/lib/site-settings";
 import {
   dateKeyToDate,
   dateToDateKey,
@@ -130,6 +131,39 @@ export async function adminSetPickupAvailability(date: string, isOpen: boolean) 
 
   revalidatePath("/admin/pickup-availability");
   revalidatePath("/checkout");
+  return { error: null };
+}
+
+// ─── Site Settings ───────────────────────────────────────────────────────────
+
+export async function adminGetSiteSettings() {
+  await requireAdmin();
+
+  return {
+    aiConciergeEnabled: await getAiConciergeEnabled(),
+  };
+}
+
+export async function adminSetAiConciergeEnabled(enabled: boolean) {
+  await requireAdmin();
+
+  await prisma.siteSetting.upsert({
+    where: {
+      key: AI_CONCIERGE_SETTING_KEY,
+    },
+    create: {
+      key: AI_CONCIERGE_SETTING_KEY,
+      booleanValue: enabled,
+    },
+    update: {
+      booleanValue: enabled,
+    },
+  });
+
+  revalidateTag(AI_CONCIERGE_SETTING_KEY, "max");
+  revalidatePath("/");
+  revalidatePath("/admin/settings");
+
   return { error: null };
 }
 

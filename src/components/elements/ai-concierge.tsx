@@ -109,6 +109,7 @@ export function AiConcierge() {
   const pathname = usePathname();
   const { language, dictionary } = useLanguage();
   const { addItem } = useCart();
+  const [isEnabled, setIsEnabled] = React.useState<boolean | null>(null);
   const [isOpen, setIsOpen] = React.useState(false);
   const [input, setInput] = React.useState("");
   const [isSending, setIsSending] = React.useState(false);
@@ -117,6 +118,23 @@ export function AiConcierge() {
     getInitialMessages(dictionary.aiConcierge.welcome)
   );
   const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    let isMounted = true;
+
+    fetch("/api/ai-concierge", { cache: "no-store" })
+      .then((response) => response.json())
+      .then((data: { enabled?: unknown }) => {
+        if (isMounted) setIsEnabled(data.enabled === true);
+      })
+      .catch(() => {
+        if (isMounted) setIsEnabled(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   React.useEffect(() => {
     window.localStorage.setItem(
@@ -136,6 +154,7 @@ export function AiConcierge() {
   }, [messages, isSending]);
 
   if (
+    !isEnabled ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/sign-in") ||
     pathname.startsWith("/sign-up")

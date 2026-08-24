@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import { getAiConciergeEnabled } from "@/lib/site-settings";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const DEFAULT_MODEL = "google/gemini-3.7-flash";
@@ -162,8 +163,23 @@ function buildPrompt(language: "EN" | "ID", products: CatalogProduct[]) {
   ].join("\n");
 }
 
+export async function GET() {
+  return NextResponse.json(
+    { enabled: await getAiConciergeEnabled() },
+    {
+      headers: {
+        "cache-control": "no-store",
+      },
+    }
+  );
+}
+
 export async function POST(request: Request) {
   const apiKey = process.env.OPENROUTER_API_KEY;
+
+  if (!(await getAiConciergeEnabled())) {
+    return NextResponse.json({ error: "AI concierge is disabled." }, { status: 403 });
+  }
 
   if (!apiKey) {
     return NextResponse.json({ error: "AI concierge is not configured." }, { status: 503 });

@@ -268,6 +268,16 @@ model PickupAvailability {
   @@map("pickup_availability")
 }
 
+model SiteSetting {
+  key          String   @id @db.VarChar(100)
+  booleanValue Boolean? @map("boolean_value")
+  stringValue  String?  @map("string_value") @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
 model Order {
   id              String               @id @default(uuid())
   userId          String               @map("user_id")
