@@ -51,6 +51,20 @@
     "ariaLabel": "Contact MinFio on WhatsApp",
     "message": "Hi MinFio! I'd like to order flowers. May I have the price list and how to order? Thank you 🌸"
   },
+  "aiConcierge": {
+    "title": "MinFio Concierge",
+    "subtitle": "Flower recommendations",
+    "bubbleTitle": "Need flower advice?",
+    "bubbleCta": "Ask MinFio AI",
+    "open": "Open MinFio AI concierge",
+    "close": "Close MinFio AI concierge",
+    "welcome": "Hi, I’m MinFio. Tell me the occasion, recipient, budget, and preferred colors, and I’ll recommend the most suitable flowers from Fiorisce.",
+    "placeholder": "Ask for a flower recommendation...",
+    "send": "Send message",
+    "thinking": "MinFio is arranging ideas...",
+    "add": "Add",
+    "error": "Sorry, I could not arrange a recommendation right now. Please try again in a moment."
+  },
   "footer": {
     "tagline": "Bringing the beauty of nature into your everyday life with carefully curated, sustainable floral arrangements.",
     "sections": {

@@ -51,6 +51,20 @@
     "ariaLabel": "Hubungi MinFio di WhatsApp",
     "message": "Hi MinFio! Aku ingin pesan bunga, boleh tahu info pricelist dan pemesanannya bagaimana? Terima kasih 🌸"
   },
+  "aiConcierge": {
+    "title": "Konsierge MinFio",
+    "subtitle": "Rekomendasi bunga",
+    "bubbleTitle": "Bingung pilih bunga?",
+    "bubbleCta": "Tanya MinFio AI",
+    "open": "Buka konsierge MinFio AI",
+    "close": "Tutup konsierge MinFio AI",
+    "welcome": "Hi, aku MinFio. Ceritakan momennya, untuk siapa, budget, dan warna favoritmu. Nanti aku bantu pilih bunga Fiorisce yang paling cocok.",
+    "placeholder": "Tanya rekomendasi bunga...",
+    "send": "Kirim pesan",
+    "thinking": "MinFio sedang merangkai ide...",
+    "add": "Tambah",
+    "error": "Maaf, rekomendasi belum bisa dibuat sekarang. Coba lagi sebentar lagi ya."
+  },
   "footer": {
     "tagline": "Menghadirkan keindahan alam ke keseharianmu lewat rangkaian bunga yang dikurasi dengan cermat dan berkelanjutan.",
     "sections": {

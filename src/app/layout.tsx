@@ -76,6 +76,7 @@ import { SessionProvider } from "@/context/session-provider";
 import { CartProvider } from "@/context/cart-context";
 import { FloatingContactButton } from "@/components/elements/floating-contact-button";
 import { AnalyticsProvider } from "@/components/elements/analytics-provider";
+import { AiConcierge } from "@/components/elements/ai-concierge";
 
 export default function RootLayout({
   children,
@@ -108,6 +109,7 @@ export default function RootLayout({
                 <Navbar />
                 <main className="flex-1">{children}</main>
                 <Footer />
+                <AiConcierge />
                 <FloatingContactButton />
               </TooltipProvider>
               <Toaster />
