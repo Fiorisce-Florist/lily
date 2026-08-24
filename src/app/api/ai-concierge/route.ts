@@ -21,6 +21,7 @@ type CatalogProduct = {
   id: string;
   name: string;
   slug: string;
+  imageUrl: string | null;
   price: number;
   category: string;
   tags: string[];
@@ -79,6 +80,15 @@ async function getCatalogProducts(): Promise<CatalogProduct[]> {
       slug: true,
       description: true,
       price: true,
+      images: {
+        orderBy: {
+          isPrimary: "desc",
+        },
+        take: 1,
+        select: {
+          imageUrl: true,
+        },
+      },
       category: {
         select: {
           name: true,
@@ -115,6 +125,7 @@ async function getCatalogProducts(): Promise<CatalogProduct[]> {
       id: product.id,
       name: product.name,
       slug: product.slug,
+      imageUrl: product.images[0]?.imageUrl ?? null,
       price:
         basePrice > 0 || product.variants.length === 0
           ? basePrice

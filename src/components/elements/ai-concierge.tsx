@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Bot, Loader2, MessageCircle, Send, ShoppingBag, Sparkles, X } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -26,6 +27,7 @@ type ConciergeRecommendation = {
     id: string;
     name: string;
     slug: string;
+    imageUrl: string | null;
     price: number;
     category: string;
     tags: string[];
@@ -38,6 +40,9 @@ type ConciergeRecommendation = {
   };
   reason: string;
 };
+
+const CHAT_STORAGE_KEY = "fiorisce_ai_concierge_chat";
+const CHAT_TTL_MS = 12 * 60 * 60 * 1000;
 
 const quickPrompts = {
   EN: [
@@ -60,6 +65,46 @@ function createMessage(role: ConciergeMessage["role"], content: string): Concier
   };
 }
 
+function isConciergeMessage(value: unknown): value is ConciergeMessage {
+  if (!value || typeof value !== "object") return false;
+
+  const message = value as Partial<ConciergeMessage>;
+  return (
+    typeof message.id === "string" &&
+    (message.role === "user" || message.role === "assistant") &&
+    typeof message.content === "string"
+  );
+}
+
+function getInitialMessages(welcome: string) {
+  const fallback = [createMessage("assistant", welcome)];
+
+  if (typeof window === "undefined") return fallback;
+
+  try {
+    const stored = window.localStorage.getItem(CHAT_STORAGE_KEY);
+    if (!stored) return fallback;
+
+    const parsed = JSON.parse(stored) as {
+      expiresAt?: unknown;
+      messages?: unknown;
+    };
+
+    if (typeof parsed.expiresAt !== "number" || parsed.expiresAt <= Date.now()) {
+      window.localStorage.removeItem(CHAT_STORAGE_KEY);
+      return fallback;
+    }
+
+    if (!Array.isArray(parsed.messages)) return fallback;
+
+    const messages = parsed.messages.filter(isConciergeMessage);
+    return messages.length > 0 ? messages : fallback;
+  } catch {
+    window.localStorage.removeItem(CHAT_STORAGE_KEY);
+    return fallback;
+  }
+}
+
 export function AiConcierge() {
   const pathname = usePathname();
   const { language, dictionary } = useLanguage();
@@ -68,10 +113,20 @@ export function AiConcierge() {
   const [input, setInput] = React.useState("");
   const [isSending, setIsSending] = React.useState(false);
   const [addingId, setAddingId] = React.useState<string | null>(null);
-  const [messages, setMessages] = React.useState<ConciergeMessage[]>(() => [
-    createMessage("assistant", dictionary.aiConcierge.welcome),
-  ]);
+  const [messages, setMessages] = React.useState<ConciergeMessage[]>(() =>
+    getInitialMessages(dictionary.aiConcierge.welcome)
+  );
   const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    window.localStorage.setItem(
+      CHAT_STORAGE_KEY,
+      JSON.stringify({
+        expiresAt: Date.now() + CHAT_TTL_MS,
+        messages,
+      })
+    );
+  }, [messages]);
 
   React.useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -204,18 +259,45 @@ export function AiConcierge() {
                       {message.recommendations.map((recommendation) => (
                         <article
                           key={recommendation.product.id}
-                          className="rounded-lg border border-cornsilk-300 bg-white p-3 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-cornsilk-100"
+                          className="rounded-lg border border-cornsilk-300 bg-white p-2 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-cornsilk-100"
                         >
-                          <div className="flex items-start justify-between gap-3">
-                            <div>
+                          <div className="flex items-center gap-3">
+                            <Link
+                              href={`/shop/${recommendation.product.slug}`}
+                              className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-cornsilk-200 dark:bg-neutral-800"
+                              onClick={() =>
+                                trackEvent("ai_concierge_recommendation_opened", {
+                                  product_id: recommendation.product.id,
+                                  product_name: recommendation.product.name,
+                                  path: pathname,
+                                  source: "recommendation_image",
+                                })
+                              }
+                            >
+                              {recommendation.product.imageUrl ? (
+                                <Image
+                                  src={recommendation.product.imageUrl}
+                                  alt={recommendation.product.name}
+                                  fill
+                                  sizes="64px"
+                                  className="object-cover"
+                                />
+                              ) : (
+                                <span className="flex h-full w-full items-center justify-center text-neutral-500">
+                                  <ShoppingBag className="h-5 w-5" />
+                                </span>
+                              )}
+                            </Link>
+                            <div className="min-w-0 flex-1">
                               <Link
                                 href={`/shop/${recommendation.product.slug}`}
-                                className="font-inter text-b5 font-semibold hover:text-blush-500"
+                                className="line-clamp-1 font-inter text-b5 font-semibold hover:text-blush-500"
                                 onClick={() =>
                                   trackEvent("ai_concierge_recommendation_opened", {
                                     product_id: recommendation.product.id,
                                     product_name: recommendation.product.name,
                                     path: pathname,
+                                    source: "recommendation_title",
                                   })
                                 }
                               >
@@ -224,11 +306,16 @@ export function AiConcierge() {
                               <p className="mt-0.5 font-jetbrains text-[11px] text-neutral-500 dark:text-neutral-400">
                                 {formatPrice(recommendation.product.price)}
                               </p>
+                              {recommendation.reason ? (
+                                <p className="mt-1 line-clamp-2 text-b6 leading-snug text-neutral-600 dark:text-neutral-400">
+                                  {recommendation.reason}
+                                </p>
+                              ) : null}
                             </div>
                             <Button
                               type="button"
                               size="sm"
-                              className="h-8 shrink-0 px-3"
+                              className="h-8 shrink-0 px-2.5"
                               onClick={() => handleAddToCart(recommendation)}
                               disabled={addingId === recommendation.product.id}
                             >
@@ -240,11 +327,6 @@ export function AiConcierge() {
                               {dictionary.aiConcierge.add}
                             </Button>
                           </div>
-                          {recommendation.reason ? (
-                            <p className="mt-2 text-b6 text-neutral-600 dark:text-neutral-400">
-                              {recommendation.reason}
-                            </p>
-                          ) : null}
                         </article>
                       ))}
                     </div>
