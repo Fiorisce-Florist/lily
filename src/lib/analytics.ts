@@ -9,6 +9,10 @@ const MIXPANEL_TOKEN =
 
 let isInitialized = false;
 
+function getMixpanelApiHost() {
+  return `${window.location.origin}/api/analytics/mixpanel`;
+}
+
 function cleanProperties(properties: AnalyticsProperties = {}) {
   return Object.fromEntries(
     Object.entries(properties).filter(([, value]) => value !== undefined && value !== null)
@@ -19,7 +23,7 @@ export function initAnalytics() {
   if (typeof window === "undefined" || isInitialized || !MIXPANEL_TOKEN) return;
 
   mixpanel.init(MIXPANEL_TOKEN, {
-    api_host: "https://api-js.mixpanel.com",
+    api_host: getMixpanelApiHost(),
     debug: process.env.NODE_ENV === "development",
     track_pageview: "full-url",
     autocapture: {
